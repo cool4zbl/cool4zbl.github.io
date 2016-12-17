@@ -1,0 +1,260 @@
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Oops...DevOps</title>
+    <meta name="description" content="">
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="shortcut icon" href="../favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="../assets/css/screen.css?v=082f27cfd5">
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic%7COpen+Sans:700,400">
+
+    <link rel="canonical" href="http://localhost:2368/oops-devops/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <link rel="amphtml" href="http://localhost:2368/oops-devops/amp/">
+    
+    <meta property="og:site_name" content="ZBL's Doodles">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Oops...DevOps">
+    <meta property="og:description" content="晚上花时间来清理邮箱，查收到了 DNSPod 发来的一堆监控警告邮件，才突然发现自己长草多年的博客已经宕机半个月之余！ 迅速打开博客地址，大写的 502 Bad Gateway 与 Nginx 更配噢。现在就是有台强力除草机也没用了。 亏我还一直按时给 DO 充值打钱... 于是立马 mosh 到大洋彼岸的 VPS（这里还直接用的联通流量）， service ghost restart &amp;amp;&amp;amp; service nginx restart 之后，502 仍然继续。 继续想起半个月前手贱升级了系统 Node 版本。 node -v 后发现已经是 v6.3.x 了，而 Ghost 现在官方支持版本里并没有 v6.x，可能就是版本不兼容的问题。 通过">
+    <meta property="og:url" content="http://localhost:2368/oops-devops/">
+    <meta property="article:published_time" content="2016-10-20T17:41:00.000Z">
+    <meta property="article:modified_time" content="2016-10-22T07:50:55.000Z">
+    <meta property="article:tag" content="devops">
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Oops...DevOps">
+    <meta name="twitter:description" content="晚上花时间来清理邮箱，查收到了 DNSPod 发来的一堆监控警告邮件，才突然发现自己长草多年的博客已经宕机半个月之余！ 迅速打开博客地址，大写的 502 Bad Gateway 与 Nginx 更配噢。现在就是有台强力除草机也没用了。 亏我还一直按时给 DO 充值打钱... 于是立马 mosh 到大洋彼岸的 VPS（这里还直接用的联通流量）， service ghost restart &amp;amp;&amp;amp; service nginx restart 之后，502 仍然继续。 继续想起半个月前手贱升级了系统 Node 版本。 node -v 后发现已经是 v6.3.x 了，而 Ghost 现在官方支持版本里并没有 v6.x，可能就是版本不兼容的问题。 通过">
+    <meta name="twitter:url" content="http://localhost:2368/oops-devops/">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="ZBL">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="devops">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "ZBL&#x27;s Doodles",
+        "logo": "http://localhost:2368/ghost/img/ghosticon.jpg"
+    },
+    "author": {
+        "@type": "Person",
+        "name": "ZBL",
+        "image": "http://localhost:2368/content/images/2016/10/IMG_0963.JPG",
+        "url": "http://localhost:2368/author/zbl/",
+        "sameAs": [],
+        "description": "I&#x27;m what I&#x27;m."
+    },
+    "headline": "Oops...DevOps",
+    "url": "http://localhost:2368/oops-devops/",
+    "datePublished": "2016-10-20T17:41:00.000Z",
+    "dateModified": "2016-10-22T07:50:55.000Z",
+    "keywords": "devops",
+    "description": "晚上花时间来清理邮箱，查收到了 DNSPod 发来的一堆监控警告邮件，才突然发现自己长草多年的博客已经宕机半个月之余！ 迅速打开博客地址，大写的 502 Bad Gateway 与 Nginx 更配噢。现在就是有台强力除草机也没用了。 亏我还一直按时给 DO 充值打钱... 于是立马 mosh 到大洋彼岸的 VPS（这里还直接用的联通流量）， service ghost restart &amp;amp;&amp;amp; service nginx restart 之后，502 仍然继续。 继续想起半个月前手贱升级了系统 Node 版本。 node -v 后发现已经是 v6.3.x 了，而 Ghost 现在官方支持版本里并没有 v6.x，可能就是版本不兼容的问题。 通过",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "http://localhost:2368"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 0.11">
+    <link rel="alternate" type="application/rss+xml" title="ZBL's Doodles" href="http://localhost:2368/rss/">
+</head>
+<body class="post-template tag-devops nav-closed">
+
+    <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="index.html#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+            <li class="nav-home" role="presentation"><a href="http://localhost:2368/">Home</a></li>
+    </ul>
+        <a class="subscribe-button icon-feed" href="http://localhost:2368/rss/">Subscribe</a>
+</div>
+<span class="nav-cover"></span>
+
+
+    <div class="site-wrapper">
+
+        
+
+
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        
+            <a class="menu-button icon-menu" href="index.html#"><span class="word">Menu</span></a>
+    </nav>
+</header>
+
+<main class="content" role="main">
+    <article class="post tag-devops">
+
+        <header class="post-header">
+            <h1 class="post-title">Oops...DevOps</h1>
+            <section class="post-meta">
+                <time class="post-date" datetime="2016-10-21">21 October 2016</time>  on <a href="../tag/devops/">devops</a>
+            </section>
+        </header>
+
+        <section class="post-content">
+            <p><img src="http://127.0.0.1:2368/content/images/2016/10/13696947_266466680392407_1036551811_n-1.jpg" alt=""></p>
+
+<p>晚上花时间来清理邮箱，查收到了 DNSPod 发来的一堆监控警告邮件，才突然发现自己长草多年的博客已经宕机半个月之余！<br>
+迅速打开博客地址，大写的 <strong>502 Bad Gateway</strong> 与 Nginx 更配噢。现在就是有台强力除草机也没用了。<br>
+亏我还一直按时给 DO 充值打钱...</p>
+
+<p>于是立马 <code>mosh</code> 到大洋彼岸的 VPS（这里还直接用的联通流量）， <code>service ghost restart &amp;&amp; service nginx restart</code> 之后，502 仍然继续。</p>
+
+<p>继续想起半个月前手贱升级了系统 Node 版本。
+<code>node -v</code> 后发现已经是 <code>v6.3.x</code> 了，而 Ghost 现在<a href="http://support.ghost.org/supported-node-versions/">官方支持版本</a>里并没有 <code>v6.x</code>，可能就是版本不兼容的问题。</p>
+
+<p>通过 DO 官方 <a href="https://www.digitalocean.com/community/questions/how-to-upgrade-node-js-on-older-ghost-droplets">Node 升级指南</a>，装好后虽然 <code>/usr/bin/node -v</code> 返回是 <code>v4.x</code> ，但 <code>which node</code> 及 <code>/usr/local/bin/node -v</code> 返回仍然为 <code>6.x</code>。那就指南暴力覆盖了！ <code>rm /usr/local/bin/npm &amp;&amp; cp /usr/bin/node /usr/local/bin/node</code>， 一番更新修改后，<code>system node</code> 版本成功 downgrade 为 <code>v4.x</code>。</p>
+
+<p>高兴地敲击 <code>npm start --production</code>，结果发现后面更多的坑需要填...</p>
+
+<p><code>npm start --production</code> 后，直接扔出了一个 <code>Node Error Stack</code> 如下：</p>
+
+<pre><code class="language-bash">Unhandled rejection Error: Cannot find module '[REDACTED]\node_modules\ghost\node_modules\sqlite3\lib\binding\node-v44-linux-x64\node_sqlite3.node'  
+    at Function.Module._resolveFilename (module.js:336:15)
+    at Function.Module._load (module.js:286:25)
+    at Module.require (module.js:365:17)
+    at require (module.js:384:17)
+    at Object.&lt;anonymous&gt; ([REDACTED]\node_modules\ghost\node_modules\sqlite3\lib\sqlite3.js:4:15)
+    at Module._compile (module.js:430:26)
+    at Object.Module._extensions..js (module.js:448:10)
+    at Module.load (module.js:355:32)
+    at Function.Module._load (module.js:310:12)
+    at Module.require (module.js:365:17)
+    at require (module.js:384:17)
+    at Client_SQLite3.initDriver ([REDACTED]\node_modules\ghost\node_modules\knex\lib\dialects\sqlite3\index.js:41:24)
+    at new Client_SQLite3 ([REDACTED]\node_modules\ghost\node_modules\knex\lib\dialects\sqlite3\index.js:15:10)
+    at Knex.initialize ([REDACTED]\node_modules\ghost\node_modules\knex\knex.js:109:15)
+    at Knex ([REDACTED]\node_modules\ghost\node_modules\knex\knex.js:13:26)
+    at ConfigManager.set ([REDACTED]\node_modules\ghost\core\server\config\index.js:153:24)
+    at ConfigManager.init ([REDACTED]\node_modules\ghost\core\server\config\index.js:76:10)
+    at [REDACTED]\node_modules\ghost\core\server\config\index.js:267:30
+    at tryCatcher ([REDACTED]\node_modules\ghost\node_modules\bluebird\js\main\util.js:24:31)
+    at Promise._settlePromiseFromHandler ([REDACTED]\node_modules\ghost\node_modules\bluebird\js\main\promise.js:454:31)
+    at Promise._settlePromiseAt ([REDACTED]\node_modules\ghost\node_modules\bluebird\js\main\promise.js:530:18)
+    at Promise._settlePromises ([REDACTED]\node_modules\ghost\node_modules\bluebird\js\main\promise.js:646:14)
+    at Async._drainQueue ([REDACTED]\node_modules\ghost\node_modules\bluebird\js\main\async.js:177:16)
+    at Async._drainQueues ([REDACTED]\node_modules\ghost\node_modules\bluebird\js\main\async.js:187:10)
+    at Immediate.Async.drainQueues [as _onImmediate] ([REDACTED]\node_modules\ghost\node_modules\bluebird\js\main\async.js:15:14)
+    at processImmediate [as _immediateCallback] (timers.js:371:17)
+</code></pre>
+
+<p>（这里也可以 <code>tail -n 100 /var/log/ghost/error.log</code> 查看抛出的错误栈。）</p>
+
+<p>唔，仔细看了下，可能是 npm 包没有完整装好，或者 npm 包的版本不兼容吧。
+感谢 Google，找到了一个<a href="https://github.com/TryGhost/Ghost/issues/5911">类似的 issue</a>，楼里恰好有一位遭遇同样情况的小哥，机智地解决了这个问题：</p>
+
+<blockquote>
+  <p>Ghost supports node version 4.2.0 also. I was having this error "ERROR: Cannot find module '../../node<em>modules/sqlite3/lib/binding/node-v46-linux-x64/node</em>sqlite3.node' " .</p>
+  
+  <p>I just installed node version 4.2.0 using nvm and installed sqlite3. The "binding" folder inside sqlite3 got a node-v47 folder instead of v46. So I just renamed the folder to v46 and downloaded the node<em>sqlite3.node file from here <a href="http://www.unifieddigital.com/node">http://www.unifieddigital.com/node</a></em>modules/sqlite3/lib/binding/node-v46-linux-x64/.</p>
+  
+  <p>THIS WORKED FOR ME.!!!</p>
+</blockquote>
+
+<p>简直了，我真是感谢他，<strong>THIS ALSO WORKED FOR ME!!!</strong></p>
+
+<p>终于 <code>npm start --production</code> 可以成功跑起来 😆 ~ <br>
+<code>Ctrl-c</code> 后，<code>service ghost restart</code>，刷新 Blog，啊哈哈，Welcome to Ghost ~</p>
+
+<p>所以<del>愉快流畅地</del>升级到了 Ghost <code>v0.11.2</code> ...<br>
+（官方也有一份关于 <code>SQLite3 Error</code> <a href="http://support.ghost.org/troubleshooting/#sqlite3-errors">TroubleShooting</a></p>
+
+<p>但是注意，<strong>备份</strong>的重要性来了！</p>
+
+<p>这里粗暴升级后，相当于是新装的 Ghost，打开 <code>{hostname}/ghost</code>，会需要你重新注册一个用户账号，也就是第一个注册的账号，会默认作为 Ghost <code>Owner</code>。但是这里什么数据都没有。打开 <code>ghost/data/</code> 或者 <code>ghost/content/theme/</code> 应该都是只有系统默认数据，而之前的那些用户数据都没有了。 </p>
+
+<p>还好我在之前就有想到自己有可能这么粗暴升级 Ghost，本地已经有了一份 <code>.json</code> 后缀的 exported data。于是在后台 <code>Settings -&gt; Labs</code>，点击 <code>import data</code>，成功刷新后，之前所有备份过的博客文章数据都恢复啦！尽管我并不是什么高产博主，但是两年前才入门前端时，花心思写的一些东西说没就没也是一种遗憾。所以真是贴心的小功能。（不过这里的数据备份只包括 Post 数据，不包括 Theme / User Avatar 等，所以仍然需要 <code>cp -r myTheme/ theme/</code>，或者在后台 Settings -&gt; General 上传主题图片和用户头像。）</p>
+
+<p>搞定后，一切都恢复了日常。<br>
+宕机这么久，DevOps 脖子好疼。<br>
+唔，决定每天都拿着强力除草机来刷一刷，让这里成为自己的一小片 <code>Playground</code>。</p>
+
+<p>很久之前读过一句话，大概意思是，为什么在各种免费博客平台盛行的时候，你还要自己去购买域名购买服务器然后搭建一套博客平台呢？只因为，这样写出来的东西，就永远打上了自己的域名那样特有的烙印。<br>
+典型的个人风格文字，特立独行的思想。
+希望我能拥有。</p>
+
+<p><img src="http://127.0.0.1:2368/content/images/2016/10/13768177_295401884143837_1899942111_n.jpg" alt="from Instagram"></p>
+        </section>
+
+        <footer class="post-footer">
+
+
+            <figure class="author-image">
+                <a class="img" href="../author/zbl/" style="background-image: url(http://127.0.0.1:2368/content/images/2016/10/IMG_0963.JPG)"><span class="hidden">ZBL's Picture</span></a>
+            </figure>
+
+            <section class="author">
+                <h4><a href="../author/zbl/">ZBL</a></h4>
+
+                    <p>I'm what I'm.</p>
+                <div class="author-meta">
+                    <span class="author-location icon-location">Beijing</span>
+                    
+                </div>
+            </section>
+
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="https://twitter.com/intent/tweet?text=Oops...DevOps&amp;url=http://localhost:2368/oops-devops/" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:2368/oops-devops/" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=http://localhost:2368/oops-devops/" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+
+        </footer>
+
+    </article>
+</main>
+
+<aside class="read-next">
+    <a class="read-next-story no-cover" href="../follow-the-progressive/">
+        <section class="post">
+            <h2>跟上前进者的步伐</h2>
+            <p>每个人，在人生不同阶段，或多或少是需要一些鸡血的。 自从工作以来，也确实觉得自己懒癌，且很多事情缺乏自控力和自律。 只记得乔老爷子说过，   自由从何而来？从自信来，而自信则是从自律来！先学会克制自己，用严格的日程表控制生活，才能在这种自律中不断磨练出自信。自信是对事情的控制能力，如果你连最基本的时间都做控制不了，还谈什么自信？ 是不是真的出自乔老爷子之口还没有经过求证，但当时看到这句话的时候，确实是突然会心一击。…</p>
+        </section>
+    </a>
+    <a class="read-next-story prev no-cover" href="../review_music_at_your_fingertips/">
+        <section class="post">
+            <h2>一个人是可以没有音乐而生存，但是他不会活得太好</h2>
+            <p>这是一篇关于指尖下的音乐 Music at Your Fingertips 的书评。 没想到，一本谈论「钢琴演奏」的书，居然充满了如此多的哲理。上升到的高度，就连并不是钢琴演奏者（比如我），都受益良多。 大师之所以成为大师，除了有过人的天赋外，一定与他们那些富有方法和技巧的刻意练习分不开关系。 这是在朝阳图书馆偶然发现的一本小书，…</p>
+        </section>
+    </a>
+</aside>
+
+
+
+        <footer class="site-footer clearfix">
+            <section class="copyright"><a href="http://localhost:2368">ZBL's Doodles</a> © 2016</section>
+            <section class="poweredby">Proudly published with <a href="https://ghost.org">Ghost</a></section>
+        </footer>
+
+    </div>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    
+    <script type="text/javascript" src="../assets/js/jquery.fitvids.js?v=082f27cfd5"></script>
+    <script type="text/javascript" src="../assets/js/index.js?v=082f27cfd5"></script>
+
+</body>

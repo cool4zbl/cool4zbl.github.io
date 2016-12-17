@@ -1,0 +1,264 @@
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>拓展HTML5之data元素与自定义data属性</title>
+    <meta name="description" content="">
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="shortcut icon" href="../favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="../assets/css/screen.css?v=082f27cfd5">
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic%7COpen+Sans:700,400">
+
+    <link rel="canonical" href="http://localhost:2368/html5-data-attributes/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <link rel="amphtml" href="http://localhost:2368/html5-data-attributes/amp/">
+    
+    <meta property="og:site_name" content="ZBL's Doodles">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="拓展HTML5之data元素与自定义data属性">
+    <meta property="og:description" content="如我们所知，HTML5中已经有了一大堆很好的新语义化元素，如&amp;lt;article&amp;gt;和&amp;lt;time&amp;gt;等，但有时我们仍然会发现可能没有一个能正确表示语义含义的元素。我们希望能给我们提供一些可进行拓展的方式——以便添加浏览器、脚本甚至机器人都可以使用的机器可读数据。所以这可能涉及添加JavaScript使用的元数据，给HTML5元素添加额外语义，乃至添加当前尚未涉及的全新语义化数据。  我们知道HTML4中有5种基本的拓展方法： &amp;lt;meta&amp;gt;元素   class、rel、rev和profile 属性   其中rev 和 profile 已被淘汰，但在HTML5中保留了&amp;lt;meta&amp;gt;、class和rel。  当然，在HTML5中，&amp;lt;meta&amp;gt;现在已经有了规范定义的一些名称和一种递交新名称值的方式，而 rel在HTML5规范中定义了几种新的链接类型和一种递交新链接类型的方式。  除了这些外，还有几个新的HTML5拓展方法，包括： &amp;lt;data&amp;gt;">
+    <meta property="og:url" content="http://localhost:2368/html5-data-attributes/">
+    <meta property="article:published_time" content="2014-12-08T08:11:46.000Z">
+    <meta property="article:modified_time" content="2015-03-08T09:21:39.000Z">
+    <meta property="article:tag" content="HTML5">
+    <meta property="article:tag" content="SEO">
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="拓展HTML5之data元素与自定义data属性">
+    <meta name="twitter:description" content="如我们所知，HTML5中已经有了一大堆很好的新语义化元素，如&amp;lt;article&amp;gt;和&amp;lt;time&amp;gt;等，但有时我们仍然会发现可能没有一个能正确表示语义含义的元素。我们希望能给我们提供一些可进行拓展的方式——以便添加浏览器、脚本甚至机器人都可以使用的机器可读数据。所以这可能涉及添加JavaScript使用的元数据，给HTML5元素添加额外语义，乃至添加当前尚未涉及的全新语义化数据。  我们知道HTML4中有5种基本的拓展方法： &amp;lt;meta&amp;gt;元素   class、rel、rev和profile 属性   其中rev 和 profile 已被淘汰，但在HTML5中保留了&amp;lt;meta&amp;gt;、class和rel。  当然，在HTML5中，&amp;lt;meta&amp;gt;现在已经有了规范定义的一些名称和一种递交新名称值的方式，而 rel在HTML5规范中定义了几种新的链接类型和一种递交新链接类型的方式。  除了这些外，还有几个新的HTML5拓展方法，包括： &amp;lt;data&amp;gt;">
+    <meta name="twitter:url" content="http://localhost:2368/html5-data-attributes/">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="ZBL">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="HTML5, SEO">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "ZBL&#x27;s Doodles",
+        "logo": "http://localhost:2368/ghost/img/ghosticon.jpg"
+    },
+    "author": {
+        "@type": "Person",
+        "name": "ZBL",
+        "image": "http://localhost:2368/content/images/2016/10/IMG_0963.JPG",
+        "url": "http://localhost:2368/author/zbl/",
+        "sameAs": [],
+        "description": "I&#x27;m what I&#x27;m."
+    },
+    "headline": "拓展HTML5之data元素与自定义data属性",
+    "url": "http://localhost:2368/html5-data-attributes/",
+    "datePublished": "2014-12-08T08:11:46.000Z",
+    "dateModified": "2015-03-08T09:21:39.000Z",
+    "keywords": "HTML5, SEO",
+    "description": "如我们所知，HTML5中已经有了一大堆很好的新语义化元素，如&amp;lt;article&amp;gt;和&amp;lt;time&amp;gt;等，但有时我们仍然会发现可能没有一个能正确表示语义含义的元素。我们希望能给我们提供一些可进行拓展的方式——以便添加浏览器、脚本甚至机器人都可以使用的机器可读数据。所以这可能涉及添加JavaScript使用的元数据，给HTML5元素添加额外语义，乃至添加当前尚未涉及的全新语义化数据。  我们知道HTML4中有5种基本的拓展方法： &amp;lt;meta&amp;gt;元素   class、rel、rev和profile 属性   其中rev 和 profile 已被淘汰，但在HTML5中保留了&amp;lt;meta&amp;gt;、class和rel。  当然，在HTML5中，&amp;lt;meta&amp;gt;现在已经有了规范定义的一些名称和一种递交新名称值的方式，而 rel在HTML5规范中定义了几种新的链接类型和一种递交新链接类型的方式。  除了这些外，还有几个新的HTML5拓展方法，包括： &amp;lt;data&amp;gt;",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "http://localhost:2368"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 0.11">
+    <link rel="alternate" type="application/rss+xml" title="ZBL's Doodles" href="http://localhost:2368/rss/">
+</head>
+<body class="post-template tag-html5 tag-seo nav-closed">
+
+    <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="index.html#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+            <li class="nav-home" role="presentation"><a href="http://localhost:2368/">Home</a></li>
+    </ul>
+        <a class="subscribe-button icon-feed" href="http://localhost:2368/rss/">Subscribe</a>
+</div>
+<span class="nav-cover"></span>
+
+
+    <div class="site-wrapper">
+
+        
+
+
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        
+            <a class="menu-button icon-menu" href="index.html#"><span class="word">Menu</span></a>
+    </nav>
+</header>
+
+<main class="content" role="main">
+    <article class="post tag-html5 tag-seo">
+
+        <header class="post-header">
+            <h1 class="post-title">拓展HTML5之data元素与自定义data属性</h1>
+            <section class="post-meta">
+                <time class="post-date" datetime="2014-12-08">08 December 2014</time>  on <a href="../tag/html5/">HTML5</a>, <a href="../tag/seo/">SEO</a>
+            </section>
+        </header>
+
+        <section class="post-content">
+            <p>如我们所知，HTML5中已经有了一大堆很好的新语义化元素，如<code>&lt;article&gt;</code>和<code>&lt;time&gt;</code>等，但有时我们仍然会发现可能没有一个能正确表示语义含义的元素。我们希望能给我们提供一些可进行拓展的方式——以便添加浏览器、脚本甚至机器人都可以使用的机器可读数据。所以这可能涉及添加JavaScript使用的元数据，给HTML5元素添加额外语义，乃至添加当前尚未涉及的全新语义化数据。 <br>
+我们知道HTML4中有5种基本的拓展方法：</p>
+
+<ul>
+<li><code>&lt;meta&gt;</code>元素  </li>
+<li>class、rel、rev和profile 属性  </li>
+</ul>
+
+<p>其中rev 和 profile 已被淘汰，但在HTML5中保留了<code>&lt;meta&gt;</code>、class和rel。  当然，在HTML5中，<code>&lt;meta&gt;</code>现在已经有了规范定义的一些<a href="http://j.mp/html5-meta-name">名称</a>和一种递交新名称值的方式，而 <code>rel</code>在HTML5规范中定义了几种<a href="http://j.mp/html5-rel-type">新的链接类型</a>和一种递交新链接类型的方式。 <br>
+除了这些外，还有几个新的HTML5拓展方法，包括：</p>
+
+<ul>
+<li><code>&lt;data&gt;</code>元素及其<code>val</code>属性</li>
+<li>自定义的<code>data</code>属性（<code>data-*</code>）</li>
+<li>Microdata（微数据）</li>
+<li>RDFa（Resource Description Framework in Attributes，属性资源描述框架）</li>
+</ul>
+
+<p>下面让我们从新崛起的<code>&lt;data&gt;</code>元素开始，见识HTML5的新拓展方法在SEO的威力吧。</p>
+
+<h4 id="data"><code>&lt;data&gt;</code>元素</h4>
+
+<p><code>&lt;time&gt;</code>元素给我们提供一种简便方式，使我们能够以机器可读的方式来表现日期、时间以及期限，但是数据类型可不是只有<code>time</code>这一种啊，于是我们也希望在显示人类可读内容的同时，也是机器可读的。因此，引入了具有<code>value</code>属性的<code>&lt;data&gt;</code>元素。</p>
+
+<blockquote>
+  <p><code>&lt;data&gt;</code>元素用于表现其内容，并在其<code>value</code>属性中包含该内容的机器可读形式。 <br>
+  <a href="http://j.mp/html5-data">HTML Living Standard, WHATWG</a></p>
+</blockquote>
+
+<p>以下代码演示了其用法：  </p>
+
+<pre><code class="language-html">The Karman Line is &lt;data value="100km"&gt;62 miles&lt;/data&gt; above the Earth's sea level, ...  
+</code></pre>
+
+<h4 id="datadata">自定义的<code>data</code>属性 （<code>data-*</code>）</h4>
+
+<p>例如，你可能需要在HTML中存储一些让JavaScript使用的值。最好的办法是避免隐藏的元数据，因而可以继续使用<code>&lt;time&gt;</code>和<code>&lt;data&gt;</code>之类的元素，以便将机器可读的数据与页面的内容绑定在一起。但如果我们能将JavaScript所用的数据追加到任意的元素，岂不是更方便？ 啊哈，HTML5就引入了自定义的<code>data-*</code>属性。此处的<code>*</code>即代表你要使用的名称。注意，属性不能包括任何大写字母，必须均为小写。 <br>
+其实简单来说，就是你可以往HTML标签上添加任意以 "data-"开头的属性，这些属性页面上是不显示的，它不会影响到你的页面布局和风格，但它却是可读可写的。 <br>
+那么以我博客主题的博文分享至社交媒体的代码片段为例：</p>
+
+<pre><code class="language-html">&lt;div class="post-social"&gt;  
+    &lt;h4 class="post-footer-heading"&gt;Spread the word&lt;/h4&gt;
+    &lt;a href="#" data-action="share-twitter"&gt;&lt;i class="fa fa-fw fa-lg fa-twitter"&gt;&lt;/i&gt;&lt;/a&gt;
+    &lt;a href="#" data-action="share-facebook"&gt;&lt;i class="fa fa-fw fa-lg fa-facebook-square"&gt;&lt;/i&gt;&lt;/a&gt;
+&lt;/div&gt;  
+</code></pre>
+
+<pre><code class="language-javascript">g.on("click", "[data-action]", function(e) {  
+    var f = a(this), g = f.data("action"), h = function(a, c, e) {
+    var f = b.screenLeft !== d ? b.screenLeft : screen.left, g = b.screenTop !== d ? b.screenTop : screen.top, h = screen.width / 2 - e / 2 + f, i = screen.height / 2 - c / 2 + g, j = b.open(a, "", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no,copyhistory=no, width=" + e + ", height=" + c + ", top=" + i + ", left=" + h);
+    return b.focus &amp;&amp; j.focus(), j
+     };
+ switch (e.preventDefault(), g) {
+      case "open-drawer":
+          Drawer.open();
+          break;
+      case "close-drawer":
+          Drawer.close();
+          break;
+      case "share-gplus":
+          h("https://plus.google.com/share?url=" + encodeURIComponent(location.href), 600, 600);
+          break;
+      case "share-facebook":                              h("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(location.href), 436, 626);
+          break;
+      case "share-twitter":
+          h("https://twitter.com/share?url=" + encodeURIComponent(location.href) + "&amp;text=" + encodeURIComponent(c.title), 440, 550)
+  }
+  return !1
+})
+</code></pre>
+
+<p>以上两段代码作用就是在每个分享图标上绑定一个<code>data-action</code>事件，一旦点击某个分享图标，即触发<code>click</code>事件，那么脚本读取<code>data-action</code>属性值，然后根据属性值来判断接下来将要发生的动作。（是不是有点类似AngularJS中的数据绑定？）</p>
+
+<p><strong>注意：</strong> <code>data-*</code>只能用于自己的脚本，而不适合用于你希望用外部脚本去使用的任何数据。  </p>
+
+<p>HTML5灵活的自定义<code>data-*</code>属性就介绍到这，如果想要更深入了解，包括更详细地如何在JavaScript中对<code>data-*</code>值进行访问、创建和修改，请戳一篇不错的文章：<a href="http://html5doctor.com/html5-custom-data-attributes/">HTML5 Custom Data Attributes</a>。</p>
+
+<hr>
+
+<p><strong>参考资料</strong> </p>
+
+<ul>
+<li><a href="http://html5doctor.com/html5-custom-data-attributes/">HTML5 Custom Data Attributes</a>  </li>
+<li><a href="http://www.amazon.cn/HTML5-CSS3%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98-%E5%A2%A8%E8%8F%B2/dp/B00KMQYUIU/ref=sr_1_1?ie=UTF8&amp;qid=1418026113&amp;sr=8-1&amp;keywords=html5%2Bcss3%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98">HTML5+CSS3开发实战</a></li>
+</ul>
+        </section>
+
+        <footer class="post-footer">
+
+
+            <figure class="author-image">
+                <a class="img" href="../author/zbl/" style="background-image: url(http://127.0.0.1:2368/content/images/2016/10/IMG_0963.JPG)"><span class="hidden">ZBL's Picture</span></a>
+            </figure>
+
+            <section class="author">
+                <h4><a href="../author/zbl/">ZBL</a></h4>
+
+                    <p>I'm what I'm.</p>
+                <div class="author-meta">
+                    <span class="author-location icon-location">Beijing</span>
+                    
+                </div>
+            </section>
+
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="https://twitter.com/intent/tweet?text=%E6%8B%93%E5%B1%95HTML5%E4%B9%8Bdata%E5%85%83%E7%B4%A0%E4%B8%8E%E8%87%AA%E5%AE%9A%E4%B9%89data%E5%B1%9E%E6%80%A7&amp;url=http://localhost:2368/html5-data-attributes/" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:2368/html5-data-attributes/" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=http://localhost:2368/html5-data-attributes/" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+
+        </footer>
+
+    </article>
+</main>
+
+<aside class="read-next">
+    <a class="read-next-story no-cover" href="../frontend-guidelines/">
+        <section class="post">
+            <h2>「译」前端编码最佳实践</h2>
+            <p>几天前从Github上看到了这篇前端编码最佳实践，Star数已破4K，觉得应该是篇不错的小指南，花了点时间将它稍作翻译，也当是复习复习 HTML&amp;CSS&amp;JS。  翻译时随手参照了《CSS设计指南》、《精通CSS-2ndEdition》、老道的《JavaScript语言精粹》、NZ大神的《JavaScript高级程序设计》，在学习了一些专有名词表达同时，也学到了许多有用的代码和思想。…</p>
+        </section>
+    </a>
+    <a class="read-next-story prev no-cover" href="../css-design-guide/">
+        <section class="post">
+            <h2>CSS中那些大大小小的坑</h2>
+            <p>中国读者不是不善于交流，而是对基础知识掌握不够牢固，不敢交流。就如同有人提到用英文写作时所说的，最难的不是怎么写，而是写什么。英文语法错误其实是别人最容易纠正的，但你到底想要表达什么则是别人无法知道的。具体到CSS，虽然不难学，但真正彻底把原理和基本概念全搞通也不是一件容易的事。 —— 李松峰 最近读完了Charles Wyke-Smith的《CSS设计指南》，上面那段话是节选的译者李松峰的序（在这多说一句，觉得李松峰翻译的书质量都很高，现在的我基本在遍历）…</p>
+        </section>
+    </a>
+</aside>
+
+
+
+        <footer class="site-footer clearfix">
+            <section class="copyright"><a href="http://localhost:2368">ZBL's Doodles</a> © 2016</section>
+            <section class="poweredby">Proudly published with <a href="https://ghost.org">Ghost</a></section>
+        </footer>
+
+    </div>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    
+    <script type="text/javascript" src="../assets/js/jquery.fitvids.js?v=082f27cfd5"></script>
+    <script type="text/javascript" src="../assets/js/index.js?v=082f27cfd5"></script>
+
+</body>
