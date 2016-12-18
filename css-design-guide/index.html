@@ -11,18 +11,18 @@
 
     <link rel="shortcut icon" href="../favicon.ico">
 
-    <link rel="stylesheet" type="text/css" href="../assets/css/screen.css?v=cca0463456">
+    <link rel="stylesheet" type="text/css" href="../assets/css/screen.css?v=cda07dd408">
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic%7COpen+Sans:700,400">
 
-    <link rel="canonical" href="http://localhost:2368/css-design-guide/">
+    <link rel="canonical" href="http://zhangbinliu.me/css-design-guide/">
     <meta name="referrer" content="no-referrer-when-downgrade">
-    <link rel="amphtml" href="http://localhost:2368/css-design-guide/amp/">
+    <link rel="amphtml" href="http://zhangbinliu.me/css-design-guide/amp/">
     
     <meta property="og:site_name" content="ZBL's Doodles">
     <meta property="og:type" content="article">
     <meta property="og:title" content="CSS中那些大大小小的坑">
     <meta property="og:description" content="中国读者不是不善于交流，而是对基础知识掌握不够牢固，不敢交流。就如同有人提到用英文写作时所说的，最难的不是怎么写，而是写什么。英文语法错误其实是别人最容易纠正的，但你到底想要表达什么则是别人无法知道的。具体到CSS，虽然不难学，但真正彻底把原理和基本概念全搞通也不是一件容易的事。 —— 李松峰 最近读完了Charles Wyke-Smith的《CSS设计指南》，上面那段话是节选的译者李松峰的序（在这多说一句，觉得李松峰翻译的书质量都很高，现在的我基本在遍历）。越来越觉得只读书不思考是毫无用处的，于是把笔记整理出来，并加上了自己思考过的感悟。 CHAPTER 1 HTML标记与文档结构 用HTML标记内容的目的是为了赋予网页语义（semantic）。换句话说，就是要给你的网页内容赋予某些用户代理（user agent）能够理解的含义。 浏览器、屏幕阅读器，以及搜索引擎放出的web爬虫都是用户代理，它们需要显示、朗读和分析网页。 文本用闭合标签，引用内容用自闭合标签。  闭合标签与自闭合标签的区别在于，闭合标签包含的是会显示的实际内容，而自闭合标签只是给浏览器提供一个对要显示内容的引用。浏览器会在HTML页面加载时候，额外向服务器发送请求，以取得自闭合标签引用的内容。 属性alt(alternative)，定义的是在图片因故未能加载成功时候在屏幕上显示的文本。视障用户的屏幕阅读器会大声读出alt属性的内容，因此一定要给&amp;">
-    <meta property="og:url" content="http://localhost:2368/css-design-guide/">
+    <meta property="og:url" content="http://zhangbinliu.me/css-design-guide/">
     <meta property="article:published_time" content="2014-11-10T09:08:35.000Z">
     <meta property="article:modified_time" content="2014-12-05T03:56:45.000Z">
     <meta property="article:tag" content="Notes">
@@ -32,7 +32,7 @@
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="CSS中那些大大小小的坑">
     <meta name="twitter:description" content="中国读者不是不善于交流，而是对基础知识掌握不够牢固，不敢交流。就如同有人提到用英文写作时所说的，最难的不是怎么写，而是写什么。英文语法错误其实是别人最容易纠正的，但你到底想要表达什么则是别人无法知道的。具体到CSS，虽然不难学，但真正彻底把原理和基本概念全搞通也不是一件容易的事。 —— 李松峰 最近读完了Charles Wyke-Smith的《CSS设计指南》，上面那段话是节选的译者李松峰的序（在这多说一句，觉得李松峰翻译的书质量都很高，现在的我基本在遍历）。越来越觉得只读书不思考是毫无用处的，于是把笔记整理出来，并加上了自己思考过的感悟。 CHAPTER 1 HTML标记与文档结构 用HTML标记内容的目的是为了赋予网页语义（semantic）。换句话说，就是要给你的网页内容赋予某些用户代理（user agent）能够理解的含义。 浏览器、屏幕阅读器，以及搜索引擎放出的web爬虫都是用户代理，它们需要显示、朗读和分析网页。 文本用闭合标签，引用内容用自闭合标签。  闭合标签与自闭合标签的区别在于，闭合标签包含的是会显示的实际内容，而自闭合标签只是给浏览器提供一个对要显示内容的引用。浏览器会在HTML页面加载时候，额外向服务器发送请求，以取得自闭合标签引用的内容。 属性alt(alternative)，定义的是在图片因故未能加载成功时候在屏幕上显示的文本。视障用户的屏幕阅读器会大声读出alt属性的内容，因此一定要给&amp;">
-    <meta name="twitter:url" content="http://localhost:2368/css-design-guide/">
+    <meta name="twitter:url" content="http://zhangbinliu.me/css-design-guide/">
     <meta name="twitter:label1" content="Written by">
     <meta name="twitter:data1" content="ZBL">
     <meta name="twitter:label2" content="Filed under">
@@ -45,36 +45,31 @@
     "publisher": {
         "@type": "Organization",
         "name": "ZBL&#x27;s Doodles",
-        "logo": "http://localhost:2368/ghost/img/ghosticon.jpg"
+        "logo": "http://zhangbinliu.me/ghost/img/ghosticon.jpg"
     },
     "author": {
         "@type": "Person",
         "name": "ZBL",
-        "image": {
-            "@type": "ImageObject",
-            "url": "http://localhost:2368/content/images/2016/12/pigeon.JPG",
-            "width": 640,
-            "height": 640
-        },
-        "url": "http://localhost:2368/author/zbl/",
+        "image": "http://zhangbinliu.me/content/images/2016/10/IMG_0963.JPG",
+        "url": "http://zhangbinliu.me/author/zbl/",
         "sameAs": [],
         "description": "I&#x27;m what I&#x27;m."
     },
     "headline": "CSS中那些大大小小的坑",
-    "url": "http://localhost:2368/css-design-guide/",
+    "url": "http://zhangbinliu.me/css-design-guide/",
     "datePublished": "2014-11-10T09:08:35.000Z",
     "dateModified": "2014-12-05T03:56:45.000Z",
     "keywords": "Notes, CSS , Design  ",
     "description": "中国读者不是不善于交流，而是对基础知识掌握不够牢固，不敢交流。就如同有人提到用英文写作时所说的，最难的不是怎么写，而是写什么。英文语法错误其实是别人最容易纠正的，但你到底想要表达什么则是别人无法知道的。具体到CSS，虽然不难学，但真正彻底把原理和基本概念全搞通也不是一件容易的事。 —— 李松峰 最近读完了Charles Wyke-Smith的《CSS设计指南》，上面那段话是节选的译者李松峰的序（在这多说一句，觉得李松峰翻译的书质量都很高，现在的我基本在遍历）。越来越觉得只读书不思考是毫无用处的，于是把笔记整理出来，并加上了自己思考过的感悟。 CHAPTER 1 HTML标记与文档结构 用HTML标记内容的目的是为了赋予网页语义（semantic）。换句话说，就是要给你的网页内容赋予某些用户代理（user agent）能够理解的含义。 浏览器、屏幕阅读器，以及搜索引擎放出的web爬虫都是用户代理，它们需要显示、朗读和分析网页。 文本用闭合标签，引用内容用自闭合标签。  闭合标签与自闭合标签的区别在于，闭合标签包含的是会显示的实际内容，而自闭合标签只是给浏览器提供一个对要显示内容的引用。浏览器会在HTML页面加载时候，额外向服务器发送请求，以取得自闭合标签引用的内容。 属性alt(alternative)，定义的是在图片因故未能加载成功时候在屏幕上显示的文本。视障用户的屏幕阅读器会大声读出alt属性的内容，因此一定要给&amp;",
     "mainEntityOfPage": {
         "@type": "WebPage",
-        "@id": "http://localhost:2368"
+        "@id": "http://zhangbinliu.me"
     }
 }
     </script>
 
     <meta name="generator" content="Ghost 0.11">
-    <link rel="alternate" type="application/rss+xml" title="ZBL's Doodles" href="http://localhost:2368/rss/">
+    <link rel="alternate" type="application/rss+xml" title="ZBL's Doodles" href="http://zhangbinliu.me/rss/">
 </head>
 <body class="post-template tag-notes tag-css tag-design-2 nav-closed">
 
@@ -84,9 +79,9 @@
         <span class="hidden">Close</span>
     </a>
     <ul>
-            <li class="nav-home" role="presentation"><a href="http://localhost:2368/">Home</a></li>
+            <li class="nav-home" role="presentation"><a href="http://zhangbinliu.me/">Home</a></li>
     </ul>
-        <a class="subscribe-button icon-feed" href="http://localhost:2368/rss/">Subscribe</a>
+        <a class="subscribe-button icon-feed" href="http://zhangbinliu.me/rss/">Subscribe</a>
 </div>
 <span class="nav-cover"></span>
 
@@ -410,7 +405,7 @@ CSS为字体和文本分别定义了属性。字体属性主要用于描述一�
 
 
             <figure class="author-image">
-                <a class="img" href="../author/zbl/" style="background-image: url(../content/images/2016/12/pigeon.JPG)"><span class="hidden">ZBL's Picture</span></a>
+                <a class="img" href="../author/zbl/" style="background-image: url(../content/images/2016/10/IMG_0963.JPG)"><span class="hidden">ZBL's Picture</span></a>
             </figure>
 
             <section class="author">
@@ -426,13 +421,13 @@ CSS为字体和文本分别定义了属性。字体属性主要用于描述一�
 
             <section class="share">
                 <h4>Share this post</h4>
-                <a class="icon-twitter" href="https://twitter.com/intent/tweet?text=CSS%E4%B8%AD%E9%82%A3%E4%BA%9B%E5%A4%A7%E5%A4%A7%E5%B0%8F%E5%B0%8F%E7%9A%84%E5%9D%91&amp;url=http://localhost:2368/css-design-guide/" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                <a class="icon-twitter" href="https://twitter.com/intent/tweet?text=CSS%E4%B8%AD%E9%82%A3%E4%BA%9B%E5%A4%A7%E5%A4%A7%E5%B0%8F%E5%B0%8F%E7%9A%84%E5%9D%91&amp;url=http://zhangbinliu.me/css-design-guide/" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
                     <span class="hidden">Twitter</span>
                 </a>
-                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:2368/css-design-guide/" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://zhangbinliu.me/css-design-guide/" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
                     <span class="hidden">Facebook</span>
                 </a>
-                <a class="icon-google-plus" href="https://plus.google.com/share?url=http://localhost:2368/css-design-guide/" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=http://zhangbinliu.me/css-design-guide/" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
                     <span class="hidden">Google+</span>
                 </a>
             </section>
@@ -461,7 +456,7 @@ CSS为字体和文本分别定义了属性。字体属性主要用于描述一�
 
 
         <footer class="site-footer clearfix">
-            <section class="copyright"><a href="http://localhost:2368">ZBL's Doodles</a> © 2016</section>
+            <section class="copyright"><a href="http://zhangbinliu.me">ZBL's Doodles</a> © 2016</section>
             <section class="poweredby">Proudly published with <a href="https://ghost.org">Ghost</a></section>
         </footer>
 
@@ -469,7 +464,7 @@ CSS为字体和文本分别定义了属性。字体属性主要用于描述一�
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
     
-    <script type="text/javascript" src="../assets/js/jquery.fitvids.js?v=cca0463456"></script>
-    <script type="text/javascript" src="../assets/js/index.js?v=cca0463456"></script>
+    <script type="text/javascript" src="../assets/js/jquery.fitvids.js?v=cda07dd408"></script>
+    <script type="text/javascript" src="../assets/js/index.js?v=cda07dd408"></script>
 
 </body>
