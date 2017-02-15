@@ -11,7 +11,7 @@
 
     <link rel="shortcut icon" href="../favicon.ico">
 
-    <link rel="stylesheet" type="text/css" href="../assets/css/screen.css?v=33a56b1b53">
+    <link rel="stylesheet" type="text/css" href="../assets/css/screen.css?v=02893f7dd2">
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic%7COpen+Sans:700,400">
 
     <link rel="canonical" href="http://zhangbinliu.me/fun-with-codemod-and-ast/">
@@ -25,7 +25,7 @@
     <meta property="og:url" content="http://zhangbinliu.me/fun-with-codemod-and-ast/">
     <meta property="og:image" content="http://zhangbinliu.me/content/images/2017/02/processing.png">
     <meta property="article:published_time" content="2017-02-15T14:23:40.000Z">
-    <meta property="article:modified_time" content="2017-02-15T14:40:47.000Z">
+    <meta property="article:modified_time" content="2017-02-15T14:47:47.000Z">
     <meta property="article:tag" content="JavaScript">
     <meta property="article:tag" content="AST">
     
@@ -66,7 +66,7 @@
     "headline": "Fun with Codemod &amp; AST",
     "url": "http://zhangbinliu.me/fun-with-codemod-and-ast/",
     "datePublished": "2017-02-15T14:23:40.000Z",
-    "dateModified": "2017-02-15T14:40:47.000Z",
+    "dateModified": "2017-02-15T14:47:47.000Z",
     "image": {
         "@type": "ImageObject",
         "url": "http://zhangbinliu.me/content/images/2017/02/processing.png",
@@ -197,15 +197,13 @@
 <p>暂时以我之前做的 Accounts 项目为例：
 <a href="https://github.intra.douban.com/accounts/accounts/pull/553/files#diff-b2286efdea6a62288250264e82bd948b">https://github.intra.douban.com/accounts/accounts/pull/553/files#diff-b2286efdea6a62288250264e82bd948b</a></p>
 
-<ul>
-<li>基本步骤如下：
-<ul><li>因为是第一次使用 <code>codemod</code>，所以比较谨慎，一个一个 <code>component</code> 来；</li>
-<li>先用 <code>react-codemod</code> 转，把大部头代码迁移；</li>
-<li>然后 <code>js-codemod</code> 小步更新整理；</li>
-<li>然后再根据一些自己的 Code Style 做些细节上的修改。比如使用 <code>standard-format</code> 工具格式化代码，符合我个人写的代码风格。</li>
-<li>毕竟 JS 太过于灵活，每个人写代码时候风格和结构都是各异的，有时候的转换还是会出现一些与想象中不一致的结果，官方文档也是说仍然需要人工干预，所以会手动修改下代码细节；</li>
-<li>一切组件迁移就绪，<code>npm run test</code> 测试通过以后，重新 <code>build</code> 运行</li></ul></li>
-</ul>
+<p>基本步骤如下：
+  - 因为是第一次使用 <code>codemod</code>，所以比较谨慎，一个一个 <code>component</code> 来；
+  - 先用 <code>react-codemod</code> 转，把大部头代码迁移；
+  - 然后 <code>js-codemod</code> 小步更新整理；
+  - 然后再根据一些自己的 Code Style 做些细节上的修改。比如使用 <code>standard-format</code> 工具格式化代码，符合我个人写的代码风格。
+  - 毕竟 JS 太过于灵活，每个人写代码时候风格和结构都是各异的，有时候的转换还是会出现一些与想象中不一致的结果，官方文档也是说仍然需要人工干预，所以会手动修改下代码细节；
+  - 一切组件迁移就绪，<code>npm run test</code> 测试通过以后，重新 <code>build</code> 运行</p>
 
 <p>这里我把已有的十几个组件和页面文件，全部使用上面的工具进行了更新。
 然后当你重新 <code>build</code> 后，你会发现测试仍然通过，组件功能仍然 work，但是代码库却是使用新语法糖进行了大规模彻彻底底地更新！简直太神奇了！
@@ -271,21 +269,21 @@
 
 <p>这么说其实还是有点抽象，我们先打开 <a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree">wiki</a> 看到 wikipedia 这个图，</p>
 
-<p><img src="https://media.github.intra.douban.com/user/62/files/9d7500be-f370-11e6-972f-f5ede1c448f8" alt="image"></p>
+<p><img src="../content/images/2017/02/Abstract_syntax_tree_for_Euclidean_algorithm.svg.png" alt="image"></p>
 
 <p>前端er 一定会觉得很相似，这里不就是 DOM 语法树的终极抽象版本吗，只是把一个个 DOM Nodes 换成了一个个更加无语义的字符 Token。
 FB 有一个很棒的工具 <a href="http://astexplorer.net/">ASTExplorer</a>，可以用来更形象地展示。</p>
 
 <p>比如说，我们现在就只有一个很简单的表达式<code>a+b</code>，这里是 recast Parser 解析后的 AST 结构：</p>
 
-<p><img src="https://media.github.intra.douban.com/user/62/files/758a6076-f370-11e6-97e4-f6152c3814bf" alt="image"></p>
+<p><img src="../content/images/2017/02/a-b_AST.png" alt="image"></p>
 
 <p>看上去特别复杂。注意那些蓝色字体 <code>File</code>, <code>Programme</code>,<code>ExpressionStatement</code>,<code>Identifier</code>… 这些都是 AST Nodes，其他的都是和这个 Node 相关的数据。</p>
 
 <p>关于 <a href="https://en.wikipedia.org/wiki/Parsing#Parser">Parser</a> 又是一门很深的学问了。
 在 ASTExplorer.net 上可以看到有很多 parser，比较著名的有 <a href="https://github.com/jquery/esprima/blob/master/src/parser.ts">Esprima(jQuery)</a>，Uglify-JS, Babylon(Babel), Acorn(Tern / Webpack), 及 jscodeshift 使用的 recast. 虽然有很多 Parser，但是基本上，一个 parser 的结构都差不多，对源代码进行词法分析，生成 Tokens，对 Tokens 进行语法分析，然后生成 AST。</p>
 
-<p><img src="https://media.github.intra.douban.com/user/62/files/5751ac04-f370-11e6-849e-692ab4b47bbf" alt="image"></p>
+<p><img src="../content/images/2017/02/Parser_Flow-.gif" alt="image"></p>
 
 <p>具体可以参考看下 <a href="http://esprima.org/demo/parse.html#">Esprima Parse Demo</a>。
 生成的 AST 都遵循一个统一标准 <a href="https://github.com/estree/estree/blob/master/es5.md">ESTree</a> or <a href="http://127.0.0.1:2368/fun-with-codemod-and-ast/parser%20API%20https://developer.mozilla.org/en-US/docs/Mozilla/Projects/SpiderMonkey/Parser_API">Mozilla SpiderMonkey</a>，也就是说都会返回 ESTree Compatible AST.</p>
@@ -364,11 +362,11 @@ a + b
 
 <p><code>a + b</code> AST:</p>
 
-<p><img src="https://media.github.intra.douban.com/user/62/files/e4d3c126-f36f-11e6-98aa-382c3afd9bcf" alt="image"></p>
+<p><img src="../content/images/2017/02/a-b_AST-1.png" alt="image"></p>
 
 <p><code>${a}${b}</code> AST:</p>
 
-<p><img src="https://media.github.intra.douban.com/user/62/files/ea450a52-f36f-11e6-9a28-f715785d13a2" alt="image"></p>
+<p><img src="../content/images/2017/02/tmplLiteral_AST.png" alt="image"></p>
 
 <p>对比两个 AST 可以发现
 我们只需要 </p>
@@ -398,7 +396,7 @@ a + b
 
 <ul>
 <li><p>基本处理流程：
-<img src="https://media.github.intra.douban.com/user/62/files/7fe54aa4-f370-11e6-90d8-9f191a40a5cc" alt="image"></p></li>
+<img src="../content/images/2017/02/processing-1.png" alt="image"></p></li>
 <li><p>AST 是很有用的一个抽象概念。一旦你理解了这些规则，唯一的限制就是解析器和你的想象力。</p></li>
 <li>纯 AST parse 太过于理论，既然是工程师，还是需要自己动手写点什么来解决自己实际遇到的问题。</li>
 <li>可以继续拓展到「语法高亮」、「关键字匹配」、「代码格式化」、「作用域判断」、以及「代码压缩」、「Babel 插件」等等。</li>
@@ -485,7 +483,7 @@ a + b
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
     
-    <script type="text/javascript" src="../assets/js/jquery.fitvids.js?v=33a56b1b53"></script>
-    <script type="text/javascript" src="../assets/js/index.js?v=33a56b1b53"></script>
+    <script type="text/javascript" src="../assets/js/jquery.fitvids.js?v=02893f7dd2"></script>
+    <script type="text/javascript" src="../assets/js/index.js?v=02893f7dd2"></script>
 
 </body>
