@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>ZBL - ZBL&#x27;s Doodle</title>
+    <meta name="description" content="Don&#x27;t be a dabbler" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" /> -->
+
+    <meta name="generator" content="Ghost ?" />
+<link rel="alternate" type="application/rss+xml" title="ZBL&#39;s Doodle" href="/rss/index.xml">
+<link rel="canonical" href="http://localhost:5000/seo-in-mobile.html" />
+</head>
+<body class="author-template author-ZBL post-template tag-seo tag-shares nav-closed">
+
+    
+
+    <div class="site-wrapper">
+
+        
+
+
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        
+    </nav>
+</header>
+
+<main class="content" role="main">
+    <article class="post tag-seo tag-shares">
+
+        <header class="post-header">
+            <h1 class="post-title">移动环境下的 SEO</h1>
+            <section class="post-meta">
+                <time class="post-date" datetime="2016-05-20">20 May 2016</time>  on <a href="/tag/seo/">SEO</a>, <a href="/tag/shares/">shares</a>
+            </section>
+        </header>
+
+        <section class="post-content">
+            <h1 id="-seo">移动环境下的 SEO</h1>
+<p>真的有很久很久没来理这个博客，距离上一篇文章的发布日期是两年前。
+毕业工作后来了豆瓣，最近对移动环境（主要是浏览器及微信）的 SEO 相关进行了下研究，正好在这里分享一下。</p>
+<hr>
+<h3 id="1-seo-search-engine-optimazition">1. SEO：Search Engine Optimazition</h3>
+<p>产品：搜索引擎优化，促进内容网站信息分享／传播，提高目标转化率，留存率（补 link）</p>
+<p>工程：为各类页面实现统一的信息分享、传播，提高搜索排名（search ranking）</p>
+<p>个人觉得：</p>
+<ul>
+<li>豆瓣是一个内容网站，拥有一些 UGC 优质内容，SEO 间接帮助用户分享。</li>
+</ul>
+<p>​        且分享率越高，increase search ranking.</p>
+<ul>
+<li>m 站的面向 <strong>人（User）</strong>的 UX 比较完善，但是仍需要丰富一些细节，让 <strong>Search Engine</strong> 的 UX 更好，更能理解 m 站。</li>
+</ul>
+<p>#</p>
+<h3 id="2-seo-">2. 前端在 SEO 中的位置</h3>
+<ul>
+<li><strong>帮助产品进行TDK （Title / Description / Keyword）优化</strong></li>
+<li><strong>添加一些 Social Meta Tag （Facebook / Twitter / G+ / WeChat / Weibo）</strong></li>
+<li>页面内容优化（HTML5 标签语义化、唯一的 H1 标题、img 设置 <code>alt</code> 属性，不需要爬虫跟踪的链接加 <code>nofollow</code>）</li>
+<li>URL 优化 （<strong>canonical</strong>，标签表示页面的唯一性。<ul>
+<li>在搜索引擎里，<strong>只有链接完全一样，才会认为是同一个链接</strong>，如果链接带上参数，虽然访问到的内容还是一样，但是在搜索引擎看来确是不同的链接，页面抓取也会出现多次，从而导致多个链接，内容一样。</li>
+<li>因此 URL 中最好是不要带上查询参数。但为了产品统计数据，总需要 <code>?from=xxx&amp;refer=xxx</code>等参数，所以使用 <code>canonical</code>标签来确保链接唯一性，避免权重分散、流失。</li>
+<li>比如 <code>m.douban.com/group/topics[?start=xxx]</code>均视为同一个页面这里的 <code>?start=xxx</code>是一个分页查询参数，所以为了确保这些页面都能继承 m.douban.group/toics 这个 url  的权重，在<code>head</code>中增加了<code>canonical</code>标签</li>
+</ul>
+</li>
+<li>Meta robots</li>
+<li>Sitemap</li>
+</ul>
+<p>#</p>
+<h3 id="3-">3. 具体实现</h3>
+<blockquote>
+<p><strong>统一 SNS 抓取</strong></p>
+<p>提供一个 mako 函数，统一分享的标题、图片、描述</p>
+<ul>
+<li>Open Graph</li>
+<li>Twitter Card</li>
+</ul>
+<p><strong>实现统一的分享接口</strong></p>
+<p>可变的图片、标题、描述</p>
+<ul>
+<li><p>微信 （iOS、Android 系统分享菜单、微信内置分享）</p>
+</li>
+<li><ul>
+<li>外部调用分享可能会抓取标题、第一个图片地址（Open Graph）</li>
+<li>调用内置分享可用第三个链接 (API 跨子域)</li>
+</ul>
+</li>
+<li><p>微博</p>
+</li>
+</ul>
+<p>参考链接：</p>
+<p><a href="https://developers.facebook.com/docs/sharing/opengraph">https://developers.facebook.com/docs/sharing/opengraph</a></p>
+<p><a href="https://dev.twitter.com/cards/overview">https://dev.twitter.com/cards/overview</a></p>
+<p><a href="http://github.intra.douban.com/frodo/Talion/blob/master/views/j/wechat/__init__.py">http://github.intra.douban.com/frodo/Talion/blob/master/views/j/wechat/<strong>init</strong>.py</a> </p>
+</blockquote>
+<p>— From <a href="https://paper.dropbox.com/doc/-SEO-UVIgU3WYPUeiJv3nOPP0N">Douban FE Dropbox</a></p>
+<p><code>seo_meta()</code> Mako widget</p>
+<p> <a href="http://github.intra.douban.com/frodo/Talion/blob/master/templates/card/widgets.html#L527">http://github.intra.douban.com/frodo/Talion/blob/master/templates/card/widgets.html#L527</a></p>
+<pre class="hljs"><code><span class="xml"></span>&lt;%<span class="perl">def name=<span class="hljs-string">&quot;seo_meta(title, desc, image=None, url=None, type=None, rating_count=None, rating_val=None, wechat_timeline_title=None,wechat_chat_title=None, wechat_desc=None, wechat_image=None)&quot;</span>&gt;
+    &lt;%
+        from douban.image.qiniu import qiniu_proxy_url
+
+        default_title = <span class="hljs-string">&#39;豆瓣&#39;</span>
+        default_desc = <span class="hljs-string">&#39;读书、看电影、涨知识、学穿搭...，加入兴趣小组，获得达人们的高质量生活经验，找到有相同爱好的小伙伴。&#39;</span>
+        default_image = static(<span class="hljs-string">&#39;/pics/icon/m_logo_180.png&#39;</span>)
+        default_url = <span class="hljs-string">&#39;<a href="http://m.douban.com/">http://m.douban.com/</a>&#39;</span>
+        default_type = <span class="hljs-string">&#39;article&#39;</span>
+        image = qiniu_proxy_url(image, <span class="hljs-number">300</span>, <span class="hljs-number">300</span>, mode=<span class="hljs-string">&#39;1&#39;</span>) <span class="hljs-keyword">if</span> image <span class="hljs-keyword">else</span> <span class="hljs-string">&#39;&#39;</span>
+    </span>%&gt;<span class="xml">
+    <span class="hljs-comment">&lt;!-- Schema.org markup for Google+ --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">itemprop</span>=<span class="hljs-value">&quot;name&quot;</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">&quot;${ title or default_title }&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">itemprop</span>=<span class="hljs-value">&quot;description&quot;</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">&quot;${ desc or default_desc }&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">itemprop</span>=<span class="hljs-value">&quot;image&quot;</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">&quot;${ image or default_image }&quot;</span>&gt;</span>
+</span><span class="perl">    % <span class="hljs-keyword">if</span> rating_count:</span><span class="xml">
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">itemprop</span>=<span class="hljs-value">&quot;reviewCount&quot;</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">&quot;${ rating_count }&quot;</span>&gt;</span>
+</span><span class="perl">    % endif</span><span class="xml">
+</span><span class="perl">    % <span class="hljs-keyword">if</span> rating_val:</span><span class="xml">
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">itemprop</span>=<span class="hljs-value">&quot;ratingValue&quot;</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">&quot;${ rating_val }&quot;</span>&gt;</span>
+</span><span class="perl">    % endif</span><span class="xml">
+    <span class="hljs-comment">&lt;!-- Twitter meta --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;twitter:card&quot;</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">&quot;summary&quot;</span> /&gt;</span>
+    <span class="hljs-comment">&lt;!-- Open Graph meta --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">property</span>=<span class="hljs-value">&quot;og:title&quot;</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">&quot;${ title or default_title }&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">property</span>=<span class="hljs-value">&quot;og:description&quot;</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">&quot;${ desc or default_desc }&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">property</span>=<span class="hljs-value">&quot;og:site_name&quot;</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">&quot;豆瓣(手机版)&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">property</span>=<span class="hljs-value">&quot;og:url&quot;</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">&quot;${ url or default_url }&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">property</span>=<span class="hljs-value">&quot;og:image&quot;</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">&quot;${ image or default_image }&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">property</span>=<span class="hljs-value">&quot;og:image:type&quot;</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">&quot;image/png&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">property</span>=<span class="hljs-value">&quot;og:image:width&quot;</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">&quot;300&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">property</span>=<span class="hljs-value">&quot;og:image:height&quot;</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">&quot;300&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">property</span>=<span class="hljs-value">&quot;og:type&quot;</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">&quot;${ type or default_type }&quot;</span> /&gt;</span>
+    <span class="hljs-comment">&lt;!-- Wechat meta --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">property</span>=<span class="hljs-value">&quot;weixin:timeline_title&quot;</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">&quot;${ wechat_timeline_title or &#39;&#39; }&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">property</span>=<span class="hljs-value">&quot;weixin:chat_title&quot;</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">&quot;${ wechat_chat_title or &#39;&#39; }&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">property</span>=<span class="hljs-value">&quot;weixin:description&quot;</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">&quot;${ wechat_desc or &#39;&#39; }&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">property</span>=<span class="hljs-value">&quot;weixin:image&quot;</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">&quot;${ image or default_image }&quot;</span> /&gt;</span>
+    </span>&lt;%<span class="perl">block filter=<span class="hljs-string">&quot;collect_js&quot;</span>&gt;
+    ;(function () {
+        window.setMeta = function (name, val) {
+          var meta = document.querySelectorAll(<span class="hljs-string">&#39;meta[property=&quot;&#39;</span> + name + <span class="hljs-string">&#39;&quot;], meta[name=&quot;&#39;</span> + name + <span class="hljs-string">&#39;&quot;]&#39;</span>)
+          <span class="hljs-keyword">if</span> (!meta.<span class="hljs-keyword">length</span>) {
+            meta = document.createElement(<span class="hljs-string">&#39;meta&#39;</span>)
+            meta.name = name
+            document.head.appendChild(meta)
+          }
+         meta[<span class="hljs-number">0</span>].content = val || <span class="hljs-string">&#39;&#39;</span>
+        }
+        window.getMeta = function (name) {
+          var meta = document.querySelectorAll(<span class="hljs-string">&#39;meta[property=&quot;&#39;</span> + name + <span class="hljs-string">&#39;&quot;], meta[name=&quot;&#39;</span> + name + <span class="hljs-string">&#39;&quot;]&#39;</span>)
+          <span class="hljs-keyword">if</span> (!meta.<span class="hljs-keyword">length</span>) {
+            <span class="hljs-keyword">return</span> <span class="hljs-string">&#39;&#39;</span>
+          } <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">return</span> meta[<span class="hljs-number">0</span>].content
+          }
+        }
+        setMeta(<span class="hljs-string">&#39;og:url&#39;</span>, location.href)
+        !getMeta(<span class="hljs-string">&#39;weixin:chat_title&#39;</span>) &amp;&amp; setMeta(<span class="hljs-string">&#39;weixin:chat_title&#39;</span>, document.title)
+        !getMeta(<span class="hljs-string">&#39;weixin:timeline_title&#39;</span>) &amp;&amp; setMeta(<span class="hljs-string">&#39;weixin:timeline_title&#39;</span>, document.title)
+        !getMeta(<span class="hljs-string">&#39;weixin:description&#39;</span>) &amp;&amp; setMeta(<span class="hljs-string">&#39;weixin:description&#39;</span>, getMeta(<span class="hljs-string">&#39;og:description&#39;</span>))
+    })();
+    &lt;<span class="hljs-regexp">/%block&gt;
+&lt;/</span><span class="hljs-variable">%def</span>&gt;</span></code></pre><h4 id="-m-seo-meta-tags">给 m 站大部分页面增加了 SEO Meta Tags</h4>
+<p>之前分享出去抓不到自定义的 description 和 image ，现默认分享到 weixin 的 title 、 description 、image 值都和 Open Graph 一样，也可以自定义。</p>
+<p>默认情况下</p>
+<ul>
+<li><code>og:title</code>， <code>og:description</code> 和之前的 title, description 一样；</li>
+</ul>
+<ul>
+<li><code>og:url</code> ： 当前页面 url；</li>
+<li><code>og:image</code>：<ul>
+<li>小组帖子页和单个日记页如有图片，则为第一张图片的 src url，没有的话为现在默认的分享 icon src url；</li>
+<li>条目页的均为该条目的 image src url；</li>
+<li>相册页为该相册第一张 image src；</li>
+<li>豆列、标签页为默认的分享 icon src</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p><strong>Hashtag 页</strong></p>
+<ul>
+<li>image: 运营头图 || 豆 icon；</li>
+<li>title: { hashtag_name} - 豆瓣；</li>
+<li>description: 运营描述 || &#39;有关#{ hashtag_name }#的话题讨论，豆瓣用户参与的精彩话题&#39;；</li>
+</ul>
+</li>
+<li><p><strong>单条广播页</strong></p>
+<ul>
+<li>微信聊天、朋友圈：image =  广播第一张图 || 豆 icon；</li>
+<li>微信聊天页： title = XXX 的豆瓣广播; description = 广播文字内容的前十五个字 || 默认的 m 站描述；</li>
+<li>微信朋友圈： title = 广播文字内容前十五个字 || XXX 的豆瓣广播</li>
+</ul>
+</li>
+<li><p>关于 image 图片规格：</p>
+<p>为了使抓取的图片更优雅，不被压缩变形，使用「七牛图片服务」进行剪裁。</p>
+<p>默认 <code>og:image</code> 等 image 均会被以 <code>width = height = 300</code> 进行处理。</p>
+<ul>
+<li><a href="http://github.intra.douban.com/frodo/Talion/tree/23fe149cc3186f15195634cca774861d3ce9efca">Talion</a>/<a href="http://github.intra.douban.com/frodo/Talion/tree/23fe149cc3186f15195634cca774861d3ce9efca/libs">libs</a>/<strong>image.py</strong></li>
+<li><a href="http://github.intra.douban.com/frodo/Talion/blob/23fe149cc3186f15195634cca774861d3ce9efca/libs/image.py#L11">http://github.intra.douban.com/frodo/Talion/blob/23fe149cc3186f15195634cca774861d3ce9efca/libs/image.py#L11</a></li>
+<li><code>from douban.image.qiniu import qiniu_proxy_url</code></li>
+</ul>
+<p>​</p>
+</li>
+</ul>
+<p>效果截屏：</p>
+<p><a href="http://github.intra.douban.com/frodo/Talion/pull/253">http://github.intra.douban.com/frodo/Talion/pull/253</a></p>
+<p>（补图）</p>
+<p>(<a href="http://p.dapps.douban.com/p/38c24dc31b4d482c8095083995e43d00.blob">http://p.dapps.douban.com/p/38c24dc31b4d482c8095083995e43d00.blob</a>)</p>
+<p><a href="http://p.dapps.douban.com/p/78b40c471bab42209a0cb8ee2283c974.blob">http://p.dapps.douban.com/p/78b40c471bab42209a0cb8ee2283c974.blob</a></p>
+<h4 id="-">统一分享接口（微信重度使用患者）</h4>
+<ul>
+<li><a href="http://github.intra.douban.com/frodo/Talion/blob/master/static/js/card/weixin.js#L52">weixin.js</a>、 <a href="https://mp.weixin.qq.com/wiki/7/aaa137b55fb2e0456bf8dd9148dd613f.html#.E5.88.86.E4.BA.AB.E6.8E.A5.E5.8F.A3">微信 JSSDK 文档</a></li>
+</ul>
+<pre class="hljs"><code>
+          wx.onMenuShareTimeline($.extend({}, shareData,{
+              title: <span class="hljs-built_in">window</span>.getMeta(<span class="hljs-string">&#39;weixin:timeline_title&#39;</span>) || <span class="hljs-built_in">document</span>.title,
+              success: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+                  wxShareStat.target = <span class="hljs-string">&#39;timeline&#39;</span>;
+                  $.get(<span class="hljs-string">&#39;/j/wechat/shared&#39;</span>, wxShareStat);
+              },
+              cancel: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{}
+          }));
+
+          wx.onMenuShareAppMessage($.extend({}, shareData,{
+              title: <span class="hljs-built_in">window</span>.getMeta(<span class="hljs-string">&#39;weixin:chat_title&#39;</span>) || <span class="hljs-built_in">document</span>.title,
+              desc: <span class="hljs-built_in">window</span>.getMeta(<span class="hljs-string">&#39;weixin:description&#39;</span>) || <span class="hljs-built_in">window</span>.getMeta(<span class="hljs-string">&#39;og:description&#39;</span>),
+              success: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+                  wxShareStat.target = <span class="hljs-string">&#39;friend&#39;</span>;
+                  $.get(<span class="hljs-string">&#39;/j/wechat/shared&#39;</span>, wxShareStat);
+              },
+              cancel: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{}
+          }));</code></pre><p>  结合使用 <code>meta[name=&quot;weixin:image&quot;]</code></p>
+<pre class="hljs"><code>      &lt;meta property=<span class="hljs-string">&quot;weixin:timeline_title&quot;</span> content=<span class="hljs-string">&quot;<span class="hljs-subst">${ wechat_timeline_title <span class="hljs-keyword">or</span> <span class="hljs-string">&#39;&#39;</span> }</span>&quot;</span> /&gt;
+      &lt;meta property=<span class="hljs-string">&quot;weixin:chat_title&quot;</span> content=<span class="hljs-string">&quot;<span class="hljs-subst">${ wechat_chat_title <span class="hljs-keyword">or</span> <span class="hljs-string">&#39;&#39;</span> }</span>&quot;</span> /&gt;
+      &lt;meta property=<span class="hljs-string">&quot;weixin:description&quot;</span> content=<span class="hljs-string">&quot;<span class="hljs-subst">${ wechat_desc <span class="hljs-keyword">or</span> <span class="hljs-string">&#39;&#39;</span> }</span>&quot;</span> /&gt;
+      &lt;meta property=<span class="hljs-string">&quot;weixin:image&quot;</span> content=<span class="hljs-string">&quot;<span class="hljs-subst">${ image <span class="hljs-keyword">or</span> default_image }</span>&quot;</span> /&gt;</code></pre><p>  ​</p>
+<ul>
+<li><p>自定义微信分享到聊天、朋友圈的显示内容，文案<code>setMeta()</code>, <code>getMeta()</code></p>
+</li>
+<li><p><strong>Tips:</strong> 如果没有设置 <code>wx.onMenuShareTimeline()</code>/ <code>wx.onMenuShareAppMessage()</code> 中的 title / imgUrl / desc 参数，微信内置浏览器默认抓取对应的<code>og:xxx</code> 相关。</p>
+</li>
+<li><p><strong>Bugs:</strong> 通过 Safari Extension 分享出来的永远抓的是 <code>apple-touch-icon</code> 😂</p>
+</li>
+</ul>
+<pre class="hljs"><code>  <span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">&quot;apple-touch-icon-precomposed&quot;</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;<a href="https://img3.doubanio.com/f/talion/315ba4fc82e5cdb5c50ef1d9f88c8aa2c5c0c4ba/pics/icon/m_logo_76.png">https://img3.doubanio.com/f/talion/315ba4fc82e5cdb5c50ef1d9f88c8aa2c5c0c4ba/pics/icon/m_logo_76.png</a>&quot;</span>&gt;</span></code></pre><p>  无论如何修改。。。</p>
+<ul>
+<li><a href="https://www.chromium.org/tab-to-search">Tab to Search</a><ul>
+<li>（补图</li>
+<li>Open Search <a href="http://github.intra.douban.com/frodo/Talion/pull/271/files#diff-a460aa3a81387aa3c4e2007ab689c0ddR1">http://github.intra.douban.com/frodo/Talion/pull/271/files#diff-a460aa3a81387aa3c4e2007ab689c0ddR1</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="4-further-reading-resource">4. Further Reading &amp; Resource</h3>
+<ol>
+<li>Sitemap &amp; <a href="http://baiduseoguide.com/news/20141128113.html">Deadlink</a></li>
+<li>Social Meta Tag Cheatsheet</li>
+<li>Google SEO TOP1: Baidu Baike 😂</li>
+<li><a href="https://developer.apple.com/library/safari/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html">Apple Safari supported meta tags</a></li>
+<li><a href="http://static.googleusercontent.com/media/www.google.com/en//webmasters/docs/search-engine-optimization-starter-guide.pdf">Google SEO search-engine-optimization-starter-guide</a></li>
+<li>Google 结构化数据标记辅助工具</li>
+<li><a href="http://www.hobo-web.co.uk/seo-tutorial/">SEO Tutorial</a></li>
+<li><a href="http://www.ghugo.com/jd-seo/">京东 SEO</a></li>
+<li>SEO Tools<ul>
+<li><a href="https://www.google.com/webmasters/">Google Webmasters Search Console</a></li>
+<li><a href="https://varvy.com/tools/">Varvy SEO tool</a></li>
+<li><a href="http://keywordtool.io/">Keyword Tool</a></li>
+</ul>
+</li>
+</ol>
+
+            <section itemprop="comment" class="post-comments">
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_config = function () {
+                    this.page.url = 'http://localhost:5000/seo-in-mobile.html';
+                    this.page.identifier = '8';
+                  };
+                var disqus_shortname = 'zblsdoodle';
+                (function() { // DON'T EDIT BELOW THIS LINE
+                  var d = document, s = d.createElement('script');
+                  s.async = true;
+                  s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                  s.setAttribute('data-timestamp', +new Date());
+                  (d.head || d.body).appendChild(s);
+                })();
+            </script>
+            </section>
+        </section>
+
+        <footer class="post-footer">
+
+
+            <figure class="author-image">
+                <a class="img" href="/author/ZBL/" style="background-image: url(http://lorempixel.com/155/155/people/)"><span class="hidden">ZBL's Picture</span></a>
+            </figure>
+
+            <section class="author">
+                <h4><a href="/author/ZBL/">ZBL</a></h4>
+
+                    <p>Don&#x27;t be a dabbler</p>
+                <div class="author-meta">
+                    <span class="author-location icon-location"> </span>
+                    <span class="author-link icon-link"><a href="http://zhangbinliu.me/author/zbl">http://zhangbinliu.me/author/zbl</a></span>
+                </div>
+            </section>
+
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="https://twitter.com/intent/tweet?text=%E7%A7%BB%E5%8A%A8%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84%20SEO&amp;url=http://localhost:5000/seo-in-mobile.html"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:5000/seo-in-mobile.html"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=http://localhost:5000/seo-in-mobile.html"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+
+        </footer>
+
+    </article>
+</main>
+
+<aside class="read-next">
+</aside>
+
+
+
+
+        <footer class="site-footer clearfix">
+            <section class="copyright"><a href="http://localhost:5000">ZBL&#x27;s Doodle</a> &copy; 2016</section>
+            <section class="poweredby">Proudly published with <a href="https://ghost.org">Ghost</a></section>
+        </footer>
+
+    </div>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="/assets/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="/assets/js/index.js"></script>
+
+</body>
+</html>
