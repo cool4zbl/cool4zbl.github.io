@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[undefined - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://localhost:5000/</link><generator>Ghost</generator><lastBuildDate>Sun, 02 Jul 2017 15:11:08 GMT</lastBuildDate><atom:link href="http://localhost:5000/tag/undefined/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[[译]前端指南]]></title><description><![CDATA[<p><strong>Update</strong>
+以下大概写于两年前，亟待更新。</p>
+<hr>
+<p>几天前从Github上看到了这篇<a href="https://github.com/bendc/frontend-guidelines">前端编码最佳实践</a>，Star数已破4K，觉得应该是篇不错的小指南，花了点时间将它稍作翻译，也当是复习复习 <code>HTML&amp;CSS&amp;JS</code>。
+翻译时随手参照了《CSS设计指南》、《精通CSS-2ndEdition》、老道的《JavaScript语言精粹》、NZ大神的《JavaScript高级程序设计》，在学习了一些专有名词表达同时，也学到了许多有用的代码和思想。
+不过原作者好像是<code>CoffeeScript</code>爱好者，且广泛使用了<code>ES6</code>特性，所以有些名词和表达我暂未理解透彻，还需斟酌。故现将原文译文参照排版，还待之后的更新。</p>
+<hr>
+<h2 id="html">HTML</h2>
+<p>###语义化（Semantics）
+HTML5 provides us with lots of semantic elements aimed to describe precisely the content. Make sure you benefit from its rich vocabulary.
+HTML5 给我们提供了大量的语义化元素标签去准确的描述元素内容。确保你从它的丰富的词汇中获益。</p>
+<pre class="hljs"><code><span class="hljs-comment">&lt;!-- bad --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;main&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;article&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;header&quot;</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">h1</span>&gt;</span>Blog post<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>Published: <span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>21st Feb, 2015<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>…<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-comment">&lt;!-- good --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">main</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">article</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">h1</span>&gt;</span>Blog post<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span>
+                  <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>Published: <span class="hljs-tag">&lt;<span class="hljs-title">time</span> <span class="hljs-attribute">datetime</span>=<span class="hljs-value">&quot;2015-02-21&quot;</span>&gt;</span>21st Feb, 2015<span class="hljs-tag">&lt;/<span class="hljs-title">time</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+         <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>…<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">article</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">main</span>&gt;</span></code></pre><p>Make sure you understand the semantic of the elements you&#39;re using. It&#39;s worse to use a semantic element in a wrong way than staying neutral.
+确保你理解你正在使用的元素的语义。错误的使用一个语义化标签元素比保持中立更糟糕。</p>
+<pre class="hljs"><code><span class="hljs-comment">&lt;!-- bad --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">h1</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">figure</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">img</span> <span class="hljs-attribute">alt</span>=<span class="hljs-value">Company</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">logo.png</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">figure</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- good --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">h1</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">img</span> <span class="hljs-attribute">alt</span>=<span class="hljs-value">Company</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">logo.png</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span></code></pre><p>简洁（Brevity）
+Keep your code terse. Forget about your old XHTML habits.
+保持你代码的简洁精练。把你的老掉牙XHTML习惯忘掉吧。</p>
+<pre class="hljs"><code><span class="hljs-comment">&lt;!-- bad --&gt;</span>
+<span class="hljs-doctype">&lt;!doctype html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">html</span> <span class="hljs-attribute">lang</span>=<span class="hljs-value">en</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">http-equiv</span>=<span class="hljs-value">Content-Type</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">&quot;text/html; charset=utf-8&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>Contact<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">stylesheet</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">style.css</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">text</span>/<span class="hljs-attribute">css</span> /&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">h1</span>&gt;</span>Contact me<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">label</span>&gt;</span>
+      Email address:
+      <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">email</span> <span class="hljs-attribute">placeholder</span>=<span class="hljs-value">you@email.com</span> <span class="hljs-attribute">required</span>=<span class="hljs-value">required</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">script</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">main.js</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">text</span>/<span class="hljs-attribute">javascript</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- good --&gt;</span>
+<span class="hljs-doctype">&lt;!doctype html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">html</span> <span class="hljs-attribute">lang</span>=<span class="hljs-value">en</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">charset</span>=<span class="hljs-value">utf-8</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>Contact<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">stylesheet</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">style.css</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-title">h1</span>&gt;</span>Contact me<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">label</span>&gt;</span>
+    Email address:
+    <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">email</span> <span class="hljs-attribute">placeholder</span>=<span class="hljs-value">you@email.com</span> <span class="hljs-attribute">required</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">script</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">main.js</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span></code></pre><p> 容易理解（Accessibility）
+ Accessibility shouldn&#39;t be an afterthought. You don&#39;t have to be a WCAG expert to improve your website, you can start immediately by fixing the little things that make a huge difference, such as:
+容易理解不应该是一个附加品。你没必要成为一名WCAG专家再来改善你的网站，你马上就能通过修复一些小事情来make a huge difference。</p>
+<ul>
+<li>learning to use the alt attribute properly</li>
+<li>学会正确使用<code>alt</code>属性</li>
+<li>making sure your links and buttons are marked as such (no <div class=button> atrocities)</li>
+<li>确保你的链接和按钮都这样被标记（不要<code>&lt;div class=button&gt;</code>残暴）</li>
+<li>not relying exclusively on colors to communicate information</li>
+<li>交流信息时不仅仅依赖颜色</li>
+<li>explicitly labelling form controls</li>
+<li><p>明确地标签表单控制</p>
+<pre class="hljs"><code>  <span class="hljs-comment">&lt;!-- bad --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">h1</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">img</span> <span class="hljs-attribute">alt</span>=<span class="hljs-value">&quot;Logo&quot;</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">&quot;logo.png&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span>
+
+  <span class="hljs-comment">&lt;!-- good --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">h1</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">img</span> <span class="hljs-attribute">alt</span>=<span class="hljs-value">&quot;My Company, Inc.&quot;</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">&quot;logo.png&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span></code></pre></li>
+</ul>
+<p>语言（Language）
+While defining the language and character encoding is optional, it&#39;s recommended to always declare both at document level, even if they&#39;re specified in your HTTP headers. Favor UTF-8 over any other character encoding.
+当界定的编码语言和字符是可选择的话，建议你永远都在文档级别（document level）申明，即使它们已在你的HTTP头部规定好。喜欢<code>UTF-8</code>胜过其他类型字符编码一万倍~</p>
+<pre class="hljs"><code><span class="hljs-comment">&lt;!-- bad --&gt;</span>
+<span class="hljs-doctype">&lt;!doctype html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>Hello, world.<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- good --&gt;</span>
+<span class="hljs-doctype">&lt;!doctype html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">html</span> <span class="hljs-attribute">lang</span>=<span class="hljs-value">en</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">charset</span>=<span class="hljs-value">utf-8</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>Hello, world.<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span></code></pre><p>性能（Performance）
+Unless there&#39;s a valid reason for loading your scripts before your content, don&#39;t block the rendering of your page. If your style sheet is heavy, isolate the styles that are absolutely required initially and defer the loading of the secondary declarations in a separate style sheet. Two HTTP requests is significantly slower than one, but the perception of speed is the most important factor.
+除非在内容加载之前先载入脚本有个合理的理由，那么就别阻塞你页面的渲染。
+如果CSS文件很大，就页面初始时必要的样式分离出来，然后再延迟加载独立样式表中的次要声明。两次HTTP请求会显著地慢于一次，但是（用户对页面加载）速度的感觉才是最重要的因素。</p>
+<pre class="hljs"><code><span class="hljs-comment">&lt;!-- bad --&gt;</span>
+<span class="hljs-doctype">&lt;!doctype html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">charset</span>=<span class="hljs-value">utf-8</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">script</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">analytics.js</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>Hello, world.<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- good --&gt;</span>
+<span class="hljs-doctype">&lt;!doctype html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">charset</span>=<span class="hljs-value">utf-8</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>Hello, world.<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">script</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">analytics.js</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span></code></pre><h2 id="css">CSS</h2>
+<p> 分号（Semicolons）
+While the semicolon is technically a separator in CSS, always treat it as a terminator.
+虽然从技术上说，分号在CSS中是一个分离器，但永远把它当一个终止器来看待。</p>
+<pre class="hljs"><code><span class="hljs-comment">/<em> bad </em>/</span>
+<span class="hljs-tag">div</span> <span class="hljs-rules">{
+      <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> red
+</span></span></span>}
+
+<span class="hljs-comment">/<em> good </em>/</span>
+<span class="hljs-tag">div</span> <span class="hljs-rules">{
+      <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> red</span></span>;
+}</span></code></pre><p>盒模型（Box Model）
+The box model should ideally be the same for the entire document. A global <em> { box-sizing: border-box; } is fine, but don&#39;t change the default box model on specific elements if you can avoid it.
+理想状况下，整个文档的盒模型应该保持一样。 全局的 `</em> { box-sizing: border-box; }` 是很好，但尽量别去改变特定元素的默认盒模型。</p>
+<pre class="hljs"><code><span class="hljs-comment">/<em> bad </em>/</span>
+<span class="hljs-tag">div</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">100%</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">padding</span>:<span class="hljs-value"> <span class="hljs-number">10px</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">box-sizing</span>:<span class="hljs-value"> border-box</span></span>;
+}</span>
+
+<span class="hljs-comment">/<em> good </em>/</span>
+<span class="hljs-tag">div</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">padding</span>:<span class="hljs-value"> <span class="hljs-number">10px</span></span></span>;
+}</span></code></pre><p>  流（Flow）
+Don&#39;t change the default behavior of an element if you can avoid it. Keep elements in the natural document flow as much as you can. For example, removing the white-space below an image shouldn&#39;t make you change its default display:
+尽量不要去改变一个元素的默认行为。尽你所能让标签元素都待在正常文档流里。比如说，移除一张图片下方空白不应改变它的默认显示：</p>
+<pre class="hljs"><code><span class="hljs-comment">/<em> bad </em>/</span>
+<span class="hljs-tag">img</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">display</span>:<span class="hljs-value"> block</span></span>;
+}</span>
+
+<span class="hljs-comment">/<em> good </em>/</span>
+<span class="hljs-tag">img</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">vertical-align</span>:<span class="hljs-value"> middle</span></span>;
+}</span></code></pre><p> Similarly, don&#39;t take an element off the flow if you can avoid it.
+ 同样地，尽量别把一个元素从文档流中拿出来。</p>
+<pre class="hljs"><code>  <span class="hljs-comment">/<em> bad </em>/</span>
+  <span class="hljs-tag">div</span> <span class="hljs-rules">{
+      <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">100px</span></span></span>;
+      <span class="hljs-rule"><span class="hljs-attribute">position</span>:<span class="hljs-value"> absolute</span></span>;
+      <span class="hljs-rule"><span class="hljs-attribute">right</span>:<span class="hljs-value"> <span class="hljs-number">0</span></span></span>;
+  }</span>
+
+   <span class="hljs-comment">/<em> good </em>/</span>
+   <span class="hljs-tag">div</span> <span class="hljs-rules">{
+       <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">100px</span></span></span>;
+       <span class="hljs-rule"><span class="hljs-attribute">margin-left</span>:<span class="hljs-value"> auto</span></span>;
+   }</span></code></pre><p>定位（Positioning）
+There are many ways to position elements in CSS but try to restrict yourself to the properties/values below. By order of preference:
+在CSS中有许多方法来定位元素，但尽量限制自己来使用以下的属性/值。通过偏好排序：</p>
+<pre class="hljs"><code><span class="hljs-attribute">display</span>: <span class="hljs-string">block;</span>
+<span class="hljs-attribute">display</span>: <span class="hljs-string">flex;</span>
+<span class="hljs-attribute">position</span>: <span class="hljs-string">relative;</span>
+<span class="hljs-attribute">position</span>: <span class="hljs-string">sticky;</span>
+<span class="hljs-attribute">position</span>: <span class="hljs-string">absolute;</span>
+<span class="hljs-attribute">position</span>: <span class="hljs-string">fixed;</span></code></pre><p>选择符（Selectors）
+Minimize selectors tightly coupled to the DOM. Consider adding a class to the elements you want to match when your selector exceeds 3 structural pseudo-classes, descendant or sibling combinators.
+最小化和DOM紧密耦合的选择符。当选择符超出三个结构伪类（structural pseudo-classes）、后代（descendant）或同胞（ sibling）选择符组合的话，考虑为你希望匹配的元素标签加一个类。</p>
+<pre class="hljs"><code><span class="hljs-comment">/<em> bad </em>/</span>
+<span class="hljs-operator">div</span>:<span class="hljs-keyword">first</span>-<span class="hljs-operator">of</span>-type :<span class="hljs-keyword">last</span>-child &gt; p ~ <em>
+
+<span class="hljs-comment">/</em> good */</span>
+<span class="hljs-operator">div</span>:<span class="hljs-keyword">first</span>-<span class="hljs-operator">of</span>-type .info</code></pre><p>Avoid overloading your selectors when you don&#39;t need to.  不必要的时候避免选择符过载。（<strong>译注：CSS选择符过载是什么？只知道 override。</strong>）</p>
+<pre class="hljs"><code><span class="hljs-comment">/<em> bad </em>/</span>
+<span class="hljs-tag">img</span><span class="hljs-attr_selector">[src$=svg]</span>, <span class="hljs-tag">ul</span> &gt; <span class="hljs-tag">li</span><span class="hljs-pseudo">:first-child</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">opacity</span>:<span class="hljs-value"> <span class="hljs-number">0</span></span></span>;
+}</span>
+
+<span class="hljs-comment">/<em> good </em>/</span>
+<span class="hljs-attr_selector">[src$=svg]</span>, <span class="hljs-tag">ul</span> &gt; <span class="hljs-pseudo">:first-child</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">opacity</span>:<span class="hljs-value"> <span class="hljs-number">0</span></span></span>;
+}</span></code></pre><p>特指度（Specificity）
+Don&#39;t make values and selectors hard to override. Minimize the use of id&#39;s and avoid !important.
+别让值和选择符难以重载。减少ID的使用，避免使用<code>!important</code>。</p>
+<pre class="hljs"><code><span class="hljs-comment">/<em> bad </em>/</span>
+<span class="hljs-class">.bar</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> green <span class="hljs-important">!important</span></span></span>;
+}</span>
+<span class="hljs-class">.foo</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> red</span></span>;
+}</span>
+
+<span class="hljs-comment">/<em> good </em>/</span>
+<span class="hljs-class">.foo</span><span class="hljs-class">.bar</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> green</span></span>;
+}</span>
+<span class="hljs-class">.foo</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> red</span></span>;
+}</span></code></pre><p> 层叠（Overriding）
+ Overriding styles makes selectors and debugging harder. Avoid it when possible.
+ 层叠样式会使选择符和调试更加复杂困难。尽可能避免使用。</p>
+<pre class="hljs"><code> <span class="hljs-comment">/<em> bad </em>/</span>
+<span class="hljs-tag">li</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">visibility</span>:<span class="hljs-value"> hidden</span></span>;
+}</span>
+<span class="hljs-tag">li</span><span class="hljs-pseudo">:first-child</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">visibility</span>:<span class="hljs-value"> visible</span></span>;
+}</span>
+
+<span class="hljs-comment">/<em> good </em>/</span>
+<span class="hljs-tag">li</span> + <span class="hljs-tag">li</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">visibility</span>:<span class="hljs-value"> hidden</span></span>;
+}</span></code></pre><p>继承（Inheritance）
+Don&#39;t duplicate style declarations that can be inherited.
+能继承的样式声明就别复制。</p>
+<pre class="hljs"><code><span class="hljs-comment">/<em> bad </em>/</span>
+<span class="hljs-tag">div</span> <span class="hljs-tag">h1</span>, <span class="hljs-tag">div</span> <span class="hljs-tag">p</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">text-shadow</span>:<span class="hljs-value"> <span class="hljs-number">0</span> <span class="hljs-number">1px</span> <span class="hljs-number">0</span> <span class="hljs-hexcolor">#fff</span></span></span>;
+}</span>
+
+<span class="hljs-comment">/<em> good </em>/</span>
+<span class="hljs-tag">div</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">text-shadow</span>:<span class="hljs-value"> <span class="hljs-number">0</span> <span class="hljs-number">1px</span> <span class="hljs-number">0</span> <span class="hljs-hexcolor">#fff</span></span></span>;
+}</span></code></pre><p>简洁（Brevity）
+Keep your code terse. Use shorthand properties and avoid using multiple properties when it&#39;s not needed.
+保持代码的简洁。使用简写的属性，不必要时避免使用多重属性。</p>
+<pre class="hljs"><code><span class="hljs-comment">/<em> bad </em>/</span>
+<span class="hljs-tag">div</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">transition</span>:<span class="hljs-value"> all <span class="hljs-number">1s</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">top</span>:<span class="hljs-value"> <span class="hljs-number">50%</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">margin-top</span>:<span class="hljs-value"> -<span class="hljs-number">10px</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">padding-top</span>:<span class="hljs-value"> <span class="hljs-number">5px</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">padding-right</span>:<span class="hljs-value"> <span class="hljs-number">10px</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">padding-bottom</span>:<span class="hljs-value"> <span class="hljs-number">20px</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">padding-left</span>:<span class="hljs-value"> <span class="hljs-number">10px</span></span></span>;
+}</span>
+
+<span class="hljs-comment">/<em> good </em>/</span>
+<span class="hljs-tag">div</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">transition</span>:<span class="hljs-value"> <span class="hljs-number">1s</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">top</span>:<span class="hljs-value"> <span class="hljs-function">calc</span>(<span class="hljs-number">50%</span> - <span class="hljs-number">10px</span>)</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">padding</span>:<span class="hljs-value"> <span class="hljs-number">5px</span> <span class="hljs-number">10px</span> <span class="hljs-number">20px</span></span></span>;
+}</span></code></pre><p>语言（Language）
+Prefer English over math.</p>
+<pre class="hljs"><code><span class="hljs-comment">/<em> bad </em>/</span>
+<span class="hljs-pseudo">:nth-child(2n</span> + 1) <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">transform</span>:<span class="hljs-value"> <span class="hljs-function">rotate</span>(<span class="hljs-number">360deg</span>)</span></span>;
+}</span>
+
+<span class="hljs-comment">/<em> good </em>/</span>
+<span class="hljs-pseudo">:nth-child(odd)</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">transform</span>:<span class="hljs-value"> <span class="hljs-function">rotate</span>(<span class="hljs-number">1turn</span>)</span></span>;
+}</span></code></pre><p>浏览器前缀（Vendor prefixes）
+Kill obsolete vendor prefixes aggressively. If you need to use them, insert them before the standard property.
+竭力地干掉过时的浏览器前缀吧！必须使用的话，把它们写在标准属性前。</p>
+<pre class="hljs"><code><span class="hljs-comment">/<em> bad </em>/</span>
+<span class="hljs-tag">div</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">transform</span>:<span class="hljs-value"> <span class="hljs-function">scale</span>(<span class="hljs-number">2</span>)</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">-webkit-transform</span>:<span class="hljs-value"> <span class="hljs-function">scale</span>(<span class="hljs-number">2</span>)</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">-moz-transform</span>:<span class="hljs-value"> <span class="hljs-function">scale</span>(<span class="hljs-number">2</span>)</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">-ms-transform</span>:<span class="hljs-value"> <span class="hljs-function">scale</span>(<span class="hljs-number">2</span>)</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">transition</span>:<span class="hljs-value"> <span class="hljs-number">1s</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">-webkit-transition</span>:<span class="hljs-value"> <span class="hljs-number">1s</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">-moz-transition</span>:<span class="hljs-value"> <span class="hljs-number">1s</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">-ms-transition</span>:<span class="hljs-value"> <span class="hljs-number">1s</span></span></span>;
+}</span>
+
+<span class="hljs-comment">/<em> good </em>/</span>
+<span class="hljs-tag">div</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">-webkit-transform</span>:<span class="hljs-value"> <span class="hljs-function">scale</span>(<span class="hljs-number">2</span>)</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">transform</span>:<span class="hljs-value"> <span class="hljs-function">scale</span>(<span class="hljs-number">2</span>)</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">transition</span>:<span class="hljs-value"> <span class="hljs-number">1s</span></span></span>;
+}</span></code></pre><p>动画（Animation）
+Favor transitions over animations. Avoid animating other properties than opacity and transform.
+除了<code>opacity</code> 和 <code>transform</code>，其他尽量使用<code>transition</code>，而不是<code>animation</code>。</p>
+<p>单位（Units）
+能不带单位就不带单位。相对单位多用<code>rem</code>。多用<code>s</code>而不是<code>ms</code>。（<strong>why?</strong>）</p>
+<pre class="hljs"><code><span class="hljs-comment">/<em> bad </em>/</span>
+<span class="hljs-tag">div</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">margin</span>:<span class="hljs-value"> <span class="hljs-number">0px</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">font-size</span>:<span class="hljs-value"> .<span class="hljs-number">9em</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">line-height</span>:<span class="hljs-value"> <span class="hljs-number">22px</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">transition</span>:<span class="hljs-value"> <span class="hljs-number">500ms</span></span></span>;
+}</span>
+
+<span class="hljs-comment">/<em> good </em>/</span>
+<span class="hljs-tag">div</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">margin</span>:<span class="hljs-value"> <span class="hljs-number">0</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">font-size</span>:<span class="hljs-value"> .<span class="hljs-number">9rem</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">line-height</span>:<span class="hljs-value"> <span class="hljs-number">1.5</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">transition</span>:<span class="hljs-value"> .<span class="hljs-number">5s</span></span></span>;
+}</span></code></pre><p>颜色（Colors）
+需要改变透明度（transparency）时，使用<code>rgba</code>。否则永远使用十六进制值（hexadecimal format）。</p>
+<pre class="hljs"><code><span class="hljs-comment">/<em> bad </em>/</span>
+<span class="hljs-tag">div</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-function">hsl</span>(<span class="hljs-number">103</span>, <span class="hljs-number">54%</span>, <span class="hljs-number">43%</span>)</span></span>;
+}</span>
+
+<span class="hljs-comment">/<em> good </em>/</span>
+<span class="hljs-tag">div</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#5a3</span></span></span>;
+}</span></code></pre><p>绘图（Drawing）
+资源使用CSS绘图替代的话可以避免HTTP请求。</p>
+<pre class="hljs"><code><span class="hljs-comment">/<em> bad </em>/</span>
+<span class="hljs-tag">div</span><span class="hljs-pseudo">::before</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">content</span>:<span class="hljs-value"> <span class="hljs-function">url</span>(white-circle.svg)</span></span>;
+}</span>
+
+<span class="hljs-comment">/<em> good </em>/</span>
+<span class="hljs-tag">div</span><span class="hljs-pseudo">::before</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">content</span>:<span class="hljs-value"> <span class="hljs-string">&quot;&quot;</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">display</span>:<span class="hljs-value"> block</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">20px</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">height</span>:<span class="hljs-value"> <span class="hljs-number">20px</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">border-radius</span>:<span class="hljs-value"> <span class="hljs-number">50%</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">background</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#fff</span></span></span>;
+}</span></code></pre><p>技巧（Hacks）
+别用。</p>
+<pre class="hljs"><code><span class="hljs-comment">/<em> bad </em>/</span>
+<span class="hljs-tag">div</span> {
+  <span class="hljs-comment">// position: relative;</span>
+  <span class="hljs-attribute">transform</span>: <span class="hljs-function">translateZ</span>(<span class="hljs-number">0</span>);
+}
+
+<span class="hljs-comment">/<em> good </em>/</span>
+<span class="hljs-tag">div</span> {
+  <span class="hljs-comment">/<em> position: relative; </em>/</span>
+  <span class="hljs-attribute">will-change</span>: transform;
+}</code></pre><h2 id="javascript">JavaScript</h2>
+<p>性能（Performance）
+Favor readability, correctness and expressiveness over performance. JavaScript will basically never be your performance bottleneck. Optimize things like image compression, network access and DOM reflows instead. If you remember just one guideline from this document, choose this one.
+易读性、正确性、富有表现性比性能更重要。从根本上来说，JavaScript绝对不会成为性能瓶颈，应该优化图像压缩、网络连接和DOM刷新。如果你只记得这篇文档的一条规则，那就选择这条吧。</p>
+<pre class="hljs"><code>// bad (albeit way faster)
+<span class="hljs-keyword">const</span> arr = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>];
+<span class="hljs-keyword">const</span> len = arr.length;
+<span class="hljs-keyword">var</span> i = -<span class="hljs-number">1</span>;
+<span class="hljs-keyword">var</span> <span class="hljs-literal">result</span> = [];
+<span class="hljs-keyword">while</span> (++i &lt; len) {
+  <span class="hljs-keyword">var</span> n = arr[i];
+  <span class="hljs-keyword">if</span> (n % <span class="hljs-number">2</span> &gt; <span class="hljs-number">0</span>) <span class="hljs-keyword">continue</span>;
+  <span class="hljs-literal">result</span>.push(n <em> n);
+}
+
+// good
+<span class="hljs-keyword">const</span> arr = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>];
+<span class="hljs-keyword">const</span> isEven = n =&gt; n % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>;
+<span class="hljs-keyword">const</span> square = n =&gt; n </em> n;
+
+<span class="hljs-keyword">const</span> <span class="hljs-literal">result</span> = arr.filter(isEven).map(square);</code></pre><p>无国籍？（Statelessness）
+Try to keep your functions pure. All functions should ideally produce no side-effects, use no outside data and return new objects instead of mutating existing ones.
+尽量使函数纯粹。理想情况下，所有的函数都不会产生副作用，不使用外部的数据，返回新的对象而不是在现有对象上作修改。</p>
+<pre class="hljs"><code>// bad
+const merge = (target, ...sources) =&gt; Object.assign(target, ...sources);
+merge({ foo: <span class="hljs-string">&quot;foo&quot;</span> }, { bar: <span class="hljs-string">&quot;bar&quot;</span> }); // =&gt; { foo: <span class="hljs-string">&quot;foo&quot;</span>, bar: <span class="hljs-string">&quot;bar&quot;</span> }
+
+// good
+const merge = (...sources) =&gt; Object.assign({}, ...sources);
+merge({ foo: <span class="hljs-string">&quot;foo&quot;</span> }, { bar: <span class="hljs-string">&quot;bar&quot;</span> }); // =&gt; { foo: <span class="hljs-string">&quot;foo&quot;</span>, bar: <span class="hljs-string">&quot;bar&quot;</span> }</code></pre><p>原生（Natives）
+尽可能使用原生方法。</p>
+<pre class="hljs"><code><span class="hljs-comment">// bad</span>
+const <span class="hljs-built_in">toArray</span> = obj =&gt; [].slice.<span class="hljs-built_in">call</span>(obj);
+
+<span class="hljs-comment">// good</span>
+const <span class="hljs-built_in">toArray</span> = (() =&gt;
+  <span class="hljs-built_in">Array</span>.<span class="hljs-keyword">from</span> ? <span class="hljs-built_in">Array</span>.<span class="hljs-keyword">from</span> : obj =&gt; [].slice.<span class="hljs-built_in">call</span>(obj)
+)();</code></pre><p>强制转换（Coercion）
+有意义的时候就欣然使用「隐式类型转换」（imolicit coercion）吧，不然就避免它。Don&#39;t cargo-cult. （别太草包，要灵活变通？）</p>
+<pre class="hljs"><code><span class="hljs-comment">// bad</span>
+<span class="hljs-tag">if</span> (x === undefined || x === null) { ... }
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-tag">if</span> (x == undefined) { ... }</code></pre><p>循环（Loops）
+Don&#39;t use loops as they force you to use mutable objects. Rely on <code>array.prototype</code> methods.
+不要使用循环因为它强制你使用可变的对象。使用<code>array.prototype</code>方法。</p>
+<pre class="hljs"><code><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">sum</span> = arr =&gt; {
+  <span class="hljs-keyword">var</span> <span class="hljs-keyword">sum</span> = 0;
+  <span class="hljs-keyword">var</span> i = -1;
+  <span class="hljs-keyword">for</span> (;arr[++i];) {
+    <span class="hljs-keyword">sum</span> += arr[i];
+  }
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">sum</span>;
+};
+
+<span class="hljs-literal">sum</span>([1, 2, 3]); <span class="hljs-comment">// =&gt; 6</span>
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">sum</span> = arr =&gt;
+  arr.reduce((x, y) =&gt; x + y);
+
+<span class="hljs-literal">sum</span>([1, 2, 3]); <span class="hljs-comment">// =&gt; 6</span></code></pre><p>If you can&#39;t, or if using <code>array.prototype</code> methods is arguably abusive, use recursion.
+不能的话，或者可以说 <code>array.prototype</code> 被滥用，就使用递归（recursion）。</p>
+<pre class="hljs"><code><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> createDivs = howMany =&gt; {
+  <span class="hljs-keyword">while</span> (howMany--) {
+    <span class="hljs-built_in">document</span>.body.insertAdjacentHTML(<span class="hljs-string">&quot;beforeend&quot;</span>, <span class="hljs-string">&quot;&lt;div&gt;&lt;/div&gt;&quot;</span>);
+  }
+};
+createDivs(<span class="hljs-number">5</span>);
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> createDivs = howMany =&gt;
+  [...Array(howMany)].forEach(() =&gt;
+    <span class="hljs-built_in">document</span>.body.insertAdjacentHTML(<span class="hljs-string">&quot;beforeend&quot;</span>, <span class="hljs-string">&quot;&lt;div&gt;&lt;/div&gt;&quot;</span>)
+  );
+createDivs(<span class="hljs-number">5</span>);
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> createDivs = howMany =&gt; {
+  <span class="hljs-keyword">if</span> (!howMany) <span class="hljs-keyword">return</span>;
+  <span class="hljs-built_in">document</span>.body.insertAdjacentHTML(<span class="hljs-string">&quot;beforeend&quot;</span>, <span class="hljs-string">&quot;&lt;div&gt;&lt;/div&gt;&quot;</span>);
+  <span class="hljs-keyword">return</span> createDivs(howMany - <span class="hljs-number">1</span>);
+};
+createDivs(<span class="hljs-number">5</span>);</code></pre><p>参数（Arguments）
+Forget about the <code>arguments</code> object. The rest parameter is always a better option because:</p>
+<ol>
+<li>it&#39;s named, so it gives you a better idea of the arguments the function is expecting</li>
+<li>it&#39;s a real array, which makes it easier to use.
+忘掉 <code>arguments</code> 对象吧。参数名（rest parameter）总是个更好的选择。原因如下：</li>
+<li>命名的参数能让你更好理解这个函数期待输入的参数；</li>
+<li><p>命名的参数是一个真正的数组，这样使用它更容易。</p>
+<pre class="hljs"><code> <span class="hljs-comment">// bad</span>
+ <span class="hljs-keyword">const</span> sortNumbers = () =&gt;
+       <span class="hljs-keyword">Array</span>.prototype.slice.call(arguments).sort();
+
+ <span class="hljs-comment">// good</span>
+ <span class="hljs-keyword">const</span> sortNumbers = (...numbers) =&gt; numbers.sort();</code></pre></li>
+</ol>
+<p>Apply
+忘掉<code>apply()</code>吧，使用更广泛的操作符（spread operator）。</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> greet = (first, last) =&gt; <span class="hljs-string"><code>Hi &lt;span class=&quot;hljs-subst&quot;&gt;${first}&lt;/span&gt; &lt;span class=&quot;hljs-subst&quot;&gt;${last}&lt;/span&gt;</code></span>;
+<span class="hljs-keyword">const</span> person = [<span class="hljs-string">&quot;John&quot;</span>, <span class="hljs-string">&quot;Doe&quot;</span>];
+
+<span class="hljs-comment">// bad</span>
+greet.apply(<span class="hljs-literal">null</span>, person);
+
+<span class="hljs-comment">// good</span>
+greet(...person);</code></pre><p>Bind
+Don&#39;t <code>bind()</code> when there&#39;s a more idiomatic  approach.
+有更符合语言习惯的方法的时候，不要用<code>bind()</code>。</p>
+<pre class="hljs"><code><span class="hljs-comment">// bad</span>
+[<span class="hljs-string">&quot;foo&quot;</span>, <span class="hljs-string">&quot;bar&quot;</span>].forEach(func.bind(<span class="hljs-keyword">this</span>));
+
+<span class="hljs-comment">// good</span>
+[<span class="hljs-string">&quot;foo&quot;</span>, <span class="hljs-string">&quot;bar&quot;</span>].forEach(func, <span class="hljs-keyword">this</span>);
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> person = {
+  first: <span class="hljs-string">&quot;John&quot;</span>,
+  last: <span class="hljs-string">&quot;Doe&quot;</span>,
+  greet() {
+    <span class="hljs-keyword">const</span> full = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">return</span> <span class="hljs-string"><code>&lt;span class=&quot;hljs-subst&quot;&gt;${this.first}&lt;/span&gt; &lt;span class=&quot;hljs-subst&quot;&gt;${this.last}&lt;/span&gt;</code></span>;
+    }.bind(<span class="hljs-keyword">this</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-string"><code>Hello &lt;span class=&quot;hljs-subst&quot;&gt;${full()}&lt;/span&gt;</code></span>;
+  }
+}
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> person = {
+  first: <span class="hljs-string">&quot;John&quot;</span>,
+  last: <span class="hljs-string">&quot;Doe&quot;</span>,
+  greet() {
+    <span class="hljs-keyword">const</span> full = () =&gt; <span class="hljs-string"><code>&lt;span class=&quot;hljs-subst&quot;&gt;${this.first}&lt;/span&gt; &lt;span class=&quot;hljs-subst&quot;&gt;${this.last}&lt;/span&gt;</code></span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-string"><code>Hello &lt;span class=&quot;hljs-subst&quot;&gt;${full()}&lt;/span&gt;</code></span>;
+  }
+}</code></pre><p>高阶函数（Higher-order functions）
+尽量不要嵌套函数（nesting functions）。</p>
+<pre class="hljs"><code><span class="hljs-comment">// bad</span>
+[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>].<span class="hljs-built_in">map</span>(num =&gt; String(num));
+
+<span class="hljs-comment">// good</span>
+[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>].<span class="hljs-built_in">map</span>(String);</code></pre><p>组合（Composition）
+Avoid multiple nested function calls. Use composition instead.
+ 避免多重嵌套的函数调用。改用<code>composition</code>。</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> plus1 = a =&gt; a + <span class="hljs-number">1</span>;
+<span class="hljs-keyword">const</span> mult2 = a =&gt; a * <span class="hljs-number">2</span>;
+
+<span class="hljs-comment">// bad</span>
+mult2(plus1(<span class="hljs-number">5</span>)); <span class="hljs-comment">// =&gt; 12</span>
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> pipeline = (...funcs) =&gt; val =&gt; funcs.reduce((a, b) =&gt; b(a), val);
+<span class="hljs-keyword">const</span> addThenMult = pipeline(plus1, mult2);
+addThenMult(<span class="hljs-number">5</span>); <span class="hljs-comment">// =&gt; 12</span></code></pre><p>缓存（Caching）
+Cache feature tests, large data structures and any expensive operation.
+将重要的测试、大块的数据结构或者任何高代价的运算操作都缓存起来。</p>
+<pre class="hljs"><code><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> contains = (arr, value) =&gt;
+  <span class="hljs-keyword">Array</span>.prototype.includes
+    ? arr.includes(value)
+    : arr.some(el =&gt; el === value);
+contains([<span class="hljs-string">&quot;foo&quot;</span>, <span class="hljs-string">&quot;bar&quot;</span>], <span class="hljs-string">&quot;baz&quot;</span>); <span class="hljs-comment">// =&gt; false</span>
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> contains = (() =&gt;
+  <span class="hljs-keyword">Array</span>.prototype.includes
+    ? (arr, value) =&gt; arr.includes(value)
+    : (arr, value) =&gt; arr.some(el =&gt; el === value)
+)();
+contains([<span class="hljs-string">&quot;foo&quot;</span>, <span class="hljs-string">&quot;bar&quot;</span>], <span class="hljs-string">&quot;baz&quot;</span>); <span class="hljs-comment">// =&gt; false</span></code></pre><p>变量（Variables）
+Favor const over let and let over var.
+优先级：<code>const</code> &gt; <code>let</code> &gt; <code>var</code></p>
+<pre class="hljs"><code><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">var</span> obj = {};
+obj[<span class="hljs-string">&quot;foo&quot;</span> + <span class="hljs-string">&quot;bar&quot;</span>] = <span class="hljs-string">&quot;baz&quot;</span>;
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> obj = {
+  [<span class="hljs-string">&quot;foo&quot;</span> + <span class="hljs-string">&quot;bar&quot;</span>]: <span class="hljs-string">&quot;baz&quot;</span>
+};</code></pre><p>条件（Conditions）
+Favor IIFE&#39;s and return statements over if, else if, else and switch statements.
+优先级：<code>IIFE</code>+ <code>return</code> &gt; <code>if</code> + <code>else if</code> + <code>switch</code>
+译注：<code>IIFE</code>： Immediately-invoked function expression，立即调用的函数表达式；</p>
+<pre class="hljs"><code>// bad
+<span class="hljs-keyword">var</span> grade;
+<span class="hljs-keyword">if</span> (<span class="hljs-literal">result</span> &lt; <span class="hljs-number">50</span>)
+  grade = <span class="hljs-string">&quot;bad&quot;</span>;
+<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-literal">result</span> &lt; <span class="hljs-number">90</span>)
+  grade = <span class="hljs-string">&quot;good&quot;</span>;
+<span class="hljs-keyword">else</span>
+  grade = <span class="hljs-string">&quot;excellent&quot;</span>;
+
+// good
+<span class="hljs-keyword">const</span> grade = (() =&gt; {
+  <span class="hljs-keyword">if</span> (<span class="hljs-literal">result</span> &lt; <span class="hljs-number">50</span>)
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;bad&quot;</span>;
+  <span class="hljs-keyword">if</span> (<span class="hljs-literal">result</span> &lt; <span class="hljs-number">90</span>)
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;good&quot;</span>;
+  <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;excellent&quot;</span>;
+})();</code></pre><p>对象迭代（Object iteration）
+Avoid for...in when you can.
+避免使用<code>for-in</code></p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> shared = { foo: <span class="hljs-string">&quot;foo&quot;</span> };
+<span class="hljs-keyword">const</span> obj = Object.create(shared, {
+  bar: {
+    value: <span class="hljs-string">&quot;bar&quot;</span>,
+    enumerable: true
+  }
+});
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> <span class="hljs-keyword">prop</span> <span class="hljs-keyword">in</span> obj) {
+  <span class="hljs-keyword">if</span> (obj.hasOwnProperty(<span class="hljs-keyword">prop</span>))
+    console.<span class="hljs-literal">log</span>(<span class="hljs-keyword">prop</span>);
+}
+
+<span class="hljs-comment">// good</span>
+Object.keys(obj).<span class="hljs-keyword">forEach</span>(<span class="hljs-keyword">prop</span> =&gt; console.<span class="hljs-literal">log</span>(<span class="hljs-keyword">prop</span>));</code></pre><p>Objects as Maps
+While objects have legitimate use cases, maps are usually a better, more powerful choice. When in doubt, use a Map.
+尽管<code>objects</code>有些好的使用案例，但<code>maps</code>通常是一种更好更强大的选择。</p>
+<pre class="hljs"><code><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> me = {
+  name: <span class="hljs-string">&quot;Ben&quot;</span>,
+  age: <span class="hljs-number">30</span>
+};
+<span class="hljs-keyword">var</span> meSize = <span class="hljs-built_in">Object</span>.keys(me).length;
+meSize; <span class="hljs-comment">// =&gt; 2</span>
+me.country = <span class="hljs-string">&quot;Belgium&quot;</span>;
+meSize++;
+meSize; <span class="hljs-comment">// =&gt; 3</span>
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> me = <span class="hljs-built_in">Map</span>();
+me.<span class="hljs-literal">set</span>(<span class="hljs-string">&quot;name&quot;</span>, <span class="hljs-string">&quot;Ben&quot;</span>);
+me.<span class="hljs-literal">set</span>(<span class="hljs-string">&quot;age&quot;</span>, <span class="hljs-number">30</span>);
+me.size; <span class="hljs-comment">// =&gt; 2</span>
+me.<span class="hljs-literal">set</span>(<span class="hljs-string">&quot;country&quot;</span>, <span class="hljs-string">&quot;Belgium&quot;</span>);
+me.size; <span class="hljs-comment">// =&gt; 3</span></code></pre><p>柯里化（Curry）
+Currying might have its place in other languages, but avoid it in JavaScript. It makes your code harder to read by introducing a foreign paradigm while the appropriate use cases are extremely unusual.
+在其他语言中，柯里化可能有它的一席之地，但是不要在 JavaScript 中使用它。因为它引入了很少能见到正确使用的非自身范例（foreign paradigm），这会让你的代码阅读困难。</p>
+<pre class="hljs"><code><span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> sum = a =&gt; b =&gt; a + b;
+sum(<span class="hljs-number">5</span>)(<span class="hljs-number">3</span>); <span class="hljs-comment">// =&gt; 8</span>
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> sum = (a, b) =&gt; a + b;
+sum(<span class="hljs-number">5</span>, <span class="hljs-number">3</span>); <span class="hljs-comment">// =&gt; 8</span></code></pre><p>可读性（Readability）
+Don&#39;t obfuscate the intent of your code by using seemingly smart tricks.
+别用些自作聪明的小把戏混淆了你代码真正的意图。</p>
+<pre class="hljs"><code><span class="hljs-comment">// bad</span>
+foo || doSomething();
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">if</span> (!foo) doSomething();
+
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">void</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{ <span class="hljs-comment">/<em> IIFE </em>/</span> }();
+
+<span class="hljs-comment">// good</span>
+(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{ <span class="hljs-comment">/<em> IIFE </em>/</span> }());
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> n = ~~<span class="hljs-number">3.14</span>;
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> n = <span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">3.14</span>);</code></pre><p>代码复用（Code reuse）
+Don&#39;t be afraid of creating lots of small, highly composable and reusable functions.
+尽管去写些短小精悍、组件化、高度复用的函数。</p>
+<pre class="hljs"><code><span class="hljs-comment">// bad</span>
+arr[arr.length - <span class="hljs-number">1</span>];
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> first = arr =&gt; arr[<span class="hljs-number">0</span>];
+<span class="hljs-keyword">const</span> last = arr =&gt; first(arr.slice(-<span class="hljs-number">1</span>));
+last(arr);
+
+
+<span class="hljs-comment">// bad</span>
+<span class="hljs-keyword">const</span> product = (a, b) =&gt; a <em> b;
+<span class="hljs-keyword">const</span> triple = n =&gt; n </em> <span class="hljs-number">3</span>;
+
+<span class="hljs-comment">// good</span>
+<span class="hljs-keyword">const</span> product = (a, b) =&gt; a * b;
+<span class="hljs-keyword">const</span> triple = product.bind(<span class="hljs-keyword">null</span>, <span class="hljs-number">3</span>);</code></pre><p>依赖（Dependencies）
+Minimize dependencies. Third-party is code you don&#39;t know. Don&#39;t load an entire library for just a couple of methods easily replicable:
+精简依赖。你都不知道第三方有些什么代码。
+能自己写些简单方法替代就别载入整个库。</p>
+<pre class="hljs"><code>// <span class="hljs-atom">bad</span>
+<span class="hljs-atom">var</span> <span class="hljs-name"><em></span> = <span class="hljs-atom">require</span>(<span class="hljs-string">&quot;underscore&quot;</span>);
+<span class="hljs-name"></em></span>.<span class="hljs-atom">compact</span>([<span class="hljs-string">&quot;foo&quot;</span>, <span class="hljs-number">0</span>]));
+<span class="hljs-name"><em></span>.<span class="hljs-atom">unique</span>([<span class="hljs-string">&quot;foo&quot;</span>, <span class="hljs-string">&quot;foo&quot;</span>]);
+<span class="hljs-name"></em></span>.<span class="hljs-atom">union</span>([<span class="hljs-string">&quot;foo&quot;</span>], [<span class="hljs-string">&quot;bar&quot;</span>], [<span class="hljs-string">&quot;foo&quot;</span>]);
+
+// <span class="hljs-atom">good</span>
+<span class="hljs-atom">const</span> <span class="hljs-atom">compact</span> = <span class="hljs-atom">arr</span> =&gt; <span class="hljs-atom">arr</span>.<span class="hljs-atom">filter</span>(<span class="hljs-atom">el</span> =&gt; <span class="hljs-atom">el</span>);
+<span class="hljs-atom">const</span> <span class="hljs-atom">unique</span> = <span class="hljs-atom">arr</span> =&gt; [...<span class="hljs-name">Set</span>(<span class="hljs-atom">arr</span>)];
+<span class="hljs-atom">const</span> <span class="hljs-atom">union</span> = (...<span class="hljs-atom">arr</span>) =&gt; <span class="hljs-atom">unique</span>([].<span class="hljs-atom">concat</span>(...<span class="hljs-atom">arr</span>));
+
+<span class="hljs-atom">compact</span>([<span class="hljs-string">&quot;foo&quot;</span>, <span class="hljs-number">0</span>]);
+<span class="hljs-atom">unique</span>([<span class="hljs-string">&quot;foo&quot;</span>, <span class="hljs-string">&quot;foo&quot;</span>]);
+<span class="hljs-atom">union</span>([<span class="hljs-string">&quot;foo&quot;</span>], [<span class="hljs-string">&quot;bar&quot;</span>], [<span class="hljs-string">&quot;foo&quot;</span>]);</code></pre>]]></description><link>/frontend-guidelines.html</link><guid isPermaLink="true">/frontend-guidelines.html</guid><category><![CDATA[translate]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Invalid Date</pubDate></item></channel></rss>

@@ -1,0 +1,999 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[undefined - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://localhost:5000/</link><generator>Ghost</generator><lastBuildDate>Sun, 02 Jul 2017 15:11:08 GMT</lastBuildDate><atom:link href="http://localhost:5000/tag/undefined/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[从十个 React 迷你设计模式谈开去]]></title><description><![CDATA[<h1 id="notes-of-10-react-mini-patterns-and-project-creator">Notes of 10 React mini-patterns and Project Creator</h1>
+<p>很早之前就一直在读的一篇文章，<a href="https://hackernoon.com/10-react-mini-patterns-c1da92f068c5">10 个React Mini 设计模式</a>，
+一边做 <code>Creator</code> 项目，也一边终于把它精读完。
+结合自己的开发时候的项目经验，做了点笔记。
+<code>Creator</code> 项目是一个多端（Web + Mobile）React SPA，且有一些表单填写和复杂的交互组件，自己单独封装了一个很简单的基于事件的 <code>Store</code>，开发过程中收获很大，这些细节之后可以细说。</p>
+<p>原文作者说你是不是天天写 React, 写着写着发现自己可能经常用来实现需求的，也总是那么几个方法，往大了讲其实就是开发中的 <strong>设计模式</strong>。但是这里我们称为 <strong>Mini Patterns</strong>。</p>
+<h2 id="-1-sending-data-down-and-up">#1 Sending data down and up</h2>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*J5XOQh2WKIl0NFTAMvcVbQ.png" alt="Data-flow"></p>
+<ul>
+<li>React 数据流</li>
+<li>ParentComponent  通过 <code>props</code> 传给 ChildComponent 值</li>
+<li>ChildComponent 通过 <code>props</code> 传过来的一些 function 回调 parent 的一些方法。</li>
+</ul>
+<h2 id="-2-fixing-html-s-inputs">#2 Fixing HTML’s inputs</h2>
+<blockquote>
+<p>If I’m building a site that will have a lot of user inputs, one of the first things I do is fix this.</p>
+<p>You don’t need to keep working with the somewhat ass-about nature of HTML’s user input elements.</p>
+</blockquote>
+<p><img src="https://cdn-images-1.medium.com/max/800/1*WTUJjlFOOnetc5NpbykN0w.png" alt="User Inputs"></p>
+<ul>
+<li><p>如果需要有大量 user inputs，最好是自己实现一套相关组件。</p>
+</li>
+<li><p>所以在 Creator 中基本自己实现了 <code>input</code>，<code>Select</code> 等组件。需求简单所以实现得也是很简单。所以其实 <code>Select</code> 组件仍然需要优化，比如自定义 <code>option</code> 样式，多选等等。</p>
+</li>
+<li><p>Inputs should return a value via an <code>onChange</code> method, not a JavaScript <code>Event</code> instance, shouldn’t they?</p>
+</li>
+<li><p>Input 最好通过 <code>onChange</code> 返回一个值，而不是通过一个 JS <code>Event</code> 实例。</p>
+</li>
+<li><p>You can go a step further and ensure that the data type returned in <code>onChange</code> matches the type passed in. If the <code>typeof props.value</code> is <code>number</code>, then convert <code>e.target.value</code> back to a number before sending the data out again.</p>
+</li>
+<li><p>在返回 <code>onChange</code> 的值之前确保一下是不是和输入的类型匹配。比如 <code>typeof props.value === &#39;number&#39;</code> 的话，在返回 <code>e.target.value</code> 前需要确保也是数字类型。</p>
+</li>
+<li><p>这里项目中有个选择证件类型的 <code>Select</code>，与后端默认 身份证 = 0 / 护照 = 1，但是在 <code>e.target.value</code> 时候忘记 convert 了。所以还是需要记得判断下 <code>option</code> 的值类型。</p>
+<pre class="hljs"><code>let {<span class="hljs-keyword">name</span>, <span class="hljs-keyword">value</span>} = e.<span class="hljs-type">target</span>
+<span class="hljs-keyword">value</span> = isNaN(<span class="hljs-keyword">Number</span>(<span class="hljs-keyword">value</span>)) ? <span class="hljs-keyword">value</span> : <span class="hljs-keyword">Number</span>(<span class="hljs-keyword">value</span>)</code></pre><p>​</p>
+</li>
+<li><p>A set of radio buttons is functionally the same thing as a <code>&lt;select&gt;</code>, right? It’s messed up to treat them in a completely different manner when the only difference is the UI. Maybe for your app it makes sense to have a single <code>&lt;PickOneFromMany /&gt;</code> component and pass either <code>ui=&quot;radio&quot;</code> or <code>ui=&quot;dropDown&quot;</code>.</p>
+</li>
+<li><p>一堆单选按钮在功能上和一个 <code>&lt;select&gt;</code> 组件是一样的。没有必要把它们完全不一样地来对待，因为它们仅仅是 UI 不一样。其实可能只需要一个 <code>&lt;PickOneFromMany /&gt;</code> 组件就好，通过 <code>ui=&quot;radio&quot;</code> 或者<code>ui=&quot;dropdown&quot;</code> 来区分。</p>
+</li>
+<li><p><strong>React Form 与 HTML 的不同</strong></p>
+</li>
+<li><p><code>value/checked</code> 设置后用户输入无效，相当于设置了 value -&gt; controlled component.</p>
+</li>
+<li><p><code>textarea</code> 的值要设置在 value 属性</p>
+</li>
+<li><p><code>select</code> 的<code>value</code> 属性可以是数组，不建议使用 <code>option</code> 的 <code>selected</code> 属性</p>
+</li>
+<li><p><code>input/textarea</code> 的 <code>onChange</code> 每次输入都会触发，即使不失去焦点</p>
+</li>
+<li><p><code>radio/checkbox</code>  点击后触发 `onChange</p>
+</li>
+</ul>
+<h2 id="-3-binding-labels-to-inputs-with-unique-ids">#3 Binding labels to inputs with unique IDs</h2>
+<blockquote>
+<p>if you care about your users, you’ll bind your <code>&lt;label&gt;</code> elements to your <code>&lt;input&gt;</code>s via an <code>id</code>/<code>for</code> combo.</p>
+<p>You <em>could</em> generate a random ID for each input/label pair, but then your client-rendered HTML won’t match your server-rendered HTML. Checksum error! That’s no good.</p>
+<p>So, instead you can create a little module that gives an incrementing ID, and use that in an <code>Input</code> component like so:</p>
+</blockquote>
+<pre class="hljs"><code><span class="hljs-comment">// Input Component</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Input</span> <span class="hljs-keyword"><span class="hljs-keyword">extends</span></span> <span class="hljs-title">React</span>.<span class="hljs-title">Component</span> {</span>
+  constructor(props) {
+    <span class="hljs-keyword">super</span>(props);
+    <span class="hljs-keyword">this</span>.id = getNextId();
+
+    <span class="hljs-keyword">this</span>.onChange = <span class="hljs-keyword">this</span>.onChange.bind(<span class="hljs-keyword">this</span>);
+  }
+
+  onChange(e) {
+    <span class="hljs-keyword">this</span>.props.onChange(e.target.value);
+  }
+
+  render() {
+    <span class="hljs-keyword">return</span> (
+      &lt;label htmlFor={<span class="hljs-keyword">this</span>.id}&gt;
+        {<span class="hljs-keyword">this</span>.props.label}
+
+        &lt;input
+          id={<span class="hljs-keyword">this</span>.id}
+          value={<span class="hljs-keyword">this</span>.props.value}
+          onChange={<span class="hljs-keyword">this</span>.onChange}
+          /&gt;
+      &lt;/label&gt;
+    );
+  }
+}
+
+<span class="hljs-comment">// elementIdCreator.js</span>
+let count = <span class="hljs-number">1</span>;
+
+export const resetId = () =&gt; {
+  count = <span class="hljs-number">1</span>;
+}
+
+export const getNextId = () =&gt; {
+  <span class="hljs-keyword">return</span> <code>element-id-${count++}</code>;
+}</code></pre><ul>
+<li>这里大概是自动给 <code>label</code>/<code>input</code> 加上一对一的 id.</li>
+<li>Creator 中好像没有这样使用。</li>
+</ul>
+<h2 id="-4-controlling-css-with-props">#4 Controlling CSS with props</h2>
+<p>Three distinct ways to control the CSS applied to a component.</p>
+<ol>
+<li><p>Using themes. (Used in Proj Creator)</p>
+<p><code>&lt;Button theme=&quot;secondary&quot;&gt;Hello&lt;/Button&gt;</code></p>
+<p>Tip: Do your best to only require one theme per component.</p>
+<p>这种可能适合页面主题定制化。</p>
+<p>Creator 中的 <code>&lt;Button /&gt;</code> 本来是用 theme 做区分，但是好像设计那边看起来就是一个主题，豆瓣绿经典款，所以后来改为了使用下面两种方式。</p>
+<p>​</p>
+</li>
+<li><p>Using flags. (Used too.)</p>
+<p><code>&lt;Button theme=&quot;secondary&quot; rounded&gt;Hello&lt;/Button&gt;</code></p>
+<p>Creator Project:</p>
+<p>```jsx
+Button.propTypes = {
+  size: PropTypes.oneOf([</p>
+<pre class="hljs"><code><span class="hljs-string">&#39;sm&#39;</span>,
+<span class="hljs-string">&#39;md&#39;</span>,
+<span class="hljs-string">&#39;lg&#39;</span>,
+<span class="hljs-string">&#39;row&#39;</span></code></pre><p>  ]),
+  status: PropTypes.oneOf(Object.values(BUTTON_STATUS)),
+  type: PropTypes.oneOf([</p>
+<pre class="hljs"><code><span class="hljs-string">&#39;submit&#39;</span>,
+<span class="hljs-string">&#39;save&#39;</span>,
+<span class="hljs-string">&#39;cancel&#39;</span>
+])</code></pre><p>}</p>
+</li>
+</ol>
+<p>   // use className to control styles</p>
+<pre class="hljs"><code> <span class="hljs-keyword">const</span> cls = classNames(<span class="hljs-string">&#39;btn&#39;</span>, {
+   [<span class="hljs-string"><code>&lt;span class=&quot;hljs-subst&quot;&gt;${prefixCls}&lt;/span&gt;-btn</code></span>]: <span class="hljs-literal">true</span>,
+   [<span class="hljs-string"><code>&lt;span class=&quot;hljs-subst&quot;&gt;${prefixCls}&lt;/span&gt;-btn-&lt;span class=&quot;hljs-subst&quot;&gt;${size}&lt;/span&gt;</code></span>]: !!size,
+   [<span class="hljs-string"><code>&lt;span class=&quot;hljs-subst&quot;&gt;${prefixCls}&lt;/span&gt;-btn-&lt;span class=&quot;hljs-subst&quot;&gt;${status}&lt;/span&gt;</code></span>]: !!status,
+   [<span class="hljs-string"><code>&lt;span class=&quot;hljs-subst&quot;&gt;${prefixCls}&lt;/span&gt;-btn-&lt;span class=&quot;hljs-subst&quot;&gt;${type}&lt;/span&gt;</code></span>]: !!type
+ }, props.className)</code></pre><pre class="hljs"><code>
+   ​
+
+<span class="hljs-number">3.</span> Setting values.
+
+   Pass the <span class="hljs-keyword">value</span> of a CSS property directly. (<span class="hljs-keyword">set</span> it <span class="hljs-keyword">as</span> an inline style)
+
+   <code>&amp;lt;Icon width=&lt;span class=&quot;hljs-string&quot;&gt;&quot;25&quot;&lt;/span&gt; height=&lt;span class=&quot;hljs-string&quot;&gt;&quot;25&quot;&lt;/span&gt; type=&lt;span class=&quot;hljs-string&quot;&gt;&quot;search&quot;&lt;/span&gt; /&amp;gt;</code>
+
+   <span class="hljs-preprocessor">### An example</span>
+
+   <img src="https:&lt;span class=&quot;hljs-comment&quot;&gt;//cdn-images-1.medium.com/max/800/1*Kx1jOQONhFZPnGe72Fd4tQ.png" alt="creating-a-link-component"></span>
+
+   <code>``jsx
+   &lt;span class=&quot;hljs-comment&quot;&gt;// Link.js&lt;/span&gt;
+   &lt;span class=&quot;hljs-keyword&quot;&gt;const&lt;/span&gt; Link = (props) =&amp;gt; {
+     &lt;span class=&quot;hljs-keyword&quot;&gt;let&lt;/span&gt; className =</code>link link--${props.theme}-theme`;
+
+     <span class="hljs-keyword">if</span> (!props.underline) className += <span class="hljs-string">&#39; link--no-underline&#39;</span>;
+
+     <span class="hljs-keyword">return</span> &lt;a href={props.href} className={className}&gt;{props.children}&lt;/a&gt;;
+   };
+
+   Link.propTypes = {
+     theme: PropTypes.oneOf([
+       <span class="hljs-string">&#39;default&#39;</span>, <span class="hljs-comment">// primary color, no underline</span>
+       <span class="hljs-string">&#39;blend&#39;</span>, <span class="hljs-comment">// inherit surrounding styles</span>
+       <span class="hljs-string">&#39;primary-button&#39;</span>, <span class="hljs-comment">// primary color, solid block</span>
+     ]),
+     underline: PropTypes.<span class="hljs-keyword">bool</span>,
+     href: PropTypes.<span class="hljs-keyword">string</span>.isRequired,
+     children: PropTypes.oneOfType([
+       PropTypes.element,
+       PropTypes.array,
+       PropTypes.<span class="hljs-keyword">string</span>,
+     ]).isRequired,
+   };
+
+   Link.defaultProps = {
+     theme: <span class="hljs-string">&#39;default&#39;</span>,
+     underline: <span class="hljs-keyword">false</span>,
+   };</code></pre><pre class="hljs"><code>   <span class="hljs-comment">// Link.css</span>
+   <span class="hljs-class">.link--default-theme</span>,
+   <span class="hljs-class">.link--blend-theme</span><span class="hljs-pseudo">:hover</span> {
+     <span class="hljs-attribute">color</span>: <span class="hljs-hexcolor">#D84315</span>;
+   }
+
+   <span class="hljs-class">.link--blend-theme</span> {
+     <span class="hljs-attribute">color</span>: inherit;
+   }
+
+   <span class="hljs-class">.link--default-theme</span><span class="hljs-pseudo">:hover</span>,
+   <span class="hljs-class">.link--blend-theme</span><span class="hljs-pseudo">:hover</span> {
+     <span class="hljs-attribute">text-decoration</span>: underline;
+   }
+
+   <span class="hljs-class">.link--primary-button-theme</span> {
+     <span class="hljs-attribute">display</span>: inline-block;
+     <span class="hljs-attribute">padding</span>: <span class="hljs-number">12px</span> <span class="hljs-number">25px</span>;
+     <span class="hljs-attribute">font-size</span>: <span class="hljs-number">18px</span>;
+     <span class="hljs-attribute">background</span>: <span class="hljs-hexcolor">#D84315</span>;
+     <span class="hljs-attribute">color</span>: white;
+   }
+
+   <span class="hljs-class">.link--no-underline</span> {
+     <span class="hljs-attribute">text-decoration</span>: none;
+   }</code></pre><p>   ​</p>
+<blockquote>
+<p>JavaScript is easy, but with CSS you pay for your sins — once you’ve started a mess, it’s not easy to back out of.</p>
+<p>True fact: fighting CSS specificity is the number one cause of death among web developers.</p>
+</blockquote>
+<p>   嗯，这里原文作者用 CSS specificity 优先级举了个例子。比如他说你现在可以去看看 medium 顶端导航上大 Title 的CSS 样式，</p>
+<blockquote>
+<p>just guess how many CSS rules are combined to make this round circle with a number in it?</p>
+<p>Twenty three rules.</p>
+<p>That’s <em>not </em>including the styles inherited from eleven other rules.</p>
+<p>The line-height alone is overridden nine times.</p>
+</blockquote>
+<p>   光是 <code>line-height</code> 特么的就重写了九次！！！</p>
+<p>   <img src="https://cdn-images-1.medium.com/max/800/1*lQzlIf8PPqeLUS5VOvTH4Q.png" alt="line-height-css-rules"></p>
+<p>   ​</p>
+<p>   这 line-height 要是一只猫的话，现在也早死了吧。</p>
+<p>   React 的话，就好办了。</p>
+<ul>
+<li>控制组件的 classes ；</li>
+<li>移掉所有的全局 resets 然后都把它们扔到 Button.scss 中；</li>
+<li>可以用 <code>all: unset</code> 去掉所有浏览器初始样式。</li>
+</ul>
+<h2 id="-5-the-switching-component">#5 The switching component</h2>
+<p>The switching component, rendering one of many components.</p>
+<blockquote>
+<p>This may be a <code>&lt;Page&gt;</code> component that displays one of many pages. Or tabs in a tab set, or different modals in a modal component.</p>
+</blockquote>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> HomePage <span class="hljs-keyword">from</span> <span class="hljs-string">&#39;./HomePage.jsx&#39;</span>;
+<span class="hljs-keyword">import</span> AboutPage <span class="hljs-keyword">from</span> <span class="hljs-string">&#39;./AboutPage.jsx&#39;</span>;
+<span class="hljs-keyword">import</span> UserPage <span class="hljs-keyword">from</span> <span class="hljs-string">&#39;./UserPage.jsx&#39;</span>;
+<span class="hljs-keyword">import</span> FourOhFourPage <span class="hljs-keyword">from</span> <span class="hljs-string">&#39;./FourOhFourPage.jsx&#39;</span>;
+
+<span class="hljs-keyword">const</span> PAGES = {
+  home: HomePage,
+  about: AboutPage,
+  user: UserPage,
+};
+
+<span class="hljs-keyword">const</span> Page = (props) =&gt; {
+  <span class="hljs-keyword">const</span> Handler = PAGES[props.page] || FourOhFourPage;
+
+  <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">Handler</span> {<span class="hljs-attribute">...props</span>} /&gt;</span>
+};
+
+Page.propTypes = {
+    page: PropTypes.oneOf(Object.keys(PAGES)).isRequired,
+};
+
+// Usage
+
+<span class="hljs-tag">&lt;<span class="hljs-title">Page</span> <span class="hljs-attribute">page</span>=<span class="hljs-value">&quot;home&quot;</span> /&gt;</span></span></code></pre><p>If you replace the keys <code>home</code>, <code>about</code> and <code>user</code> with <code>/</code>, <code>/about</code>, and <code>/user</code>, you’ve got yourself half a router.</p>
+<p>(Future post idea: removing <code>react-router</code>.)</p>
+<p>这里 Creator 中还是使用了 <code>react-router</code> 作为 SPA 路由。</p>
+<pre class="hljs"><code><span class="hljs-regexp">//</span> Route.jsx
+import React from <span class="hljs-string">&#39;react&#39;</span>
+import IntroPage from <span class="hljs-string">&#39;../Page/IntroPage&#39;</span>
+import ApplyFormPage from <span class="hljs-string">&#39;../Page/ApplyFormPage&#39;</span>
+import AddWorksPage from <span class="hljs-string">&#39;../Page/AddWorksPage&#39;</span>
+import ApplyDonePage from <span class="hljs-string">&#39;../Page/ApplyDonePage&#39;</span>
+import MyWorksPage from <span class="hljs-string">&#39;../Page/MyWorksPage&#39;</span>
+
+const defaultHeader = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &lt;h1&gt;创作者认证申请&lt;/h1&gt;
+const routes = [
+  { <span class="hljs-attribute">path</span>: <span class="hljs-string">&#39;/&#39;</span>,
+    <span class="hljs-attribute">exact</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attribute">header</span>: defaultHeader,
+    <span class="hljs-attribute">main</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> (&lt;IntroPage /&gt;)
+  },
+  { <span class="hljs-attribute">path</span>: <span class="hljs-string">&#39;/apply/intro&#39;</span>,
+    <span class="hljs-attribute">header</span>: defaultHeader,
+    <span class="hljs-attribute">main</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> (&lt;IntroPage /&gt;)
+  },
+  { <span class="hljs-attribute">path</span>: <span class="hljs-string">&#39;/apply/step1&#39;</span>,
+    <span class="hljs-attribute">header</span>: defaultHeader,
+    <span class="hljs-attribute">main</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> (&lt;ApplyFormPage /&gt;)
+  },
+  { <span class="hljs-attribute">path</span>: <span class="hljs-string">&#39;/apply/step2&#39;</span>,
+    <span class="hljs-attribute">header</span>: defaultHeader,
+    <span class="hljs-attribute">main</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> (&lt;AddWorksPage /&gt;)
+  },
+  { <span class="hljs-attribute">path</span>: <span class="hljs-string">&#39;/apply/step3&#39;</span>,
+    <span class="hljs-attribute">header</span>: defaultHeader,
+    <span class="hljs-attribute">main</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> (&lt;ApplyDonePage /&gt;)
+  },
+  { <span class="hljs-attribute">path</span>: <span class="hljs-string">&#39;/myworks&#39;</span>,
+    <span class="hljs-attribute">header</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &lt;h1&gt;管理我的作品&lt;/h1&gt;,
+    <span class="hljs-attribute">main</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> (&lt;MyWorksPage /&gt;)
+  }
+]
+export default routes</code></pre><pre class="hljs"><code>// App.js
+import {
+  HashRouter,
+  Route
+} from &#39;react-router-dom&#39;
+import routes from &#39;./Route&#39;
+
+const App = () =&gt; (
+  <span class="hljs-tag">&lt;<span class="hljs-title">HashRouter</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">&#39;App&#39;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&#39;creator-wrapper&#39;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">&#39;header&#39;</span>&gt;</span>
+          { routes.map((route, index) =&gt; (
+            <span class="hljs-tag">&lt;<span class="hljs-title">Route</span> <span class="hljs-attribute">key</span>=<span class="hljs-value">{index}</span> <span class="hljs-attribute">path</span>=<span class="hljs-value">{route.path}</span>
+              <span class="hljs-attribute">exact</span>=<span class="hljs-value">{route.exact}</span>
+              <span class="hljs-attribute">component</span>=<span class="hljs-value">{route.header}</span>
+            /&gt;</span>
+          )) }
+        <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">&#39;main&#39;</span>&gt;</span>
+          { routes.map((route, index) =&gt; (
+            <span class="hljs-tag">&lt;<span class="hljs-title">Route</span> <span class="hljs-attribute">key</span>=<span class="hljs-value">{index}</span> <span class="hljs-attribute">path</span>=<span class="hljs-value">{route.path}</span>
+              <span class="hljs-attribute">exact</span>=<span class="hljs-value">{route.exact}</span>
+              <span class="hljs-attribute">component</span>=<span class="hljs-value">{route.main}</span> /&gt;</span>
+          )) }
+        <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+        { isMobile ? Footer() : Sidebar() }
+      <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">HashRouter</span>&gt;</span>
+)</code></pre><h2 id="-6-reaching-into-a-component">#6 Reaching into a component</h2>
+<h3 id="render">render</h3>
+<p>React Virtual DOM ==&gt; render= =&gt; DOM</p>
+<pre class="hljs"><code>ReactComponent render(
+  ReactElement <span class="hljs-keyword">element</span>,
+  DOMElement container,
+  [<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">callback</span>]</span>
+)</code></pre><blockquote>
+<p>Render a ReactElement into the DOM in the supplied <code>container</code> and return a <a href="more-about-refs.html">reference</a> to the component (or returns <code>null</code> for <a href="reusable-components.html#stateless-functions">stateless components</a>).</p>
+<p><code>ReactDOM.render()</code> controls the contents of the container node you pass in. Any existing DOM elements inside are replaced when first called. Later calls use React’s DOM diffing algorithm for efficient updates.</p>
+</blockquote>
+<ul>
+<li><code>ReactElement</code> into DOM.</li>
+<li>有状态组件 =&gt; <code>refs</code>，无状态组件 =&gt; <code>null</code></li>
+<li>组件初次渲染之后再次更新，会使用 ReactDOM diffing algorithm</li>
+<li>装载完后，执行回调 callback</li>
+<li><code>ReactDOM.render()</code> 不会影响 container node，只会影响 container node 的 children nodes. （可能是被覆盖替换啊..）</li>
+</ul>
+<pre class="hljs"><code>const myApp = &lt;App /&gt;   <span class="hljs-comment">// just a ReactElement.(a object)</span>
+
+const myAppInstance = ReactDOM.<span class="hljs-function"><span class="hljs-title">render</span><span class="hljs-params">(&lt;App /&gt;, document.getElementById(<span class="hljs-string">&#39;root&#39;</span>)</span></span>)
+myAppInstance.<span class="hljs-function"><span class="hljs-title">doSth</span><span class="hljs-params">()</span></span> <span class="hljs-comment">// The ref returned from ReactDOM.render</span></code></pre><p>这里利用 <code>render</code> 方法得到了 App 组件的实例，就可以使用它做点什么了。</p>
+<p>但是如果在组件内，JSX 并不会返回一个组件的实例。组件内只是一个 ReactElement，告诉 React 加载的组件应该长什么样。</p>
+<blockquote>
+<p>Keep in mind, however, that the JSX doesn&#39;t return a component instance! It&#39;s just a <strong>ReactElement</strong>: a lightweight representation that tells React what the mounted component should look like.</p>
+</blockquote>
+<h3 id="ref">ref</h3>
+<p>一个神奇的属性。</p>
+<h4 id="the-ref-callback-attribute">The ref Callback Attribute</h4>
+<ul>
+<li>可以给任意 React 组件加上 <code>ref</code> prop. 组件被调用时候会新建一个该组件实例，而 <code>ref</code> 会指向这个实例。</li>
+</ul>
+<ul>
+<li><p>可以是一个 callback function，会在组件加载后立即执行。</p>
+<pre class="hljs"><code>// <span class="hljs-type">ES5</span>
+
+render: function() {
+  <span class="hljs-keyword">return</span> (
+    &lt;<span class="hljs-type">TextInput</span>
+      <span class="hljs-keyword">ref</span>={function(input) {
+        <span class="hljs-keyword">if</span> (input != null) {
+          input.focus();
+        }
+      }} /&gt;
+  );
+},
+
+// <span class="hljs-keyword">or</span> <span class="hljs-type">ES6</span> arrow function way:
+render() {
+  <span class="hljs-keyword">return</span> &lt;<span class="hljs-type">TextInput</span> <span class="hljs-keyword">ref</span>={ c =&gt; this._input = c } /&gt;
+}
+componentDidMount() {
+  this._input.focuse()
+}</code></pre><p>​</p>
+</li>
+</ul>
+<blockquote>
+<p> When attaching a ref to a DOM component like <code>&lt;div /&gt;</code>, you get the DOM node back; when attaching a ref to a composite component like <code>&lt;TextInput /&gt;</code>, you&#39;ll get the React class instance.</p>
+</blockquote>
+<ul>
+<li><code>refs</code> in <code>ReactComponent</code> =&gt; 得到 ReactComponent 实例，就可以调用相关实例方法了（继续 findDOMNode(refs) 就可以得到 DOM 节点，使用 DOM 方法）。</li>
+<li><code>refs</code> in <code>DOM</code>  =&gt; 得到 DOM 节点，就可以使用 DOM 方法。</li>
+<li><em>Note:</em> Note that when the referenced component is unmounted and whenever the ref changes, the old ref will be called with <code>null</code> as an argument. This prevents memory leaks in the case that the instance is stored, as in the first example. Also note that when writing refs with inline function expressions as in the examples here, React sees a different function object each time so on every update, ref will be called with <code>null</code> immediately before it&#39;s called with the component instance.</li>
+<li>为防止内存泄露，当引用组件被卸载或者 <code>ref</code> 改变的时候，<code>ref = null</code>.</li>
+<li>如果用 inline function，因为每次都是一个不同的 function object，所以当组件每次更新的时候，<code>ref</code> 都会被设置为 <code>null</code> 直到组件实例再次调用它。</li>
+</ul>
+<h4 id="the-ref-string-attribute-legacy">The ref String Attribute *legacy</h4>
+<p>要获取一个 React 组件的引用，既可以使用 this 来获取当前 ReactComponent，也可以使用 <code>ref</code> 来获取子组件的引用。</p>
+<pre class="hljs"><code>&lt;input <span class="hljs-keyword">ref</span>=<span class="hljs-string">&quot;myInput&quot;</span> /&gt;
+
+// used <span class="hljs-keyword">in</span> componentDidMount()
+<span class="hljs-keyword">var</span> input = this.refs.myInput;
+<span class="hljs-keyword">var</span> inputValue = input.value;
+<span class="hljs-keyword">var</span> inputRect = input.getBoundingClientRect();</code></pre><h4 id="refs-">refs 使用</h4>
+<ul>
+<li>DOM 操作</li>
+</ul>
+<blockquote>
+<p>Performing DOM measurements almost always requires reaching out to a &quot;native&quot; component such as <code>&lt;input /&gt;</code> and accessing its underlying DOM node using a ref. Refs are one of the only practical ways of doing this reliably.</p>
+</blockquote>
+<ul>
+<li>对于 <code>stateless component</code>， <code>findDOMNode()</code> &amp; <code>ref</code> 返回的都是 <code>null</code>，因为它只是函数执行，并不返回一个实例 <code>a backing instance</code>。要用的话只能自己去手动包一层 component.</li>
+</ul>
+<h4 id="an-example">An example</h4>
+<p>Like adding <code>autofucus</code> to the input to pease your users in an easy way.</p>
+<p>The React Way</p>
+<pre class="hljs"><code><span class="hljs-comment">// Child Component</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Input</span> <span class="hljs-keyword"><span class="hljs-keyword">extends</span></span> <span class="hljs-title">Compnent</span> {</span>
+  focus() {
+    <span class="hljs-keyword">this</span>.input.focus()
+  }
+  render() {
+    <span class="hljs-keyword">return</span> (
+      &lt;input ref={(el)=&gt; <span class="hljs-keyword">this</span>.input = el} /&gt;
+    )
+  }
+}
+
+<span class="hljs-comment">// Parent Component</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SignInModal</span> <span class="hljs-keyword"><span class="hljs-keyword">extends</span></span> <span class="hljs-title">Component</span> {</span>
+  componentDidMount() {
+    <span class="hljs-keyword">this</span>.<span class="hljs-type">InputComponent</span>.focus(); <span class="hljs-comment">// 拿到 Input 组件的引用，就可以调用 Input 组件方法</span>
+  }
+
+  render() {
+    <span class="hljs-keyword">return</span> (
+      &lt;div&gt;
+        &lt;label&gt;<span class="hljs-type">User</span> name: &lt;/label&gt;
+        &lt;<span class="hljs-type">Input</span>
+          ref={comp =&gt; { <span class="hljs-keyword">this</span>.<span class="hljs-type">InputComponent</span> = comp; }}
+        /&gt;
+      &lt;/div&gt;
+    )
+  }
+}</code></pre><h2 id="-7-almost-components">#7 Almost-components</h2>
+<blockquote>
+<p>Don’t prematurely componentize. Components aren’t like teaspoons; you <em>can </em>have too many.</p>
+<p>What I am saying: “take something that you <em>don’t</em> think should be a component, and make it a bit more like its own component (if it can be).”</p>
+</blockquote>
+<p>让那些你认为不应该成为一个组件的东西，长得更像组件一点（如果它可以的话）。</p>
+<h2 id="-8-components-for-formatting-text">#8 Components for formatting text</h2>
+<p>用来格式化的组件，也就是组件也可以工具化。</p>
+<pre class="hljs"><code><span class="hljs-comment">// Here’s a &lt;Price&gt; component that takes a number and returns a pretty string, with or without decimals and a ‘$’ sign.</span>
+
+<span class="hljs-keyword">const</span> Price = (props) =&gt; {
+    <span class="hljs-keyword">const</span> price = props.children.toLocaleString(<span class="hljs-string">&#39;en&#39;</span>, {
+      style: props.showSymbol ? <span class="hljs-string">&#39;currency&#39;</span> : undefined,
+      currency: props.showSymbol ? <span class="hljs-string">&#39;USD&#39;</span> : undefined,
+      maximumFractionDigits: props.showDecimals ? <span class="hljs-number">2</span> : <span class="hljs-number">0</span>,
+    });
+
+    <span class="hljs-keyword">return</span> &lt;span className={props.className}&gt;{price}&lt;/span&gt;
+};
+
+Price.propTypes = {
+  className: React.PropTypes.string,
+  children: React.PropTypes.number,
+  showDecimals: React.PropTypes.<span class="hljs-built_in">bool</span>,
+  showSymbol: React.PropTypes.<span class="hljs-built_in">bool</span>,
+};
+
+Price.defaultProps = {
+  children: <span class="hljs-number">0</span>,
+  showDecimals: <span class="hljs-keyword">true</span>,
+  showSymbol: <span class="hljs-keyword">true</span>,
+};
+
+<span class="hljs-keyword">const</span> Page = () =&gt; {
+  <span class="hljs-keyword">const</span> lambPrice = <span class="hljs-number">1234.567</span>;
+  <span class="hljs-keyword">const</span> jetPrice = <span class="hljs-number">999999.99</span>;
+  <span class="hljs-keyword">const</span> bootPrice = <span class="hljs-number">34.567</span>;
+
+  <span class="hljs-keyword">return</span> (
+    &lt;div&gt;
+      &lt;p&gt;One lamb <span class="hljs-keyword">is</span> &lt;Price className=<span class="hljs-string">&quot;expensive&quot;</span>&gt;{lambPrice}&lt;/Price&gt;&lt;/p&gt;
+      &lt;p&gt;One jet <span class="hljs-keyword">is</span> &lt;Price showDecimals={<span class="hljs-keyword">false</span>}&gt;{jetPrice}&lt;/Price&gt;&lt;/p&gt;
+      &lt;p&gt;Those gumboots will <span class="hljs-literal">set</span> ya back &lt;Price showDecimals={<span class="hljs-keyword">false</span>} showSymbol={<span class="hljs-keyword">false</span>}&gt;{bootPrice}&lt;/Price&gt; bucks.&lt;/p&gt;
+    &lt;/div&gt;
+  );
+};</code></pre><p>这里当然可以很简单的用 less code function 来实现</p>
+<pre class="hljs"><code><span class="hljs-comment">// could just easily use a function</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">numberToPrice</span><span class="hljs-params">(num, options = {})</span> </span>{
+    <span class="hljs-keyword">const</span> showSymbol = options.showSymbol !== <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">const</span> showDecimals = options.showDecimals !== <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">return</span> num.toLocaleString(<span class="hljs-string">&#39;en&#39;</span>, {
+      style: showSymbol ? <span class="hljs-string">&#39;currency&#39;</span> : <span class="hljs-literal">undefined</span>,
+      currency: showSymbol ? <span class="hljs-string">&#39;USD&#39;</span> : <span class="hljs-literal">undefined</span>,
+      maximumFractionDigits: showDecimals ? <span class="hljs-number">2</span> : <span class="hljs-number">0</span>,
+    });
+}
+
+<span class="hljs-keyword">const</span> Page = () =&gt; {
+  <span class="hljs-keyword">const</span> lambPrice = <span class="hljs-number">1234.567</span>;
+  <span class="hljs-keyword">const</span> jetPrice = <span class="hljs-number">999999.99</span>;
+  <span class="hljs-keyword">const</span> bootPrice = <span class="hljs-number">34.567</span>;
+
+  <span class="hljs-keyword">return</span> (
+    &lt;div&gt;
+      &lt;p&gt;One lamb <span class="hljs-keyword">is</span> &lt;span className=<span class="hljs-string">&quot;expensive&quot;</span>&gt;{numberToPrice(lambPrice)}&lt;/span&gt;&lt;/p&gt;
+      &lt;p&gt;One jet <span class="hljs-keyword">is</span> {numberToPrice(jetPrice, { showDecimals: <span class="hljs-literal">false</span> })}&lt;/p&gt;
+      &lt;p&gt;Those gumboots will <span class="hljs-keyword">set</span> ya back {numberToPrice(bootPrice, { showDecimals: <span class="hljs-literal">false</span>, showSymbol: <span class="hljs-literal">false</span> })} bucks.&lt;/p&gt;
+    &lt;/div&gt;
+  );</code></pre><h2 id="-9-the-store-is-the-component-s-servant">#9 The store is the component’s servant</h2>
+<p>用 <code>store</code> 来管理组件复杂度。</p>
+<p>My suggestion:</p>
+<ol>
+<li>Work out the general structure of your components and the data they will require</li>
+<li>Design your store to support those requirements</li>
+<li>Do whatever you need to do to your incoming data to make it fit into the store.</li>
+</ol>
+<p>推荐使用单个模块来管理所有 Incoming data，所有的数据处理放在一起做，单元测试什么的也变简单了。</p>
+<pre class="hljs"><code><span class="hljs-comment">// react/redux way</span>
+
+<span class="hljs-tag">fetch</span>(<span class="hljs-built_in"><code>/api/search?${queryParams}</code></span>)
+<span class="hljs-class">.then</span>(response =&gt; response.<span class="hljs-function">json</span>())
+<span class="hljs-class">.then</span>(normalizeSearchResultsApiData) <span class="hljs-comment">// the do-it-all data massager</span>
+<span class="hljs-class">.then</span>(normalData =&gt; {
+    <span class="hljs-comment">// dispatch normalData to the store here</span>
+});</code></pre><p>**这里推荐徐飞在 QCon 上分享的 <a href="https://zhuanlan.zhihu.com/p/26426054">单页引用的数据流方案探索</a></p>
+<h2 id="-10-importing-components-without-relative-paths">#10 Importing components without relative paths</h2>
+<p>Turn</p>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> Button <span class="hljs-keyword">from</span> <span class="hljs-string">&#39;../../../../Button/Button.jsx&#39;</span>;
+<span class="hljs-keyword">import</span> Icon <span class="hljs-keyword">from</span> <span class="hljs-string">&#39;../../../../Icon/Icon.jsx&#39;</span>;
+<span class="hljs-keyword">import</span> Footer <span class="hljs-keyword">from</span> <span class="hljs-string">&#39;../../Footer/Footer.jsx&#39;</span>;</code></pre><p>Into</p>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> {Button, Icon, Footer} <span class="hljs-keyword">from</span> <span class="hljs-string">&#39;Components&#39;</span>;</code></pre><p>更灵活方便使用组件。</p>
+<p>使用 <code>Webpack2</code> 可以直接配置</p>
+<pre class="hljs"><code><span class="hljs-regexp">//</span> exports all components wherever they are
+<span class="hljs-regexp">//</span> <span class="hljs-attribute">Ref</span>: Webpack <span class="hljs-built_in">require</span>.context
+<span class="hljs-regexp">//</span> <span class="hljs-attribute">https</span>:<span class="hljs-regexp">//</span>webpack.github.io/docs/context.html
+
+<span class="hljs-regexp">//</span> ./{xxx}/yyy/index.js =&gt; import { yyy } from <span class="hljs-string">&#39;components&#39;</span>
+const req = <span class="hljs-built_in">require</span>.context(<span class="hljs-string">&#39;.&#39;</span>, <span class="hljs-literal">true</span>, <span class="hljs-regexp">/.\/[^/</span>]+\<span class="hljs-regexp">/[^/</span>]+\<span class="hljs-regexp">/index.js$/</span>)
+
+req.keys().forEach(<span class="hljs-function"><span class="hljs-params">(key)</span> =&gt;</span> {
+  const componentName = key.replace(<span class="hljs-regexp">/^.+\/([^/</span>]+)\<span class="hljs-regexp">/index.js/</span>, <span class="hljs-string">&#39;$1&#39;</span>)
+  <span class="hljs-built_in">module</span>.exports[componentName] = req(key).default
+})</code></pre><p>Creator 中因为用的 <code>create-react-app</code> CLI，无法自己配置 Webpack，所以并没有用到...</p>
+]]></description><link>/2017-06-28-10-react-mini-patterns-note/index.html</link><guid isPermaLink="true">/2017-06-28-10-react-mini-patterns-note/index.html</guid><category><![CDATA[notes]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Tue, 27 Jun 2017 16:00:00 GMT</pubDate></item><item><title><![CDATA[一个人没有音乐是可以生存，但他可能生活得不太好]]></title><description><![CDATA[<p>这是一篇关于<a href="https://book.douban.com/subject/1493169/">指尖下的音乐 Music at Your Fingertips</a> 的<a href="https://book.douban.com/review/8063271/">书评</a>。</p>
+<hr>
+<p>没想到，一本谈论「钢琴演奏」的书，居然充满了如此多的哲理。上升到的高度，就连并不是钢琴演奏者（比如我），都受益良多。</p>
+<p>大师之所以成为大师，除了有过人的天赋外，一定与他们那些富有方法和技巧的刻意练习分不开关系。</p>
+<p>这是在朝阳图书馆偶然发现的一本小书，内侧封面介绍说，作者是世界著名钢琴家 Ruth Slenczynska ，四岁就以音乐神童的身份演出，从艺七十多年以来已在世界各地举办了 3000 场以上的独奏会。Slenczynska 同时也是一位备受欢迎的音乐评审和音乐教育大师，一针见血地解决许多钢琴演奏上的问题，所以这本书算是习琴者必备参考书之一。</p>
+<p>借了很久，今天终于抽出半天时间一口气看完，做了一晚上的笔记。</p>
+<p>当时也正好自己是在学吉他的劲头上，对于现场演奏这块比较苦恼，想着各种器乐的学习和演奏都是通的，同时作为一个音乐爱好者，一直想对钢琴有所了解，于是翻开随意读了几页，渐渐发现，正如这本书的代序所说，这本书真的不仅仅是讲「如何练琴」这么简单，Slenczynska 对音乐的认识和见解，已经把普通的悉谱、练琴、演奏过程，小至分解到一个个音符、一段段乐句，大至上升到了音乐的高度，甚至于演奏者的生活方式及人生态度，或者更宽泛地说，三观。</p>
+<p>总的来说，本书给我的最大感触有三点。</p>
+<p>第一，Slenczynska 强调，学习音乐，应该先从学习如何「听」开始。此处她说的「听」，是一个人内在的听觉，那种能分辨心中的音乐与外在声音的「听力」。有点玄学，个人觉得应该就是进入自己心流以后，能把外界嘈杂噪音完全屏蔽掉，可以很好的聆听到来自内心的、想要的、真正的音乐。</p>
+<p>第二，音乐就是一种语言，演奏音乐就是带着理解的情绪，把它表达出来。而完美的演奏就是需要「运用想象力」，从悉谱时想象作曲家当时在写这个音符、这个乐句的心意，到想象整个乐章、整个乐曲，演奏者自身应该以一种什么样的情绪来表达，最后想象演奏者自己坐在演奏厅，以一种什么样的方式来演奏。我们必须能先想象出音乐里每一个音符的音色，每一个乐句的走向，及整个作品欲表达的情感与气氛。有了想象后，还需要有能力把这些意念显明地传达出来。如此，我们创造出来的境界，才能马上在聆听者的心中引起共鸣，留下完整且深刻印象。</p>
+<p>第三，音乐的吸收与表达，到了练习到最后，应该是身、心、琴三者合一，&quot;将钢琴视为我们身体的一部分，是具体讲述内心音乐思绪的延伸体。&quot; 当音乐完完全全进入你的潜意识，你才真正拥有它。&quot;一首精致的乐曲，我们不应仅止于「学会」它，更应该将之「吸收」进我们的体内，使它成为你我身体的一部分；不仅相似于你的手指、牙齿等器官，更形同你的心智，能够随着时间的更移而成长、成熟&quot;。将自己全身心投入进去，慢慢地你和你的作品会互相塑造、相互成长。真正热爱音乐的人，演奏出来的音乐才是优美的。</p>
+<p>透过练琴，或者说「音乐」，读的时候，联想起了与自己也特别紧密编程、下厨、健身等，发现这些睿智的道理（说是又炖了一碗鸡汤也好，至少是好喝的能补的药效持久的鸡汤），也能适用在这些方面。</p>
+<p>以下为一些手敲的书摘和自己林林总总的感悟。</p>
+<hr>
+<h5 id="-">译序 山丘上的木屋</h5>
+<ol>
+<li><p>打磨音符，其实就是在增强手指的力度，使这些手指在紧张下，不至于瘫痪，还能发出美丽的声音。打磨休止符，则是个奇怪的用语，但事实的确如此。过去我曾任意地忽视并遗弃休止符，现在都得正视它们存在的意义及正确的长度。音符磨亮后，我得像说话一样地注意乐句的标点符号、感情记号，我得呼吸，我得知道怎么唱、怎么跳、怎么用力。何时用单手指的力、何时用手臂的力、何时用身体的力。它们在音乐的表达上，皆有不同的目的。</p>
+</li>
+<li><p>稳定地爬出了一些成绩后，我被允许「行走」……这个阶段的音乐像极了放慢的影片，一切都是慢动作，但是音乐里所有的表情存在，音乐的张力亦被夸张地表现着，乐句有方向，线条间也有呼吸。</p>
+</li>
+<li><p>「如果你把自己局限在第二等钢琴家中，你就永远只能是第二等钢琴家。我是不愿意成为第二等的，我也不和别人计较，我只和最好的自己比较。如果我这一次做得好，下次我一定要更好。」</p>
+</li>
+<li><p>「横介于 &quot;很好&quot; 和 &quot;极佳&quot; 之间的一条线，是极其纤细的，你只要再多努力一点，再多加深一点感觉，再多加入一些想象，就跨过去了。」</p>
+</li>
+<li><p>我曾好奇地问老师，「为什么一些钢琴家，每天只要练习两个小时，上台就能生龙活虎，而我们却要花这么多时间？」她回答，「当我还是一个孩童的时候，我父亲总是对外宣布，他那天才般的女儿，一天只练习两个小时。而实际上，我每天必定练九个小时的琴。」</p>
+<p>（Note：关于这点，Slenczynska 还写过一本自传，<a href="https://book.douban.com/subject/1464418/">琴恋</a>， 有书评说她的父亲对她练琴超级苛刻，也许天才的成长，也并不是那么一路鲜花。）</p>
+</li>
+<li><p>每一位学生均被指定弹奏两首乐曲，同时必须准备着所有人的乐谱，带着黑、红、蓝三种铅笔。以黑笔记下指法和细节，以红笔在巴赫的音乐里画出主题，再以蓝笔画出副主题。</p>
+<p>​</p>
+</li>
+</ol>
+<hr>
+<h5 id="-">前言 三十年个人经验的累积</h5>
+<ol>
+<li><p>从我开始学习音乐起，老师们在教学上最强调的一件事，就是要我「用耳朵注意地听」（用耳朵去分辨声音），以一种非常开放、真诚、喜好研究的心态去学习任何一种美好的音色。同时，练习用耳朵去判断，确定自己所弹奏的音乐「听起来是对的」，而在这「听起来是对的」的前提下，任何能达到此目标的方法都可以使用。</p>
+</li>
+<li><p>一个优秀的音乐家必定对许多音乐以外的事物感到兴趣，这些兴趣只是因着内心的喜好而存在，没有丝毫额外的目的。</p>
+</li>
+<li><p>每一位钢琴家在技巧上所遇到的问题，都守着他们心理因素的影响。不论我们面临多么艰难的乐曲，只要我们心底有克服困难的愿望，除去了心理上的障碍，一切问题便简单多了。</p>
+</li>
+<li><p>「你是谁，你不过是一个九岁的孩子，为什么要将自己与成熟的钢琴家相比拟呢？你不应该在镜中看一个不实在的自己。从你弹奏的音乐里去了解音乐、与音乐沟通才是最重要的。」</p>
+</li>
+<li><p>事实上每一位伟大的艺术家，都是从学生的阶段一步步走过来的；消化了自己的理念，试验了诸多不同的练习方法和音乐观念，经历了无数次的失败、成功，通过知识的吸收、勤奋的练习，建立了乐观进取的人生观后，才发展成为一位具有独立风格的艺术家。虽然，一位赫赫有名的音乐巨匠与一位毫无一点演奏经验的学生所使用的都是同样的乐谱，然而，他们所表达的意义却迥然不同。其间的差异，便是他们有不同的感受与表达能力。</p>
+<p>（Note：这里觉得，任何一位音乐巨匠、一位编程大师、一位厨艺高人、一位杰出的运动员，他们的成长方式应该都是异曲同工。）</p>
+<p>​</p>
+</li>
+</ol>
+<hr>
+<h5 id="-">第一章 个人因素 —— 艺术家的成长</h5>
+<ol>
+<li>在音乐中，我们的耳朵绝对不会遗漏一个纯正艺术品所欲传达的精神。</li>
+<li>身为一个音乐家，我们的音乐所能表达的，仅仅是真实的自我，不是他人；音乐就像一面镜子，赤裸裸地将自己反映出来。内心如有任何些微造作、虚伪与不真诚，我们都会感到羞耻，而在音乐中表露无遗。</li>
+<li>我们也时常将经历到的灵感，小心翼翼地储藏在脑海里，当需要的时候，它们就从记忆里蹦出，像火花一般地点燃我们再创造的力量。</li>
+<li>一位艺术家的形成，是由许多个人特殊的因素所发展出来的，如：高度的想象力、聪慧、灵敏、易于变通。处在任何环境下都有强烈的学习欲望；即使面临的是崎岖之路，仍然顽强地、辛勤地一步步向前走。</li>
+<li>有时候，信心是我们唯一能够拥有的东西，它带领我们跨越了绝望的天堑。</li>
+<li>爱做白日梦、幻想太多的音乐家，应该训练自己多做些练习。（Note：比如我..）</li>
+<li>对一个演奏家来说，他的心、头脑和手是在一起工作的。这心充满了好奇与美，这头脑知道如何使情感得以宣泄，而手，在任何情况下，都能服从且实现心与脑所给予的音乐意念。</li>
+<li>......我们之所以选择这朵花，主要是我们内心的一双眼睛已代替肉眼，看到花在未来绽放的情景。音乐的形成与此相去不远。在练习每首乐曲之初，我们必须能先想象出音乐里每一个音符的音色，每一个乐句的走向，及整个作品欲表达的情感与气氛。有了想象后，还需要有能力把这些意念显明地传达出来。如此，我们创造出来的境界，才能马上在聆听者的心中引起共鸣，留下完整且深刻印象。</li>
+<li><p>音乐就像我们呼吸的空气一般，是人们生活中不可或缺的。音乐也是一种语言，比任何话语都更能打动人心。而能够在情感上与人们相互交流的音乐演奏，便是世间最光辉与神圣的荣耀，它使得极尽枯燥与单调平凡的联系，都变成了无比快乐的过程。</p>
+<p>（Note： 感觉编程、做饭也是如此吧。开始之前，你脑海中要对你即将出现的作品已经有了个大概的轮廓，大师级别的甚至可能精确到了作品的每个小细节。在创作的时候，你得与自己的作品不断沟通，注入情感。到它终于完成，展现在他人面前，大家都能感受到作者满满的心思与心血。）</p>
+</li>
+</ol>
+<hr>
+<h5 id="-">第二章 音乐是一种语言</h5>
+<ol>
+<li><p>音乐是一种活生生的语言，比任何用口语说出的言词更易打动人心，表达深刻、强烈的情感；而演奏家就是音乐语言的叙述者。</p>
+</li>
+<li><p>李斯特曾说：‘’一个钢琴家在弹奏钢琴时，对自己的音乐应该持有十分严格的批评，这种批评就像发自另一位与自己有相同竞争力的钢琴家口中。“ 许多钢琴家在演奏时候，非常忙碌地制作音乐，而忘了用耳朵去听，这首因为他们在练习的时候，就没有聆听自己弹奏的习惯。因此，如果我们想给予自己的音乐一些建设性的批评，必须在练习时便训练自己用耳朵仔细地聆听。假想自己是一个听众，远远地坐在离钢琴右边 4 英尺的地方（那里是感情发声后，所有声音聚集的点），全神贯注地听着我们的音乐是否连贯，线条是否有意义，整首乐曲是否充满了音乐的起伏与流动。</p>
+<p>（Note： 感觉这里编程和演奏很相似，平庸的程序员只是在非常忙碌地制造一堆代码，并不是真正意义上的「编程」，所以，在自己写代码的时候，要假设是在用白板编程，或者想象旁边正有一双眼睛在帮你 Code Review，这样才能真的进入状态。）</p>
+</li>
+<li><p>以“话语” 为钥匙。练习时，分析乐曲中每一个句子，然后用平静且能听得见的声音告诉自己，你认为某一乐句欲表现的情绪是什么：是愉悦、悲伤，还是思乡、抱怨？是痛苦、欢乐，还是热情、预言？在你决定了最适当的 “感觉” 后，将这种 “感觉” 在键盘上一次又一次做试验，直到你双手弹奏出来的音乐成功地呈现了先前在口语上给予自己的提示。很快，你便能透过音乐传达出自己的情感。</p>
+</li>
+<li><p>“渐弱” 只是单纯地在乐句的音量上慢慢减少，与节奏上的变化没有丝毫的关联。</p>
+</li>
+<li><p>直到多年后的一天，我突然发现，我并不满意其中一个音符的表达，这个不满意使我整个改变了自己对这首乐曲的解释。</p>
+</li>
+<li><p>当我们与一首乐曲一同成长时，总是不断地想在诠释上寻求更新的音色表现、更新的细节及意境。不论在过往的日子里，我们是如何感受着这首乐曲，这些感受皆会随着时光的更替，而变得半真实，那是再也无法重温的旧梦了。</p>
+<p>（Note：就像自己一开始写的代码是为了业务快速上线，之后每隔一段时间对它不断修改重构，直到某天看到，发现整个感觉都变了。）</p>
+</li>
+<li><p>我从不在乐谱上做记号。因为我喜欢在每一次重新演奏某首乐曲时，都有新鲜的感觉。一些小细节很可能在上一次演奏时，并未被注意到，或是未能完全理解它们的意义，而在这一次却可以被发现，而给予整个乐句新的面貌及涵义。</p>
+</li>
+<li><p>绝大多数杰出的音乐作品都有一个完整的结构，在这个结构下，乐曲中每一个音符与细节都经过精心设计，它们在乐曲中有 一定位置。通常，一条长达乐句是有许多小乐句组合而成，而每一个小句子里有存在着许多更小的元素。单独看一个小句子与整体看一个大的乐句，在音乐的表现意义上是完全不同的。</p>
+<p>（Note： 这里和编程阅读一些著名项目的源码，下厨做一些口感层次丰富的大菜一样，要学会从一开始就拆解它们。）</p>
+</li>
+<li><p>三步找到乐句中表达的重点:</p>
+<ol>
+<li>全神贯注地将音乐线条完整地弹出来，没有丝毫间断。</li>
+<li>决定乐句的气氛，而后使每一个音符与细节都在这个氛围的引导下被弹奏。</li>
+<li>找出乐句或段落中的最高点，使音乐在进行时有一个移动的方向。</li>
+</ol>
+</li>
+<li><p>肖邦：“钢琴家应该尽可能地在最准确／最好的钢琴上做练习，因为那将使我们的耳朵熟悉最优美的声音。</p>
+<p>（Note：同样，编程应该用比较好的硬件和软件设备，阅读优秀的代码，熟悉优美的设计实现。）</p>
+</li>
+<li><p>运用&quot;想象力的练习&quot;。</p>
+<p>（Note: Fake it till you make it.）</p>
+</li>
+</ol>
+<hr>
+<h5 id="-">第三章 培养均衡地弹奏的能力</h5>
+<ol>
+<li><p>如此随心所欲的音乐表达，却是经过长时间仔细推敲、不断磨练，注重音乐中每一个音符、休止符的正确弹奏，不放弃乐谱上任何隐秘线条与音色的探索之，所获得的能力。</p>
+</li>
+<li><p>节拍器是练习必备的工具。先从很慢的速度，60 开始，然后 62 — 64 — 66 等，一点点快起来。掌握好后，再从 60 开始， 63 — 66 — 69， 以 3 的速度，熟练后以 4 的速度， 64 — 68 — 72。再以 5 的速度 60 — 65 — 70 — 75 — 80 来练习。</p>
+</li>
+<li><p>耳朵的重要性。</p>
+</li>
+<li><p>李斯特的练琴方法：开始练习一首新的乐曲时，总是以很慢的步骤分五步研究乐谱：</p>
+<ol>
+<li>第一次看谱，仔细地看清楚每一个音符确实的位置；</li>
+<li>第二次则分辨音符的时值；</li>
+<li>第三次，分析乐句的音色，由不同的音色来表达情感上细微的变化；</li>
+<li>第四次，仔细地分析高低谱表内所有的声部，除了明显的主题外，他总希望能再找到一些可以醒目加强的细小旋律和线条；</li>
+<li>最后，他决定他要的速度。</li>
+<li>结束看谱后，他再开始在琴键上练习。</li>
+</ol>
+<p>他不断地从音乐的弹奏里，分析自己情绪上的翻译。每当一段激烈的乐段过去后，他便思考，应以何种方式，自然地延续热情过后松弛的感觉：是冷淡的情绪？抑或是疲累的感受？他非常坚持钢琴家必须绝对地投入音乐的弹奏，因为唯有如此，才会有真正属于个人的诠释产生。</p>
+<p>而在绝对投入之前，钢琴家的双手必须在键盘上已有完全控制琴键的能力。</p>
+<p>「绝对不要让你那不听使唤的双手，阻碍了你艺术家般的诠释。」</p>
+<p>（Note：</p>
+<p>​    读这段话的时候，想到之前练吉他的时候，会刻意练习自己不去看品格并且边练边背谱子，可是还需要有分析每个音符情绪的境界；</p>
+<p>​    编程的时候需要对键盘布局、快捷键操作足够熟悉，让打字的节奏跟上思维的节奏。后来自己写代码的时候会更加刻意练习特殊字符，如 #$%^&amp;*( 的输入；</p>
+<p>​    关于下厨，想到昨天看了一篇对名厨大董（对就是那个大董烤鸭店的大董）的报道，他说到自己原来准备比赛来练习做菜的时候，会达到闭着眼睛也能放对调料的境界。）</p>
+</li>
+<li><p>节拍器的训练可以建立自然反应的律动感。</p>
+<p>以节拍器上各种速度背谱，迫使我们在不同的速度里重复清晰地听到每一乐段的音符，音乐里各个细节便稳固地存于我们脑海中。</p>
+</li>
+<li><p>运用节拍器慢速度训练去克服所有技巧上的障碍，进而除掉对节拍器的依赖。之后需要训练双手能自由肯定地出入琴键。</p>
+</li>
+</ol>
+<hr>
+<h5 id="-">第四章 练习的秘诀</h5>
+<ol>
+<li><p>身为一位演奏者，我们必须将钢琴视为我们身体的一部分，是具体讲述内心音乐思绪的延伸体。</p>
+</li>
+<li><p>我们唯有从缓慢、艰苦、不抄捷径、同一时段只专注于一件事的练习过程里，才能得到我们欲求的能力。虽然，我们是那么的平凡，但是却可以在该工作的生活辛勤工作，在能够轻松的时候自在逍遥。</p>
+</li>
+<li><p>在钢琴的演奏上，并没有完全无法克服的困难，所有的症结都只是在于你是否下定决心去克服它。世界上没有任何一个人、没有任何一本书，能够给予我们解决所有问题的答案。最能够解决困难的方法，就存在于你自己的头脑、你的内心，以及你的双手中。</p>
+<p>（Note：也许所有的器乐演奏也是如此，所有的工作，所有的学习也是如此。）</p>
+</li>
+</ol>
+<hr>
+<h5 id="-">第五章 音乐的吸收与传达</h5>
+<ol>
+<li><p>一首精致的乐曲，我们不应仅止于「学会」它，更应该将之「吸收」进我们的体内，使它成为你我身体的一部分；不仅相似于你的手指、牙齿等器官，更形同你的心智，能够随着时间的更移而成长、成熟。</p>
+</li>
+<li><p>你必须毫不迟疑地为这首音乐所「吸引」住。你的心情就像是陷入了热恋，被这音乐迷得神魂颠倒、心荡神怡，内心燃烧着巨大的热情想要得到她，甚至愿意奉献出所有的努力，改正所有自我在表达上的缺点与弱点。而一件真正的艺术品，正是需要我们付出相当大的代价后，才能完全地拥为己有。</p>
+</li>
+<li><p>一位优秀的钢琴家应该从内心去熟知他的音乐，甚至可以正确地写下所弹奏的音符。</p>
+</li>
+<li><p>训练自己从外界环境的改变中独立出来，不受任何客观因素的干扰，是作为一位演奏家最根本应该掌握的筹码。</p>
+</li>
+<li><p>给予青年学习者的忠告：</p>
+<ol>
+<li><p>「最黑暗的时刻总是出现于黎明前。」在练习乐曲过程中，千万不要轻易气馁。</p>
+</li>
+<li><p>不论什么时候，你身在何处，一定要随身携带乐谱。一旦你在记忆上或是音乐的表达上有一丁点疑问，都可以立即查询。「因为，&quot;贝多芬&quot;是那么写在乐谱上的。」</p>
+</li>
+<li><p>演奏一首乐曲，切勿太过分地加重弹奏那些需要强调的音符，及没有任何强音记号的音符。</p>
+</li>
+<li><p>不要「夸张」地做老师给你的建议。不应该在不同的乐曲上运用相同的演奏方式，除非它们在音乐的表达上有相似的特质。</p>
+</li>
+<li><p>避免将自我塑造成一个保守主义的演奏者。</p>
+<p>由自然、不压抑的身躯里释放出来的音乐才是健康优美的，而放松自由的弹奏技巧永远值得热爱音乐的人勇于一试。</p>
+</li>
+</ol>
+<p>（Note：真正热爱音乐的人，演奏出来的音乐才是优美的。</p>
+<p>​        真正热爱编程的人，编写出来的代码才是优美的。</p>
+<p>​        真正热爱下厨的人，烧出来的菜才是优美的。）</p>
+<p>​</p>
+</li>
+</ol>
+<hr>
+<h5 id="-">第六章 钢琴曲目的建立</h5>
+<ol>
+<li><p>大多数杰出的作曲家都是钢琴家，他们喜爱钢琴远远超过弦乐器。钢琴天生具备了和声及多线条的自然效果，在自我的表达上能够给予艺术家们最大的满足感。</p>
+</li>
+<li><p>「演奏适于发挥自我特质的乐曲。」</p>
+<p>（Note：已经涉及到了成名前后个人气质是塑造。）</p>
+</li>
+</ol>
+<hr>
+<p>第七、八、九章都是作者自己整理和总结的，一些非常适合用来练习某些演奏技巧的经典曲目，满满的五线谱片段，所以并没有太仔细看。</p>
+<p>但是作者在讲的时候把那些片段都很用心地按小节进行了拆分讲解，读者若是钢琴演奏学生应该受益匪浅。</p>
+<hr>
+<h5 id="-">第九章 完整的准备演奏曲目</h5>
+<ol>
+<li><p>练习1： 从最艰难的作品着手练习；</p>
+<p>练习2： 将所有曲目分三个部分。</p>
+</li>
+<li><p>塑造音乐时脑海里要有完整的意念。</p>
+</li>
+<li><p>在一个演奏季里弹奏 50 场音乐会，比弹奏 10 场要来得容易。因为演奏得愈多，愈能保持肢体与头脑的活力，故愈弹奏变愈轻松。持续不断的演出，可以让你的音乐永葆光亮。</p>
+</li>
+<li><p>艺术家是不可以等待灵感到来的时候才工作，他的职责是随时随地都能创造出音乐的气氛，为他自己，也为他的听众。良好的练习让我们保持灵敏的手指，即使有时候头脑处于空白状况下，它们依然能有好品质的演出能力，使音乐能够深入聆听者的内心。</p>
+<p>（Note：</p>
+<p>​    关于灵感，这里想起曾经有人问李敖他靠不靠灵感写作，李敖回答：「妓女不靠性欲接客，我不靠灵感写作」。话糙理不糙。</p>
+<p>​    热爱长跑并且坚持长跑几十年的村上春树说过同样的话：「今天不想跑，所以才去跑，这才是长距离跑者的思维方式。」</p>
+<p>​    这两段话在自己才开始健身，懒惰想懈怠的时候一针强劲鸡血。现在坚持健身锻炼差不多四个月，已经形成了「一天不运动不舒服斯基」的习惯，整个人精神面貌改善很多，收获非常大。</p>
+</li>
+<li><p>我非常相信演出时的怯场，有百分之九十是来自平日训练的不足，只有百分之十是来自害怕。</p>
+</li>
+</ol>
+<hr>
+<h5 id="-">第十章 听的艺术</h5>
+<ol>
+<li><p>欲成为有深度有见地的聆听者，必须广泛接触音乐。</p>
+</li>
+<li><p>聆听者应该了解作曲家及乐谱。</p>
+<p>诚实地选出你较喜欢的音乐，了解作曲家及乐谱，并从演奏的观点及你个人的感觉来分析所听到的演奏。</p>
+<ol>
+<li>分析出乐曲被创作的年代：古典？浪漫？印象还是现代？</li>
+<li>乐曲的旋律或节奏是否具有某一个国家特有的音乐色彩语言？</li>
+<li>乐曲的旋律或和声特征是否使你想起某一个作曲家的作品？</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h5 id="-">第十一章 我的教学经验</h5>
+<ol>
+<li>「一个人是可以没有音乐而生存，但是他不会活得太好。」</li>
+</ol>
+<hr>
+<h5 id="-">第十二章 无声练习</h5>
+<p>视奏练习：不依赖眼睛，双手找琴键。</p>
+<p>（Note：练习视觉和触觉）</p>
+<h5 id="-">第十三章 录音机的效用</h5>
+<ol>
+<li>聆听自己的录音，可以刺激出客观批评</li>
+<li>录音机用来辅助背谱。试着将一些由慢速到快速，没有错误的练习录下来，然后在练琴以外的时刻小声的播放，可以一直听一直听，直到这首乐曲的所有音符都在你脑海里生根为止。每个星期都重新录一次，不断重复地听一首乐曲，「重复」可以打破我们内在精神里那道无形的硬壳，直入我们的潜意识。人的记忆分三个方向进行：听觉、视觉及触觉。</li>
+<li>录音机帮助练习协奏曲 （Note：相当于练习乐队排练）</li>
+<li>利用录音机与音乐沟通</li>
+<li>每个星期对着录音机演奏，当众演奏水平就能提高</li>
+</ol>
+<p>（Note：练习听觉。想起之前练习口语，会反复把自己的声音录下来，然后不断修改语法语调语气。在学吉他时，当练习一些演出曲目，也有尝试每次用手机 Video 录下来。虽然还只是自己拍自己，整个感觉就不一样了。就像把自己置于演出环境下，你会更加认真对待每次的练习，事倍功半。）</p>
+<hr>
+<h5 id="-">第十六章 如何走上演奏台</h5>
+<ol>
+<li><p>乐曲经过完整的练习及背谱之后，应即刻上台实际弹奏，永远等不到流畅的那天，所以早一些把手上的音乐拿到演奏台上去演奏，才会收获更多有价值的经验。</p>
+</li>
+<li><p>找一位愿意聆听的朋友来听演奏。</p>
+</li>
+<li><p>小的音乐家表现小的音乐观念，大的音乐家表现大的音乐观念。</p>
+</li>
+<li><p>熟知音乐的每一段落，以备紧急之需......各种速度练习六遍以上，必须养成追求完美技巧的习惯。</p>
+</li>
+<li><p>早期的演奏以舒适从容的速度弹奏。</p>
+</li>
+<li><p>音乐只有在完全进入潜意识后才为人们所拥有。</p>
+</li>
+<li><p>记忆模糊时应马上打开乐谱仔细复习  在一特别乐段上可以用不同的方法轮流练习。</p>
+</li>
+<li><p>养成一坐到钢琴前便弹奏开场曲的习惯。</p>
+</li>
+<li><p>世界上没有一场演奏会是完美无缺的，遇到惨痛失败时，要坚信必有成功的一天。</p>
+<p>「怯场是最糟糕的音乐自觉」</p>
+<p>钢琴家唯有在忘却了最根本的技术问题时，才能开始自由地创造音乐。作为一位艺术家，你必须把你自己完全地投注于你的音乐；在那短暂时光中所创造出的满足感，就是你在经过了所有努力之后，得到的最大回报。它们是上天给予你最神奇的礼物！</p>
+</li>
+</ol>
+]]></description><link>/review-music-at-your-fingertips.html</link><guid isPermaLink="true">/review-music-at-your-fingertips.html</guid><category><![CDATA[notes]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Sun, 28 Aug 2016 05:58:00 GMT</pubDate></item><item><title><![CDATA[CSS 中那些大大小小的坑]]></title><description><![CDATA[<h1 id="css-">CSS 中那些大大小小的坑</h1>
+<blockquote>
+<p>中国读者不是不善于交流，而是对基础知识掌握不够牢固，不敢交流。就如同有人提到用英文写作时所说的，最难的不是怎么写，而是写什么。英文语法错误其实是别人最容易纠正的，但你到底想要表达什么则是别人无法知道的。具体到CSS，虽然不难学，但真正彻底把原理和基本概念全搞通也不是一件容易的事。 —— 李松峰</p>
+</blockquote>
+<p>最近读完了Charles Wyke-Smith的《CSS设计指南》，上面那段话是节选的译者李松峰的序（在这多说一句，觉得李松峰翻译的书质量都很高，现在的我基本在遍历）。越来越觉得只读书不思考是毫无用处的，于是把笔记整理出来，并加上了自己思考过的感悟。</p>
+<hr>
+<p>###CHAPTER 1 HTML标记与文档结构
+用HTML标记内容的目的是为了赋予网页语义（semantic）。换句话说，就是要给你的网页内容赋予某些用户代理（user agent）能够理解的含义。 浏览器、屏幕阅读器，以及搜索引擎放出的web爬虫都是用户代理，它们需要显示、朗读和分析网页。</p>
+<ul>
+<li><mark>文本用闭合标签，引用内容用自闭合标签。</mark>  <ul>
+<li>闭合标签与自闭合标签的区别在于，闭合标签包含的是会显示的实际内容，而自闭合标签只是给浏览器提供一个对要显示内容的<strong>引用</strong>。浏览器会在HTML页面加载时候，<strong>额外向服务器发送请求</strong>，以取得自闭合标签引用的内容。</li>
+</ul>
+</li>
+<li>属性alt(alternative)，定义的是在图片因故未能加载成功时候在屏幕上显示的文本。视障用户的屏幕阅读器会大声读出alt属性的内容，因此一定要给<code>&lt;img&gt;</code>标签的<code>alt</code>属性添加让人一听（或一看）就能明白的内容。</li>
+<li><code>&lt;h1&gt;</code>被搜索引擎视为仅次于<code>&lt;tittle&gt;</code>标签的另一个搜索关键词重要来源。</li>
+<li>只要有不适合放在其他文本标签中的文本，都可以把它放在一个段落里。</li>
+<li>某些标签，如<code>&lt;ol&gt;</code>要求其他标签，如<code>&lt;li&gt;</code>与之共同出现。</li>
+<li><code>&lt;!DOCTYPE html&gt;</code>是DTD（文档类型定义），声明：“以下是一个HTML文档。”</li>
+<li><code>&lt;html&gt;</code>只有两个直接的子标签：<code>&lt;head&gt;</code>和<code>&lt;body&gt;</code>。帮助浏览器理解页面的信息都包含在<code>&lt;head&gt;</code>标签中。</li>
+<li>块级标签：标题、段落、列表、独立引用等，如文档流一般上下堆叠显示；行内标签：链接、图片、字体样式、简写<code>&lt;abbr&gt;</code>、引证<code>&lt;cite&gt;</code>、文本内引用<code>&lt;q&gt;</code>相互并列显示，只有在空间不足以并列的情况下才会折到下一行。</li>
+<li><strong>块级元素盒子会拓展到与父元素同宽。</strong></li>
+<li><strong>行内元素盒子会“收缩包裹”其内容，并且会尽可能包紧。</strong></li>
+<li>DOM（文档对象模型）是从浏览器的视角来观察页面中的元素及每个元素的属性，由此得出这些元素的一个家族树。通过DOM，可以确定元素之间的相互关系。在CSS中引用DOM中特定的位置，就可以选中相应的HTML元素，并修改其样式属性。CSS修改了元素后，这些变化会立即在DOM中发生，并体现在页面上。</li>
+</ul>
+<hr>
+<p>###CHAPTER 2 CSS工作原理
+当元素的同一个样式属性有多种样式值的时候，CSS靠层叠机制来决定最终应用哪种样式。</p>
+<ul>
+<li>为文档添加样式的三种方法：<ul>
+<li>行内样式 ：  <code>&lt;p style=&quot;font-size: 12px; font-weight: bold;&quot;&gt;Adding inline CSS styling&lt;/p&gt;</code> 作用范围：只影响它所在的标签，而且总会覆盖嵌入样式和链接样式。</li>
+<li>嵌入样式： 嵌在<code>head</code>元素中。如<br><code>&lt;head&gt;&lt;style type=&quot;text/css&quot;&gt;...&lt;/style&gt;&lt;/head&gt;</code><br>作用范围仅限于当前页面。会覆盖外部样式表，但被行内样式覆盖。</li>
+<li>链接样式：把样式集中在一个单独文件——样式表（一个拓展名为.css的文本文件）。<br>在多个HTML中连接同一个样式表：
+<code>&lt;link href=&quot;style.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot; /&gt;</code><br>作用范围：有<code>&lt;link&gt;</code>标签的页面。</li>
+<li><strong>@import指令</strong>：一种@规则，可以在样式表中链接其他样式表。
+<code>import url(css/style2.css)</code><br>注意：@import必须出现在样式表其他样式之前，否则不会被加载。<em>（见link css与@import css 的区别）</em></li>
+</ul>
+</li>
+<li>一般上下文选择符。 基于祖先或同胞元素选择一个元素。<br>  <code>tag1 tag2 {statements}</code>  <strong>只要tag2在整个结构层次中有个tag1的祖先元素，无论上下文之间隔着多少层次没有关系</strong>。</li>
+<li>子选择符<code>&gt;</code> <code>tag1 &gt; tag2</code>   标签2必须是标签1的子元素。</li>
+<li>紧邻同胞选择符<code>+</code> <code>tag1 + tag2</code>   标签2必须紧跟在其同胞标签1后面。</li>
+<li>一般同胞选择符<code>~</code> <code>tag1 ~ tag2</code>  标签2必须跟（不一定紧跟）在其同胞标签1后面。</li>
+<li>通用选择符<code>*</code> 匹配任何元素。<code>* {color: green;}</code> <strong><code>color</code> 属性设定的是前景色，前景色既影响文本也影响边框，但一般用来设定文本颜色。</strong>
+  故<code>p * {color: red;}</code>改变p包含的所有元素的文本变成红色。
+  构成非子选择符：<code>section * a {font-size: 1.3em}</code> 任何是section孙子元素，而非子元素的a标签都会被选中。</li>
+<li><strong>多类选择符</strong>。 <code>&lt;p class=&quot;specialtext featured&quot;&gt;...&lt;/p&gt;</code>
+  选择同时存在这两个类名的元素：<code>.specialtext.featured {statements}</code>  注意两个类名之间没有空格，因为选择同时具有这个类名的那个元素。</li>
+<li><strong>ID属性</strong>：ID用于页内导航链接。<ul>
+<li><code>&lt;a href=&quot;#bio&quot;&gt;Biography&lt;/a&gt;
+  &lt;h3 id=&quot;bio&quot;&gt;Biography&lt;/h3&gt;
+  &lt;p&gt;....&lt;/p&gt;</code><br><code>href</code>属性值开头的<code>#</code>表示链接的目标在当前页面中，因而不会触发浏览器加载页面（如果没有#，浏览器会尝试加载bio目录下的默认页面）。会跳到h3元素的位置。
+<code>&lt;a href=&quot;#&quot;&gt;Back to Top&lt;/a&gt;</code> 点击该链接返回页面顶部。<br>另外，如果不知道href放什么URL，可以用#作为占位符，但不能留空，因为href属性值为空的链接行为跟正常链接不一样。</li>
+</ul>
+</li>
+<li><strong>ID</strong>是为了唯一的标识一个元素。每个ID名在页面中只能用一次。给页面中每个顶级区域都添加一个ID，得到明确的上下文。</li>
+<li><strong>类</strong>是为了标识一组具有相同特征的元素。</li>
+<li><strong>属性名选择符</strong> <code>标签名[属性名]</code>，选择任何带有属性名的标签名。<br>  什么时候使用？一般经常给alt和title属性设定相同的值。alt属性中的文本会在图片因故未能加载时显示，或者由屏幕朗读器朗读出来。而title属性会在用户鼠标移动到图片上时，显示一个包含相应文本的提示。</li>
+<li><strong>属性值选择符</strong> <code>标签名[属性名=&quot;属性值&quot;]</code>，选择任何带有值为属性值的属性名的标签名。</li>
+<li><strong>UI伪类</strong>在HTML元素处于某种状态时应用CSS。<ul>
+<li>链接伪类。<code>::link/::visited / ::hover / ::active</code></li>
+<li><code>:focus</code>伪类。<code>e:focus</code>在单击它获得焦点时候改变CSS。</li>
+<li><strong><code>:target</code>伪类</strong>。 <code>e:target</code>如果用户点击一个指向页面中其他元素的链接，则那个元素就是目标（target），可以用:target伪类选中它。  <pre class="hljs"><code>&lt;<span class="hljs-tag">a</span> href=<span class="hljs-string">&quot;#more_info&quot;</span>&gt;More Information&lt;/a&gt;
+&lt;<span class="hljs-tag">h2</span> id=<span class="hljs-string">&quot;more_info&quot;</span>&gt;This is the information you are looking <span class="hljs-keyword">for</span>.&lt;/h2&gt;</code></pre>那么规则<code>#more_info:target {background: #eee;}</code>会在用户单击链接转向ID为more_info的元素时候，为该元素（h2）添加浅灰色背景，以便在一大堆引证中识别。（实例见Wikipedia）</li>
+</ul>
+</li>
+<li>结构伪类 <ul>
+<li><code>li:frist-child</code>&amp;<code>li:last-child</code>代表一组同胞元素中第一个或最后一个元素。</li>
+<li><code>e:nth-child(n)</code> e为元素名，n表示一个数值（也可以使用odd或even）。用于提高表格的可读性，对表格的所有行交替应用不同颜色。</li>
+</ul>
+</li>
+<li>伪元素（CSS3 new）<ul>
+<li><code>e::first-letter</code> 首字符。</li>
+<li><code>e::first-line</code>文本段落第一行，长度会随着浏览器窗口大小变换而改变。</li>
+<li><code>::before</code>和<code>::after</code>伪元素，可用在特定元素前后添加特殊内容。<a href="#">（见用CSS伪类绘制各种图形 CSS trick）</a></li>
+</ul>
+</li>
+<li>继承：文本样式（颜色）及字体（字号）。不继承元素盒子的定位和显示方式（边距、边框等）。<strong>所以使用相对字体单位（em和百分比）要格外小心！</strong></li>
+<li>层叠：样式在文档层次中逐层叠加。<ul>
+<li>层叠顺序：浏览器默认CSS-&gt;用户CSS-&gt;作者链接CSS(按照它们链接到页面的先后顺序)-&gt;作者嵌入CSS-&gt;作者行内CSS。</li>
+<li>层叠规则：    <ol>
+<li>找到应用给每个元素和属性的所有声明。</li>
+<li>按顺序和权重排序。 <code>!important;</code>用于加重声明的权重。</li>
+<li>按特指度（specificity）排序。ID&gt;类&gt;标签名。但设定的样式胜过继承的样式。</li>
+<li>顺序决定权重。位置靠下或者后声明的规则胜出。</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>em和ex都是字体大小的单位。但它们作为长度单位适用于任何元素。<ul>
+<li>em表示一种字体中字母M的宽度，因此它的具体大小取决于你使用的字体。</li>
+<li>ex等于给定字体中字母x的高度（小写字母x代表一种字体的字母中间部分的高度，不包括字母上下突出的部分——如d、p上下出头）。</li>
+</ul>
+</li>
+<li>百分比非常适合设定被包含元素的宽度，此时的百分比是相对于宽度而言。<strong>可以把HTML结构元素宽度设定为body宽度的百分比，“流式”设计的关键，可以根据浏览器窗口大小而成比例伸缩。</strong></li>
+<li>饱和度设定有多少颜色，灰色的饱和度低，而强烈色彩饱和度高。亮度设定颜色的明暗，0%就是黑色，100%就是白色。</li>
+</ul>
+<hr>
+<p>###CHAPTER 3 定位元素
+要掌握CSS，核心就是要掌握元素定位！<br>可见页面的版式 主要由三个属性控制：position 属性、display 属性和 float 属性。 position：控制页面上元素间的位置关系；display：控制元素是堆叠、并排还是根本不在页面上出现；float：提供控制的方式，以便把元素组成多栏布局。</p>
+<p><strong>！！此处添加一张描述盒模型的图！！</strong>  </p>
+<ul>
+<li>HTML页面实际由一堆盒子组成。默认情况下，每个盒子的边框不可见，背景也是透明。</li>
+<li>三组属性：<ul>
+<li>边框（border）：宽窄、样式和颜色。</li>
+<li>内边距（padding）：盒子内容区与边框的间距。</li>
+<li>外边距（margin）：盒子与相邻元素的间距。<br>如何理解？<strong>外边距是边框向外推其他元素，内边距是边框向内推元素的内容。</strong></li>
+</ul>
+</li>
+<li>简写样式：<code>margin{top, right, bottom, left}</code></li>
+<li>边框（border）3个属性：<ul>
+<li><code>border-width</code>：thin, medium, thick等文本值，也可以用除百分比和负值之外的任何绝对值；</li>
+<li><code>border-style</code>：none,  hidden, dotted, dashed, solid, double, groove, ridge, inset, outset文本值；</li>
+<li><code>border-color</code>：使用任意颜色值，包括RGB、HSL、十六进制值和颜色关键字。
+默认情况下，边框三个相关属性的值分别为<code>border-width: medium; border-style: none; border-color: black;</code>。调试的时候设置<code>border: 1px solid;</code>，1px可以把边框对布局宽度和高度的影响降到最低。</li>
+</ul>
+</li>
+<li>盒子外边距：<ul>
+<li>使用<code>* {margin: 0; padding: 0;}</code>中和默认值，再根据需要添加，就会在各浏览器上获得一致的效果。</li>
+<li>叠加外边距：<strong>垂直方向上的外边距会叠加，水平外边距不叠加。</strong>上下外边距相遇时，它们会相互重叠，直至一个外边距碰到另一个元素的边框，且较宽的外边距决定两个元素最终距离。而水平相邻的元素，水平间距是相邻外边距之和。</li>
+<li>设置外边距时需要混合使用不同的单位。比如一个段落的左右外边距可以使用像素，以便该段文本始终与包含元素边界保持固定间距，不受字号变大或变小的影响。而对于上下外边距，以em为单位则可以让段间距随字号变化而相应增大或缩小（按比例变化，整体布局就会依旧协调）。</li>
+</ul>
+</li>
+<li>盒子到底有多大<ul>
+<li>没有宽度的盒子：如果不设置块级元素的width属性，那么这个属性的默认值为auto，结果会让元素的宽度拓展到与父元素同宽。sum(添加水平边框、内边距和外边距) = 内容宽度减少量。</li>
+<li>为设定了宽度的盒子添加边框、内边距和外边距，会导致盒子扩展得更宽。实际上，盒子的<code>width</code>属性设定的只是盒子内容区的宽度，而非盒子要占据的水平宽度。</li>
+</ul>
+</li>
+<li><p>浮动与清除<br>浮动可以实现：1. 传统出版物的文字绕排图片的效果。2. 可以让原来上下堆叠的块级元素变成左右并列，从而实现布局中的分栏。</p>
+<ul>
+<li><p>浮动元素会脱离常规文档流，在原来紧跟其后的元素就会在空间的允许下，向上提升到与浮动元素平起平坐。</p>
+<blockquote>
+<p>尽量把这个元素往上放，能放多高放多高，直到碰到某个元素的边界为止。  -- Eric Meyer  </p>
+</blockquote>
+</li>
+<li><p>浮动非图片元素时，必须给它设定宽度，否则后果难料。</p>
+</li>
+<li>浮动元素脱离文档流，父元素也不会再包围它。三种围住浮动元素：<ol>
+<li>为父元素添加<code>overflow: hidden</code>。实际上<code>overflow: hidden</code>声明的真正用途是防止包含元素被超大内容撑大，包含元素依然保持其设定的宽度，而超大的子内容则会被容器剪切掉（之前有在下拉菜单的顶级元素上应用这个声明，结果作为其子元素的下拉菜单没有被显示，就是因为其被父元素剪切了），除此之外，它能可靠地迫使父元素包含其浮动的子元素。 </li>
+<li>同时浮动父元素。浮动父元素后，不管其子元素是否浮动，它总是会紧紧包围（也称收缩包裹）住它的子元素。</li>
+<li>添加非浮动的清除元素。原理：给父元素的最后添加一个非浮动的子元素，然后清除该子元素。由于包含元素一定会包围非浮动的子元素，而且清除会让这个子元素位于（清除一侧）浮动元素的下方，因此包含元素一定会包含这个子元素——以及前面的浮动元素。此种方法一共有两种方式：</li>
+</ol>
+</li>
+<li>在HTML标记中添加一个子元素div，且给它应用clear属性。</li>
+</ul>
+</li>
+</ul>
+<pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-title">section</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">img</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">&quot;images/...&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>It&#39;s fun to float.<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;clear-me&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">section</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">footer</span>&gt;</span>Here is the footer.<span class="hljs-tag">&lt;/<span class="hljs-title">footer</span>&gt;</span>
+.clear_me { clear: left; }</code></pre><ul>
+<li>用CSS来添加消除元素的方法。</li>
+</ul>
+<pre class="hljs"><code><span class="hljs-variable">&lt;section class = &quot;clearfix&quot;&gt;</span>
+    <span class="hljs-variable">&lt;imag src=&quot;images/... /&gt;</span>
+    <span class="hljs-variable">&lt;p&gt;</span>It&#39;s fun <span class="hljs-keyword">to</span> float.<span class="hljs-variable">&lt;/p&gt;</span>
+<span class="hljs-variable">&lt;/section&gt;</span>
+<span class="hljs-variable">&lt;footer&gt;</span>Here is the footer.<span class="hljs-variable">&lt;/footer&gt;</span></code></pre><pre class="hljs"><code><span class="hljs-class">.clearfix</span><span class="hljs-pseudo">:after</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">content</span>:<span class="hljs-value"> <span class="hljs-string">&quot;.&quot;</span></span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">display</span>:<span class="hljs-value">block</span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">height</span>:<span class="hljs-value"> <span class="hljs-number">0</span></span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">visibility</span>:<span class="hljs-value"> hidden</span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">clear</span>:<span class="hljs-value"> both</span></span>;
+}</span></code></pre><p><code>clear: both</code> 意味这section中新增的子元素会清除左右浮动元素。</p>
+<p>####定位
+<code>position</code>有4个属性：static、relative、absolute、fixed，默认为static。<br><strong>static（静态定位）</strong>：块级元素在常规文档流中自上而下的堆叠。<br><strong>relative（相对定位）</strong>：到底相对哪里定位？相对的是它原来在文档流中的位置（或者默认位置）。<br><code>p{ position: relative; top:25px; left:30px;}</code><br>注意：top,left为正（负）值意味着把元素向下（上）、向右（左）移动。<br><strong>absolute(绝对定位)</strong>：绝对定位会把元素彻底从文档流中拿出来。<br><code>p{ position: absolute; top:25px; left:30px;}</code><br>绝对定位元素默认的<em>定位上下文</em>是body。但绝对定位元素的任何祖先元素都可以成为它的定位上下文，只要你把相应的祖先元素<code>position：relative;</code><br><strong>fixed（固定定位）</strong>：固定定位元素也被完全移除了文档流，但固定定位的定位上下文是视口（浏览器窗口或手持设备的屏幕），因此它不会随页面而移动。一般情况下，常用来创建位于顶部或左右侧，不随页面滚动而移动的导航元素。</p>
+<p>####显示属性
+display 把块级元素变成行内元素（或相反），可以使原先的行内元素填满其父元素。
+<code>display: none</code>：该元素及所有包含在其中的元素，都不会在页面中显示。它们原先占据的所有空间也都会被“回收”，就好像相关的标记根本不存在一样。
+<code>visibility</code>默认为visible，若设置为<code>hidden</code>，元素会隐藏，但它占据的页面空间仍然在（也就是只在页面上隐形了而已咯）。</p>
+<p>####背景
+<strong>！！此处添加盒模型三维透视图！！</strong><br>CSS每个元素盒子可以想象成两个图层组成。
+<strong>背景颜色</strong><br>元素的前景层包含内容（如文本或图片）和边框，元素的背景层可以用实色填充（background-color属性），也可以包含任意多个背景图片（使用background-image属性），背景图片叠加在背景颜色之上。<br><em>注意</em> 关于<code>color</code>属性：前景色属性，作用范围是元素的内容和边框。影响边框的前提是border没有设定边框颜色（或者<code>border-color</code>没有设定），边框就会使用color属性设定的字体颜色。默认为黑色。<br><strong>背景图片</strong><br>指定背景图片来源：<code>background-image: url(images/path);</code><br>默认情况下，比元素小的背景图片以元素左上角为起点，水平和垂直方向上重复出现，直至填满整个背景空间。所以元素盒子底部和右侧的圆形图案都只显示了一部分。<br><strong>背景重复</strong><br><code>background-repeat</code>：<br><code>repeat</code>：默认值， 水平与垂直方向均重复；<br><code>repeat-x</code>：只在水平方向重复；<br> <code>repeat-y</code>：只在垂直方向重复；<br> <code>no-repeat</code>：在任何方向上均不重复，即只让背景图片显示一次。
+ <strong>CSS3背景</strong><br> <code>background-repeat: round</code> ：通过调整图片大小来适应背景区来确保图片不被剪切；<br> <code>background-repeat: space</code>： 通过在图片间添加空白来适应背景区域。<br><strong>背景位置</strong><br><code>background-position</code>：该属性有五个关键字值。<code>top、left、bottom、right和center</code>。 关键字中任意两个组合起来都可以作为该属性值。<br><strong>注意</strong>，<code>background-position</code>属性会同时设定元素和图片的原点。原点决定了元素和图片中某一点的水平和垂直坐标。默认情况下。<code>background-position</code>的原点位于左上角，即元素左上角和图片的左上角是对齐的。<br>但是当把起点位置改为center center（50% 50% 也是一样的效果），如
+<code>p#center {background-position: center;}</code>
+若只设一个关键字值（不是数值），则另一个也会取相同的值。<br>设定了图片中心点与元素中心点重合，然后向水平和垂直方向重复。
+如再设置<code>background-repeat: no-repeat</code> 则会实现图片在背景区域内居中的效果。<br><strong>比较设置背景位置三个值：关键字、百分比、绝对或相对单位的数值。</strong><br><strong>关键字</strong>：顺序不重要。<br><strong>数值</strong>：第一个值表示水平位置，第二个值表示垂直位置。要是只设定一个值，则将其用来设定水平位置，垂直位置被设为<code>center</code>。<br>使用关键字和百分比，设定的值同时应用于元素和图片。<br><strong>像素等绝对单位数值</strong>：设定图片的左上角会被放在距离元素左上角指定位置的地方。<br>有趣的是，还可以设置负值，或者足够大的正值，实现显示部分图片。<br><strong>背景尺寸</strong><br><code>background-size</code>：<br>50%：缩放图片，使其填充背景区的一半。<br>100px 50px：把图片调整到100px宽，50px高。<br>cover：拉大图片，使其完全填满背景区；保持宽高比。<br>contain：缩放图片，使其恰好适合背景区；保持宽高比。<br><strong>背景粘附</strong><br><code>background-attachment</code>：控制滚动元素内的背景图片是否随元素滚动而移动。<br><code>scroll</code>：属性默认值，即背景图片随元素移动。<br><code>fixed</code>： 背景图片不随元素滚动而移动。<br><code>inherit</code> ：继承初始值。<br><strong>附</strong>：原书关于<code>background-attachment</code>属性设置并没有讲太多内容，但是在制作现代网页设计常见的<strong>视差滚动效果</strong>时候，是个重要属性。当然，在实现更amazing的效果时候会较复杂，需要结合CSS3的多背景图片属性，还有JavaScript(jQuery)来对页面进行控制。感兴趣请戳 <a href="http://isux.tencent.com/parallax-scrolling.html">Tencent ISUX「视“差”滚动浅析」</a>。
+<strong>其他CSS3背景属性</strong><br><code>background-clip</code>： 控制背景绘制区域的范围。如让背景颜色和背景图片只出现在内容区，而不出现在内边距区域。<br><code>background-origin</code>：控制背景定位区域的原点，可以设定盒子左上角以外的位置。<br><code>background-break</code>：控制分离元素（比如跨越多行的行内盒子）的显示效果。  </p>
+<p>####多背景图片
+CSS3中可以给元素添加多个背景图片，使用简写属性<code>background</code>如下：</p>
+<pre class="hljs"><code>    <span class="hljs-tag">p</span> <span class="hljs-rules">{
+        <span class="hljs-rule"><span class="hljs-attribute">text-align</span>:<span class="hljs-value"> center</span></span>;
+        <span class="hljs-rule"><span class="hljs-attribute">background</span>:<span class="hljs-value">
+        <span class="hljs-function">url</span>(images/<span class="hljs-number">01</span>.png) <span class="hljs-number">30px</span> -<span class="hljs-number">10px</span> no-repeat,
+        <span class="hljs-function">url</span>(images/<span class="hljs-number">02</span>.png) <span class="hljs-number">145px</span> <span class="hljs-number">0px</span> no-repeat,
+        <span class="hljs-function">url</span>(images/<span class="hljs-number">03</span>.png) <span class="hljs-number">140px</span> -<span class="hljs-number">30px</span> no-repeat <span class="hljs-hexcolor">#ffbd75</span></span></span>;
+    }</span></code></pre><p><strong>注意</strong>：CSS规则中先列出的图片显示在上层，更接近前景。</p>
+<p>####背景渐变
+<code>linear-gradient</code>:<br><code>radial-gradient</code>:</p>
+<hr>
+<p>###Chapter 4 字体和文本</p>
+<blockquote>
+<p>一个网站的品质如何，有时候只要看看它用的字体就能一目了然。如果说图片是蛋糕上的糖衣，那么排版才是卓越设计的根本。</p>
+</blockquote>
+<p>接触CSS这么久后，发现字体与排版是门大学问（也就是说，是个深坑…），只有经验丰富的设计师，才能创造出专业水准的网页排版吧。  </p>
+<p><strong>难道字体和文本不是一回事？</strong><br>啊哈，当然不是。<br><strong>字体</strong>是“文字的不同体式”，或“字的形体结构”。根据外观，字体可以分为不同<em>类别</em>（font collection），包括衬线字体（serif）、无衬线字体（sans-serif）和等宽字体（monospace）。每一类字体可以继续分为不同的<em>字体族</em>（font family），比如 Times 和 Helvetica。而字体族中又可以包含不同的<em>字形</em>（font face），反应了相应字体族基本设计的不同变化，例如 Times Roman、Times Bold、Helvetica Condensed、Bodoni italic。<br><strong>文本</strong>就是一组字或者字符，比如章标题、段落正文等，跟使用什么字体无关。<br>CSS为字体和文本分别定义了属性。字体属性主要用于描述一类字体的大小和外观（什么字体族，多大字号，粗体还是斜体）。文本属性描述对文本的处理方式（行高或者字符间距，有没有下划线和缩进）。  </p>
+<p>####字体族
+一般应该给整个页面<code>body</code>设定一种主字体，然后只对那些需要使用不同字体的元素再应用font-family。<br>有些字体在用户机器上不支持，那么就应该设置字体栈来指定本地字体。为了保险，字体栈的后面应补上大多数操作系统都内置的字体。<br><strong>注意</strong>如果字体名像 Trebuchet MS 一样多于一个单词（有空格），应该加上引号：&quot;Trebuchet MS &quot;。  </p>
+<p>####字体大小
+浏览器样式表默认为每个HTML元素都设定了font-size，所以你在设定 font-size 的时候，其实就是在修改默认值。</p>
+]]></description><link>/CSS-design-guide-notes.html</link><guid isPermaLink="true">/CSS-design-guide-notes.html</guid><category><![CDATA[frontend]]></category><category><![CDATA[notes]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Mon, 10 Nov 2014 09:08:00 GMT</pubDate></item></channel></rss>
