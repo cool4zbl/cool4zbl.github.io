@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[undefined - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Sun, 02 Jul 2017 15:29:13 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/tag/undefined/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[从十个 React 迷你设计模式谈开去]]></title><description><![CDATA[<h1 id="notes-of-10-react-mini-patterns-and-project-creator">Notes of 10 React mini-patterns and Project Creator</h1>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[undefined - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Sun, 02 Jul 2017 17:30:51 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/tag/undefined/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[从十个 React 迷你设计模式谈开去]]></title><description><![CDATA[<h1 id="notes-of-10-react-mini-patterns-and-project-creator">Notes of 10 React mini-patterns and Project Creator</h1>
 <p>很早之前就一直在读的一篇文章，<a href="https://hackernoon.com/10-react-mini-patterns-c1da92f068c5">10 个React Mini 设计模式</a>，
 一边做 <code>Creator</code> 项目，也一边终于把它精读完。
 结合自己的开发时候的项目经验，做了点笔记。
@@ -536,7 +536,217 @@ req.keys().forEach(<span class="hljs-function"><span class="hljs-params">(key)</
   const componentName = key.replace(<span class="hljs-regexp">/^.+\/([^/</span>]+)\<span class="hljs-regexp">/index.js/</span>, <span class="hljs-string">&#39;$1&#39;</span>)
   <span class="hljs-built_in">module</span>.exports[componentName] = req(key).default
 })</code></pre><p>Creator 中因为用的 <code>create-react-app</code> CLI，无法自己配置 Webpack，所以并没有用到...</p>
-]]></description><link>/2017-06-28-10-react-mini-patterns-note/index.html</link><guid isPermaLink="true">/2017-06-28-10-react-mini-patterns-note/index.html</guid><category><![CDATA[notes]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Tue, 27 Jun 2017 16:00:00 GMT</pubDate></item><item><title><![CDATA[[译]前端指南]]></title><description><![CDATA[<p><strong>Update</strong>
+]]></description><link>/2017-06-28-10-react-mini-patterns-note/index.html</link><guid isPermaLink="true">/2017-06-28-10-react-mini-patterns-note/index.html</guid><category><![CDATA[notes]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Tue, 27 Jun 2017 16:00:00 GMT</pubDate></item><item><title><![CDATA[Fun with Codemod & AST]]></title><description><![CDATA[<h1 id="fun-with-codemod-ast">Fun with Codemod &amp; AST</h1>
+<hr>
+<h2 id="content">Content</h2>
+<ul>
+<li>背景</li>
+<li>Codemod</li>
+<li>jscodeshift</li>
+<li>Demo Time</li>
+<li>Refs</li>
+</ul>
+<hr>
+<h2 id="-">背景</h2>
+<p>  作为一个自信而自豪的前端弄潮儿（F2E），我们总是希望能够在这个每天都在飞速迭代的行业，与时渐进。
+  前端们是一群不安分的人，大家喜爱新框架、新语法，而 JavaScript 也是一门非常灵活的语言，它提供给我们的 API 也在与时渐进。比如，当 <code>ES2015 ES2016 ES2017…</code> 出来的时候，那些新语法糖，简洁漂亮，且更易于理解逻辑，于是我们都想去尝试下。
+  但是尝试归尝试，对于新项目尝试起来成本很低，只需要把新功能都用新语法编写就好。
+  而创建新项目的同时，其实我们也在维护着一些已有的旧项目。如果你还并没怎么理它们，可能它们还活得不错。但是一旦 PM 心情好想加个新功能，或者你哪天心情好想去更新下代码库，然后看到自己之前写的那些代码，那些现在其实可以更优雅漂亮的代码，是不是手里特痒痒特想把它们更新了？
+  执行力强的前端儿可能说干就干了，嗯，就假设我们有个项目 Project，里面使用的是用<code>ES5</code> 版 <code>React</code> 作为 <code>UI View</code>。然后它大概四个页面<code>(Page)</code>，每个页面包含大概四个组件<code>(Component)</code>，然后你从某个看起来比较小、不容易出错的<code>Component</code> 入手，开始一行一行改写代码，嗯，<code>var React = require(&#39;react’)</code> 改为 <code>import React from &#39;react’</code>， <code>var API = ‘/j/app/xxx’</code> 改为 <code>const API = ‘/j/app/xxx’</code>，<code>var foo</code> 改为 <code>let foo</code>，<code>function () {…}</code> 改为 <code>() =&gt; {…}</code>，<code>module.exports = React.createClass({…})</code> 改为 <code>export default class MyComponent extends React.Component {…}</code> … 
+  天哪，有完没完，一个组件改完下来，你已经感到身体被掏空，望了望 <code>Components</code> 列表，更不用说，重新 <code>build</code> 过的测试还没过。你陷入了绝望...</p>
+<p>  那么有没有更快一点的办法呢？
+  稍微有点经验的前端儿可能想到「正则表达式匹配替换」。Bash <code>Awk | Sed</code> 命令，或者 Vim <code>:%s/var/let/g</code>。可是如果需要有些变量是 <code>const</code> 类型，有些是 <code>let</code>，而有些保持 <code>var</code> 不变怎么办？再比如说 </p>
+<pre class="hljs"><code>  <span class="hljs-tag">merge</span>(a, {<span class="hljs-attribute">b</span>: <span class="hljs-number">1</span>}, c);  <span class="hljs-comment">// Old</span>
+
+  需要变为
+
+  ({..<span class="hljs-class">.a</span>, <span class="hljs-tag">b</span>: <span class="hljs-tag">1</span>, ..<span class="hljs-class">.c</span>});  <span class="hljs-comment">// New</span></code></pre><p>  这里光是这个函数的 <code>arguments</code> 就可能有多种形式，比如 <code>variable</code>，一个匿名函数返回的 Object 或者 <code>Plain Object</code> 那种。
+  这里相当于是一个 <code>Context-non-free</code> 的问题，也就是上下文语义很重要。
+  这样的话，无论再怎么强大的<code>RegExp</code> 也无能为力。因为正则的本质，其实是根据一定的 <code>Pattern</code> 来匹配字符串，但是在真正的代码里面，所有的字符串都有语义，都有上下文，这里的正则表达式会既复杂又无用。
+  所以，我们得换一个维度思考问题。</p>
+<hr>
+<h2 id="codemod">Codemod</h2>
+<p>  对「代码库的批量迁移更新」，其实也是程序员的一个需求，所以也感激地，已经有一群懒惰又聪明的程序员造出了工具：<code>Codemod</code>，将「大型仓库代码的批量迁移」自动化，省时省力。</p>
+<p>  好吧，所以 Codemod 到底是什么呢？
+  官方文档这样写着：</p>
+<blockquote>
+<p>Codemod is a tool/library to assist you with large-scale codebase refactors that can be partially automated but still require human oversight and occasional intervention.</p>
+</blockquote>
+<p>  这样看来，可以很好的解决我们的需求了。
+  基于 Codemod，又出现了针对 JavaScript 代码迁移的工具 <a href="https://github.com/facebook/jscodeshift">Facebook jscoodeshift</a>，
+  基于 jscodeshift，又构建了迁移一般 JavaScript 代码（比如 ES5 -&gt; ES2015) 的工具 <a href="https://github.com/cpojer/js-codemod">js-codemod</a> 和迁移 React 相关项目的 <a href="https://github.com/reactjs/react-codemod">react-codemod</a>。</p>
+<p>  嗯，这么看来，我们的事情就变得容易多了。
+  根据上面那些工具的官方文档，我们只需要按顺序执行以下命令：</p>
+<pre class="hljs"><code>  &gt; npm i -g jscodeshift
+  &gt; git clone https:<span class="hljs-comment">//github.com/reactjs/react-codemod.git</span>
+  &gt; git clone https:<span class="hljs-comment">//github.com/cpojer/js-codemod.git</span>
+  &gt; jscodeshift -t react-codemod/transforms/<span class="hljs-keyword">class</span>.js --<span class="hljs-keyword">mixin</span>-<span class="hljs-keyword">module</span>-name=react-addons-<span class="hljs-keyword">pure</span>-render-<span class="hljs-keyword">mixin</span> --flow=<span class="hljs-literal">true</span> --<span class="hljs-keyword">pure</span>-component=<span class="hljs-literal">true</span> --remove-runtime-proptypes=<span class="hljs-literal">false</span> src/register/component/myComponent.jsx
+  &gt; jscodeshift -t js-codemod/transforms/no-vars.js ./src/register/component/myComponent.jsx</code></pre><p>  然后，再次 <code>git status</code> 一下或者直接打开刚才 transform 的 <code>myComponent.jsx</code> 文件查看，你会发现，神奇般，你的代码都成为了它们应该成为的样子。</p>
+<p>  这里暂时以我之前做的 Accounts 项目为例：
+  <a href="https://github.intra.douban.com/accounts/accounts/pull/553/files#diff-b2286efdea6a62288250264e82bd948b">https://github.intra.douban.com/accounts/accounts/pull/553/files#diff-b2286efdea6a62288250264e82bd948b</a></p>
+<ul>
+<li><p>基本步骤如下：</p>
+<ul>
+<li>因为是第一次使用 <code>codemod</code>，所以比较谨慎，一个一个 <code>component</code> 来；</li>
+<li>先用 <code>react-codemod</code> 转，把大部头代码迁移；</li>
+<li>然后 <code>js-codemod</code> 小步更新整理；</li>
+<li>然后再根据一些自己的 Code Style 做些细节上的修改。比如使用 <code>standard-format</code> 工具格式化代码，符合我个人写的代码风格。</li>
+<li>毕竟 JS 太过于灵活，每个人写代码时候风格和结构都是各异的，有时候的转换还是会出现一些与想象中不一致的结果，官方文档也是说仍然需要人工干预，所以会手动修改下代码细节；</li>
+<li>一切组件迁移就绪，<code>npm run test</code> 测试通过以后，重新 <code>build</code> 运行</li>
+</ul>
+<p>这里我把已有的十几个组件和页面文件，全部使用上面的工具进行了更新。
+然后当你重新 <code>build</code> 后，你会发现测试仍然通过，组件功能仍然 work，但是代码库却是使用新语法糖进行了大规模彻彻底底地更新！简直太神奇了！
+那么，它是怎么做到的呢？</p>
+</li>
+</ul>
+<hr>
+<h2 id="jscodeshift">jscodeshift</h2>
+<p>  让我们来重新读一下 jscodeshift 的<a href="https://github.com/facebook/jscodeshift#jscodeshift-">文档</a>。</p>
+<blockquote>
+<p>jscodeshift is a toolkit for running codemods over multiple JS files. It provides:</p>
+</blockquote>
+<ul>
+<li>A runner, which executes the provided transform for each file passed to it. It also outputs a summary of how many files have (not) been transformed.</li>
+<li><p>A wrapper around recast, providing a different API. Recast is an AST-to-AST transform tool and also tries to preserve the style of original code as much as possible.</p>
+<p>那么这里就出现了两个关键的概念：<em>Runner</em> 及 <em>AST</em>。</p>
+</li>
+<li><p>Runner，</p>
+</li>
+<li><blockquote>
+<p>A runner/worker feature that can apply transforms to thousands of files in parallel.</p>
+<pre class="hljs"><code>  -- <a href="span class=&quot;hljs-link_url&quot;&gt;https://medium.com/@cpojer/effective-javascript-codemods-5a6686bb46fb#.sg03sd9eq&lt;/span"><span class="hljs-link_label">CPojer Effective JavaScript Codemods</span></a></code></pre></blockquote>
+</li>
+<li><p>AST，Abstract Syntax Tree，抽象语法分析树。</p>
+<p>为了更好理解以上概念，先来看一下之前运行 jscodeshift 命令过程。
+我们先是把一个里面包含了 JS 代码的源文件传给了它，然后它读取了源代码，又根据写好的 <code>transform.js</code> 对源代码进行了相应的变换，最后输出了变换后的 JS 代码，覆盖了原文件。
+简单的说，就是 
+<code>SourceCode =&gt; codemod =&gt; ObjectCode</code></p>
+<p>那么再详细一点，根据 jscodeshift 作者之一的 CPojer 在一次 JSConf 上对这个工具的介绍，jscodeshift 操作基本是按以下过程：
+<code>Parse =&gt; Find =&gt; Create =&gt; Update =&gt; Print</code></p>
+</li>
+<li><p>Parse: SourceCode =&gt; AST （Tree Nodes)</p>
+</li>
+<li>Find: Find the Nodes we want to replace         // Transform</li>
+<li>Create: Create the New Nodes we want to insert  // Transform</li>
+<li>Update: Update the AST at the right location    // Transform</li>
+<li><p>Print: Print it back into JavaScript Source with proper formatting and should like human wrote this.</p>
+<h3 id="-parse-ast-">第一步，将源代码解析 (parse) 成 AST.</h3>
+<p>我们知道自然语言（Natural Language)，无论什么语种，都会有「主语」「动词」「宾语」「标点符号」来描述一个现实世界所发生的事件。
+而在计算机编程语言 (Programming Language)，无论什么语种，都会有「类型」「运算符」「流程语句」「函数」「对象」等概念来表达计算机中存在内存中的0和1，以及背后运算与逻辑。
+不同的语言，都会配之不同的语法分析器(parser)。
+对于自然语言，我们的大脑就是一个 Parser。对于编程语言，语法分析器是把源代码作为字符串读入、解析，并建立语法树的程序。</p>
+<p>什么是语法树？摘自 Wiki 一段：</p>
+<blockquote>
+<p>计算机科学中，抽象语法树（abstract syntax tree 或者缩写为 AST），或者语法树（syntax tree），是源代码的抽象语法结构的树状表现形式，这里特指编程语言的源代码。树上的每个节点都表示源代码中的一种结构。之所以说语法是「抽象」的，是因为这里的语法并不会表示出真实语法中出现的每个细节。</p>
+</blockquote>
+<p>这么说其实还是有点抽象，我们先打开 <a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree">wiki</a> 看到 wikipedia 这个图，</p>
+<p><img src="https://media.github.intra.douban.com/user/62/files/9d7500be-f370-11e6-972f-f5ede1c448f8" alt="image"></p>
+</li>
+</ul>
+<p>  前端er 一定会觉得很相似，这里不就是 DOM 语法树的终极抽象版本吗，只是把一个个 DOM Nodes 换成了一个个更加无语义的字符 Token。
+  FB 有一个很棒的工具 <a href="http://astexplorer.net/">ASTExplorer</a>，可以用来更形象地展示。</p>
+<p>  比如说，我们现在就只有一个很简单的表达式<code>a+b</code>，这里是 recast Parser 解析后的 AST 结构：</p>
+<p>  <img src="https://media.github.intra.douban.com/user/62/files/758a6076-f370-11e6-97e4-f6152c3814bf" alt="image"></p>
+<p>  看上去特别复杂。注意那些蓝色字体 <code>File</code>, <code>Programme</code>,<code>ExpressionStatement</code>,<code>Identifier</code>… 这些都是 AST Nodes，其他的都是和这个 Node 相关的数据。</p>
+<p>  根据前文可以知道，每种语言的 AST 都是不同的。有专门的 Parser 来生成 AST。</p>
+<p>  关于 <a href="https://en.wikipedia.org/wiki/Parsing#Parser">Parser</a> 又是一门很深的学问了。
+  在 ASTExplorer.net 上可以看到有很多 parser，比较著名的有 <a href="https://github.com/jquery/esprima/blob/master/src/parser.ts">Esprima(jQuery)</a>，Uglify-JS, Babylon(Babel), Acorn(Tern / Webpack), 及 jscodeshift 使用的 recast. 虽然有很多 Parser，但是基本上，一个 parser 的结构都差不多，对源代码进行词法分析，生成 Tokens，对 Tokens 进行语法分析，然后生成 AST。</p>
+<p>  <img src="https://media.github.intra.douban.com/user/62/files/5751ac04-f370-11e6-849e-692ab4b47bbf" alt="image"></p>
+<p>  具体可以参考看下 <a href="http://esprima.org/demo/parse.html#">Esprima Parse Demo</a>。
+  生成的 AST 都遵循一个统一标准 <a href="https://github.com/estree/estree/blob/master/es5.md">ESTree</a> or <a href="parser API https://developer.mozilla.org/en-US/docs/Mozilla/Projects/SpiderMonkey/Parser_API">Mozilla SpiderMonkey</a>，也就是说都会返回 ESTree Compatible AST.</p>
+<h3 id="-ast-find-nodes-create-new-nodes-update-nodes-">第二三四步，对生成的 AST 进行操作修改 (Find Nodes &amp; Create New Nodes &amp; Update Nodes)</h3>
+<p>  Wiki 有介绍说，parse AST 的代码基本是使用<code>Visitor Pattern</code>，如：</p>
+<pre class="hljs"><code>  <span class="hljs-comment">// recast</span>
+  <span class="hljs-keyword">var</span> ast = recast.parse(src);
+  recast.visit(ast, {
+    visitIdentifier: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(path)</span> </span>{
+      <span class="hljs-comment">// do something with path</span>
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    }
+  });</code></pre><p>  但是 js-codeshift 基于 <a href="https://github.com/facebook/jscodeshift#collections-and-traversal"><code>Collections</code></a> 概念，很贴心的给这些 Parser API 继续包了一层，提供了一个不一样的前端友好型 API.</p>
+<pre class="hljs"><code>  <span class="hljs-comment">// jscodeshift</span>
+  <span class="hljs-tag">jscodeshift</span>(src)
+    <span class="hljs-class">.find</span>(jscodeshift.Identifier)
+    <span class="hljs-class">.forEach</span>(<span class="hljs-function">function</span>(path) {
+      <span class="hljs-comment">// do something with path</span>
+    });
+
+  <span class="hljs-comment">// Provide jQuery-likely and F2E-friendly Syntax API</span>
+  <span class="hljs-comment">// Manipulate AST nodes conveniently.</span></code></pre><p>  读这段代码的时候，一下子觉得又似曾相识。这不就和使用 <code>jQuery</code> 操作 DOM 一样嘛。
+  可以对比下 “普通 Parser” 与 jscodeshift 操纵 AST 的区别：
+  可以看到如果使用 <a href="http://esprima.org/">esprima</a> ，AST Traverse / Walk 基本是 <code>visitor pattern</code>.
+  <a href="https://github.intra.douban.com/zhangbinliu/ast_demo/tree/esprima">https://github.intra.douban.com/zhangbinliu/ast_demo/tree/esprima</a></p>
+<h3 id="-">第五步，输出转换后的代码</h3>
+<p>  这个据 CPojer 说，根据转换后的 AST，以及一些输出 <a href="https://github.com/benjamn/recast/blob/52a7ec3eaaa37e78436841ed8afc948033a86252/lib/options.js#L61">Options</a>（比如是否单引号、tab 宽度是多少、需不需要去掉尾部分号…）是一个挺困难的过程。
+  但最终，jscodeshift 的 print API 语法却是只要一行代码即可。</p>
+<pre class="hljs"><code>  <span class="hljs-class">.toSource</span>({<span class="hljs-attribute">quote</span>: <span class="hljs-string">&#39;single&#39;</span>}); <span class="hljs-comment">// sets strings to use single quotes in transformed code.</span></code></pre><p>  其实 Recast 在这做了<a href="(https://github.com/benjamn/recast/blob/master/lib/printer.js">大量的工作</a> )。</p>
+<p>  经过这五个步骤，一次 jscodeshift 的转换过程就算完成了。</p>
+<hr>
+<h2 id="demo-time-">DEMO TIME!</h2>
+<h3 id="write-a-codemod-transform">Write a codemod transform</h3>
+<pre class="hljs"><code><span class="hljs-escape"><code>j&lt;/span&gt;scodeshift -t &amp;lt;transform.js&amp;gt; /to/file/path&lt;span class=&quot;hljs-escape&quot;&gt;</code> </span>的 <span class="hljs-escape"><code>t&lt;/span&gt;ransform.js&lt;span class=&quot;hljs-escape&quot;&gt;</code>，</span>也就是说，你打算使用 jscodeshift 对源文件进行何种变换，这里面就是变换函数；</code></pre><h4 id="problem-">Problem:</h4>
+<pre class="hljs"><code>  <span class="hljs-comment">// Before</span>
+  <span class="hljs-string">&#39;Hello, &#39;</span> + name + <span class="hljs-string">&#39;, this is a string.&#39;</span>
+  <span class="hljs-comment">// After</span>
+  <code>Hello, ${name}, &lt;span class=&quot;hljs-keyword&quot;&gt;this&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;is&lt;/span&gt; a &lt;span class=&quot;hljs-keyword&quot;&gt;string&lt;/span&gt;.</code></code></pre><h4 id="solution-">Solution:</h4>
+<ol>
+<li><p>Simplify:</p>
+<pre class="hljs"><code><span class="hljs-comment">// Before</span>
+a + b
+<span class="hljs-comment">// After</span>
+<span class="hljs-string"><code>&lt;span class=&quot;hljs-subst&quot;&gt;${a}&lt;/span&gt;&lt;span class=&quot;hljs-subst&quot;&gt;${b}&lt;/span&gt;</code></span></code></pre><p><code>a + b</code> AST:</p>
+<p><img src="https://media.github.intra.douban.com/user/62/files/e4d3c126-f36f-11e6-98aa-382c3afd9bcf" alt="image"></p>
+<p><code>${a}${b}</code> AST:</p>
+<p><img src="https://media.github.intra.douban.com/user/62/files/ea450a52-f36f-11e6-9a28-f715785d13a2" alt="image"></p>
+<p>对比两个 AST 可以发现
+我们只需要 </p>
+</li>
+<li><p>读入需转换的代码，找到 <code>BinaryExpression</code></p>
+</li>
+<li>保存 <code>BinaryExpression</code> 左右两边的值（node.left &amp; node.right)</li>
+<li>生成一个为 <code>TemlateLiteral</code> Node，<code>quasis</code> 是一个包含了三个 <code>TemplateElement</code> 的数组，<code>cookde &amp; raw keys</code> 都是 <code>&#39;&#39;</code>， <code>expressions</code> 是一个包含 node.left, node.right 值的数组。</li>
+<li><p>然后将它返回输出；</p>
+<p>Solution Example:</p>
+</li>
+<li><p><a href="http://astexplorer.net/#/gist/33b63b7dc8da6d9ea4936c631adc994d/7905ef5b30dfc0cb3c811af8a8960f11014ef402">http://astexplorer.net/#/gist/33b63b7dc8da6d9ea4936c631adc994d/7905ef5b30dfc0cb3c811af8a8960f11014ef402</a></p>
+</li>
+<li><a href="http://astexplorer.net/#/gist/a71957902ec1fd79f199eb37e5e6801a/55c4910295973b3a4d09770d94cec73d5096daa4">http://astexplorer.net/#/gist/a71957902ec1fd79f199eb37e5e6801a/55c4910295973b3a4d09770d94cec73d5096daa4</a></li>
+<li><p><a href="http://astexplorer.net/#/gist/a71957902ec1fd79f199eb37e5e6801a/cf3c898c5fe494d08a978dd1a3a3e56fc42828a8">http://astexplorer.net/#/gist/a71957902ec1fd79f199eb37e5e6801a/cf3c898c5fe494d08a978dd1a3a3e56fc42828a8</a></p>
+<p>官方没有太详细的 transform 编写指导，可以多谷歌或者学习 react-codemod/tranform or js-codemod/transform，
+个人觉得写 JS-codeshift Transform | Babel-Plugin 本质其实就是对比两棵语法树，像解谜一样，看看如何「又好又快」变换成这样。
+剩下的一开始如何读取源 JS 代码并解析成语法树，具体在 AST 上 traverse &amp; find &amp; create &amp; update （这里我猜测其实是一个递归遍历节点树的过程？），及之后如何按一定的 code style 生成我们需要的代码，都是透明且不关心的。</p>
+</li>
+</ol>
+<hr>
+<h2 id="-">总结 &amp; 开脑洞</h2>
+<ul>
+<li><p>基本处理流程：
+<img src="https://media.github.intra.douban.com/user/62/files/7fe54aa4-f370-11e6-90d8-9f191a40a5cc" alt="image"></p>
+</li>
+<li><p>AST 是很有用的一个抽象概念。一旦你理解了这些规则，唯一的限制就是解析器和你的想象力。</p>
+</li>
+<li>纯 AST parse 太过于理论，既然是工程师，还是需要自己动手写点什么来解决自己实际遇到的问题。</li>
+<li>可以继续拓展到「语法高亮」、「关键字匹配」、「代码格式化」、「作用域判断」、以及「代码压缩」、「Babel 插件」等等。</li>
+<li>渐渐深入底层进行分析，让自己对这门语言有了更多、更深入的了解，可以更好地成为产品「创造者」，而不单纯是「使用者」。</li>
+<li>Write JavaScript that write JavaScript! The best editor is JavaScript. Cool!</li>
+</ul>
+<hr>
+<h2 id="-">思考</h2>
+<ul>
+<li>可以在一个 codemod transform 里面同时进行两个变换吗？个人觉得可能会很复杂且效果不太好，因为有些 transform 并不是正交的。🤔</li>
+</ul>
+<hr>
+<h2 id="refs-">Refs:</h2>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=d0pOgY8__JM">CPojer’s Talk</a></li>
+<li><a href="https://medium.com/@cpojer/effective-javascript-codemods-5a6686bb46fb#.s5kdne4xl">Effective JavaScript Codemods</a></li>
+<li><a href="https://survivejs.com/blog/codemod-interview/">Codemod Interview</a></li>
+<li><a href="https://vramana.github.io/blog/2015/12/21/codemod-tutorial/">How to write a codemod</a> 结合 CPojer’s Talk, 这个虽很长但很有用！</li>
+<li><a href="https://www.sitepoint.com/understanding-asts-building-babel-plugin/">Understanding Babel Plugin</a></li>
+<li><a href="http://tech.meituan.com/abstract-syntax-tree.html">AST 在美团的应用</a></li>
+<li><a href="http://imweb.io/topic/57b13b4f93d9938132cc8dfd">imweb</a></li>
+</ul>
+]]></description><link>/2017-02-15-fun-with-codemod-and-ast/index.html</link><guid isPermaLink="true">/2017-02-15-fun-with-codemod-and-ast/index.html</guid><category><![CDATA[programming]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Thu, 19 May 2016 18:21:00 GMT</pubDate></item><item><title><![CDATA[[译]前端指南]]></title><description><![CDATA[<p><strong>Update</strong>
 以下大概写于两年前，亟待更新。</p>
 <hr>
 <p>几天前从Github上看到了这篇<a href="https://github.com/bendc/frontend-guidelines">前端编码最佳实践</a>，Star数已破4K，觉得应该是篇不错的小指南，花了点时间将它稍作翻译，也当是复习复习 <code>HTML&amp;CSS&amp;JS</code>。
@@ -1182,217 +1392,7 @@ Minimize dependencies. Third-party is code you don&#39;t know. Don&#39;t load an
 
 <span class="hljs-atom">compact</span>([<span class="hljs-string">&quot;foo&quot;</span>, <span class="hljs-number">0</span>]);
 <span class="hljs-atom">unique</span>([<span class="hljs-string">&quot;foo&quot;</span>, <span class="hljs-string">&quot;foo&quot;</span>]);
-<span class="hljs-atom">union</span>([<span class="hljs-string">&quot;foo&quot;</span>], [<span class="hljs-string">&quot;bar&quot;</span>], [<span class="hljs-string">&quot;foo&quot;</span>]);</code></pre>]]></description><link>/frontend-guidelines.html</link><guid isPermaLink="true">/frontend-guidelines.html</guid><category><![CDATA[translate]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Invalid Date</pubDate></item><item><title><![CDATA[Fun with Codemod & AST]]></title><description><![CDATA[<h1 id="fun-with-codemod-ast">Fun with Codemod &amp; AST</h1>
-<hr>
-<h2 id="content">Content</h2>
-<ul>
-<li>背景</li>
-<li>Codemod</li>
-<li>jscodeshift</li>
-<li>Demo Time</li>
-<li>Refs</li>
-</ul>
-<hr>
-<h2 id="-">背景</h2>
-<p>  作为一个自信而自豪的前端弄潮儿（F2E），我们总是希望能够在这个每天都在飞速迭代的行业，与时渐进。
-  前端们是一群不安分的人，大家喜爱新框架、新语法，而 JavaScript 也是一门非常灵活的语言，它提供给我们的 API 也在与时渐进。比如，当 <code>ES2015 ES2016 ES2017…</code> 出来的时候，那些新语法糖，简洁漂亮，且更易于理解逻辑，于是我们都想去尝试下。
-  但是尝试归尝试，对于新项目尝试起来成本很低，只需要把新功能都用新语法编写就好。
-  而创建新项目的同时，其实我们也在维护着一些已有的旧项目。如果你还并没怎么理它们，可能它们还活得不错。但是一旦 PM 心情好想加个新功能，或者你哪天心情好想去更新下代码库，然后看到自己之前写的那些代码，那些现在其实可以更优雅漂亮的代码，是不是手里特痒痒特想把它们更新了？
-  执行力强的前端儿可能说干就干了，嗯，就假设我们有个项目 Project，里面使用的是用<code>ES5</code> 版 <code>React</code> 作为 <code>UI View</code>。然后它大概四个页面<code>(Page)</code>，每个页面包含大概四个组件<code>(Component)</code>，然后你从某个看起来比较小、不容易出错的<code>Component</code> 入手，开始一行一行改写代码，嗯，<code>var React = require(&#39;react’)</code> 改为 <code>import React from &#39;react’</code>， <code>var API = ‘/j/app/xxx’</code> 改为 <code>const API = ‘/j/app/xxx’</code>，<code>var foo</code> 改为 <code>let foo</code>，<code>function () {…}</code> 改为 <code>() =&gt; {…}</code>，<code>module.exports = React.createClass({…})</code> 改为 <code>export default class MyComponent extends React.Component {…}</code> … 
-  天哪，有完没完，一个组件改完下来，你已经感到身体被掏空，望了望 <code>Components</code> 列表，更不用说，重新 <code>build</code> 过的测试还没过。你陷入了绝望...</p>
-<p>  那么有没有更快一点的办法呢？
-  稍微有点经验的前端儿可能想到「正则表达式匹配替换」。Bash <code>Awk | Sed</code> 命令，或者 Vim <code>:%s/var/let/g</code>。可是如果需要有些变量是 <code>const</code> 类型，有些是 <code>let</code>，而有些保持 <code>var</code> 不变怎么办？再比如说 </p>
-<pre class="hljs"><code>  <span class="hljs-tag">merge</span>(a, {<span class="hljs-attribute">b</span>: <span class="hljs-number">1</span>}, c);  <span class="hljs-comment">// Old</span>
-
-  需要变为
-
-  ({..<span class="hljs-class">.a</span>, <span class="hljs-tag">b</span>: <span class="hljs-tag">1</span>, ..<span class="hljs-class">.c</span>});  <span class="hljs-comment">// New</span></code></pre><p>  这里光是这个函数的 <code>arguments</code> 就可能有多种形式，比如 <code>variable</code>，一个匿名函数返回的 Object 或者 <code>Plain Object</code> 那种。
-  这里相当于是一个 <code>Context-non-free</code> 的问题，也就是上下文语义很重要。
-  这样的话，无论再怎么强大的<code>RegExp</code> 也无能为力。因为正则的本质，其实是根据一定的 <code>Pattern</code> 来匹配字符串，但是在真正的代码里面，所有的字符串都有语义，都有上下文，这里的正则表达式会既复杂又无用。
-  所以，我们得换一个维度思考问题。</p>
-<hr>
-<h2 id="codemod">Codemod</h2>
-<p>  对「代码库的批量迁移更新」，其实也是程序员的一个需求，所以也感激地，已经有一群懒惰又聪明的程序员造出了工具：<code>Codemod</code>，将「大型仓库代码的批量迁移」自动化，省时省力。</p>
-<p>  好吧，所以 Codemod 到底是什么呢？
-  官方文档这样写着：</p>
-<blockquote>
-<p>Codemod is a tool/library to assist you with large-scale codebase refactors that can be partially automated but still require human oversight and occasional intervention.</p>
-</blockquote>
-<p>  这样看来，可以很好的解决我们的需求了。
-  基于 Codemod，又出现了针对 JavaScript 代码迁移的工具 <a href="https://github.com/facebook/jscodeshift">Facebook jscoodeshift</a>，
-  基于 jscodeshift，又构建了迁移一般 JavaScript 代码（比如 ES5 -&gt; ES2015) 的工具 <a href="https://github.com/cpojer/js-codemod">js-codemod</a> 和迁移 React 相关项目的 <a href="https://github.com/reactjs/react-codemod">react-codemod</a>。</p>
-<p>  嗯，这么看来，我们的事情就变得容易多了。
-  根据上面那些工具的官方文档，我们只需要按顺序执行以下命令：</p>
-<pre class="hljs"><code>  &gt; npm i -g jscodeshift
-  &gt; git clone https:<span class="hljs-comment">//github.com/reactjs/react-codemod.git</span>
-  &gt; git clone https:<span class="hljs-comment">//github.com/cpojer/js-codemod.git</span>
-  &gt; jscodeshift -t react-codemod/transforms/<span class="hljs-keyword">class</span>.js --<span class="hljs-keyword">mixin</span>-<span class="hljs-keyword">module</span>-name=react-addons-<span class="hljs-keyword">pure</span>-render-<span class="hljs-keyword">mixin</span> --flow=<span class="hljs-literal">true</span> --<span class="hljs-keyword">pure</span>-component=<span class="hljs-literal">true</span> --remove-runtime-proptypes=<span class="hljs-literal">false</span> src/register/component/myComponent.jsx
-  &gt; jscodeshift -t js-codemod/transforms/no-vars.js ./src/register/component/myComponent.jsx</code></pre><p>  然后，再次 <code>git status</code> 一下或者直接打开刚才 transform 的 <code>myComponent.jsx</code> 文件查看，你会发现，神奇般，你的代码都成为了它们应该成为的样子。</p>
-<p>  这里暂时以我之前做的 Accounts 项目为例：
-  <a href="https://github.intra.douban.com/accounts/accounts/pull/553/files#diff-b2286efdea6a62288250264e82bd948b">https://github.intra.douban.com/accounts/accounts/pull/553/files#diff-b2286efdea6a62288250264e82bd948b</a></p>
-<ul>
-<li><p>基本步骤如下：</p>
-<ul>
-<li>因为是第一次使用 <code>codemod</code>，所以比较谨慎，一个一个 <code>component</code> 来；</li>
-<li>先用 <code>react-codemod</code> 转，把大部头代码迁移；</li>
-<li>然后 <code>js-codemod</code> 小步更新整理；</li>
-<li>然后再根据一些自己的 Code Style 做些细节上的修改。比如使用 <code>standard-format</code> 工具格式化代码，符合我个人写的代码风格。</li>
-<li>毕竟 JS 太过于灵活，每个人写代码时候风格和结构都是各异的，有时候的转换还是会出现一些与想象中不一致的结果，官方文档也是说仍然需要人工干预，所以会手动修改下代码细节；</li>
-<li>一切组件迁移就绪，<code>npm run test</code> 测试通过以后，重新 <code>build</code> 运行</li>
-</ul>
-<p>这里我把已有的十几个组件和页面文件，全部使用上面的工具进行了更新。
-然后当你重新 <code>build</code> 后，你会发现测试仍然通过，组件功能仍然 work，但是代码库却是使用新语法糖进行了大规模彻彻底底地更新！简直太神奇了！
-那么，它是怎么做到的呢？</p>
-</li>
-</ul>
-<hr>
-<h2 id="jscodeshift">jscodeshift</h2>
-<p>  让我们来重新读一下 jscodeshift 的<a href="https://github.com/facebook/jscodeshift#jscodeshift-">文档</a>。</p>
-<blockquote>
-<p>jscodeshift is a toolkit for running codemods over multiple JS files. It provides:</p>
-</blockquote>
-<ul>
-<li>A runner, which executes the provided transform for each file passed to it. It also outputs a summary of how many files have (not) been transformed.</li>
-<li><p>A wrapper around recast, providing a different API. Recast is an AST-to-AST transform tool and also tries to preserve the style of original code as much as possible.</p>
-<p>那么这里就出现了两个关键的概念：<em>Runner</em> 及 <em>AST</em>。</p>
-</li>
-<li><p>Runner，</p>
-</li>
-<li><blockquote>
-<p>A runner/worker feature that can apply transforms to thousands of files in parallel.</p>
-<pre class="hljs"><code>  -- <a href="span class=&quot;hljs-link_url&quot;&gt;https://medium.com/@cpojer/effective-javascript-codemods-5a6686bb46fb#.sg03sd9eq&lt;/span"><span class="hljs-link_label">CPojer Effective JavaScript Codemods</span></a></code></pre></blockquote>
-</li>
-<li><p>AST，Abstract Syntax Tree，抽象语法分析树。</p>
-<p>为了更好理解以上概念，先来看一下之前运行 jscodeshift 命令过程。
-我们先是把一个里面包含了 JS 代码的源文件传给了它，然后它读取了源代码，又根据写好的 <code>transform.js</code> 对源代码进行了相应的变换，最后输出了变换后的 JS 代码，覆盖了原文件。
-简单的说，就是 
-<code>SourceCode =&gt; codemod =&gt; ObjectCode</code></p>
-<p>那么再详细一点，根据 jscodeshift 作者之一的 CPojer 在一次 JSConf 上对这个工具的介绍，jscodeshift 操作基本是按以下过程：
-<code>Parse =&gt; Find =&gt; Create =&gt; Update =&gt; Print</code></p>
-</li>
-<li><p>Parse: SourceCode =&gt; AST （Tree Nodes)</p>
-</li>
-<li>Find: Find the Nodes we want to replace         // Transform</li>
-<li>Create: Create the New Nodes we want to insert  // Transform</li>
-<li>Update: Update the AST at the right location    // Transform</li>
-<li><p>Print: Print it back into JavaScript Source with proper formatting and should like human wrote this.</p>
-<h3 id="-parse-ast-">第一步，将源代码解析 (parse) 成 AST.</h3>
-<p>我们知道自然语言（Natural Language)，无论什么语种，都会有「主语」「动词」「宾语」「标点符号」来描述一个现实世界所发生的事件。
-而在计算机编程语言 (Programming Language)，无论什么语种，都会有「类型」「运算符」「流程语句」「函数」「对象」等概念来表达计算机中存在内存中的0和1，以及背后运算与逻辑。
-不同的语言，都会配之不同的语法分析器(parser)。
-对于自然语言，我们的大脑就是一个 Parser。对于编程语言，语法分析器是把源代码作为字符串读入、解析，并建立语法树的程序。</p>
-<p>什么是语法树？摘自 Wiki 一段：</p>
-<blockquote>
-<p>计算机科学中，抽象语法树（abstract syntax tree 或者缩写为 AST），或者语法树（syntax tree），是源代码的抽象语法结构的树状表现形式，这里特指编程语言的源代码。树上的每个节点都表示源代码中的一种结构。之所以说语法是「抽象」的，是因为这里的语法并不会表示出真实语法中出现的每个细节。</p>
-</blockquote>
-<p>这么说其实还是有点抽象，我们先打开 <a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree">wiki</a> 看到 wikipedia 这个图，</p>
-<p><img src="https://media.github.intra.douban.com/user/62/files/9d7500be-f370-11e6-972f-f5ede1c448f8" alt="image"></p>
-</li>
-</ul>
-<p>  前端er 一定会觉得很相似，这里不就是 DOM 语法树的终极抽象版本吗，只是把一个个 DOM Nodes 换成了一个个更加无语义的字符 Token。
-  FB 有一个很棒的工具 <a href="http://astexplorer.net/">ASTExplorer</a>，可以用来更形象地展示。</p>
-<p>  比如说，我们现在就只有一个很简单的表达式<code>a+b</code>，这里是 recast Parser 解析后的 AST 结构：</p>
-<p>  <img src="https://media.github.intra.douban.com/user/62/files/758a6076-f370-11e6-97e4-f6152c3814bf" alt="image"></p>
-<p>  看上去特别复杂。注意那些蓝色字体 <code>File</code>, <code>Programme</code>,<code>ExpressionStatement</code>,<code>Identifier</code>… 这些都是 AST Nodes，其他的都是和这个 Node 相关的数据。</p>
-<p>  根据前文可以知道，每种语言的 AST 都是不同的。有专门的 Parser 来生成 AST。</p>
-<p>  关于 <a href="https://en.wikipedia.org/wiki/Parsing#Parser">Parser</a> 又是一门很深的学问了。
-  在 ASTExplorer.net 上可以看到有很多 parser，比较著名的有 <a href="https://github.com/jquery/esprima/blob/master/src/parser.ts">Esprima(jQuery)</a>，Uglify-JS, Babylon(Babel), Acorn(Tern / Webpack), 及 jscodeshift 使用的 recast. 虽然有很多 Parser，但是基本上，一个 parser 的结构都差不多，对源代码进行词法分析，生成 Tokens，对 Tokens 进行语法分析，然后生成 AST。</p>
-<p>  <img src="https://media.github.intra.douban.com/user/62/files/5751ac04-f370-11e6-849e-692ab4b47bbf" alt="image"></p>
-<p>  具体可以参考看下 <a href="http://esprima.org/demo/parse.html#">Esprima Parse Demo</a>。
-  生成的 AST 都遵循一个统一标准 <a href="https://github.com/estree/estree/blob/master/es5.md">ESTree</a> or <a href="parser API https://developer.mozilla.org/en-US/docs/Mozilla/Projects/SpiderMonkey/Parser_API">Mozilla SpiderMonkey</a>，也就是说都会返回 ESTree Compatible AST.</p>
-<h3 id="-ast-find-nodes-create-new-nodes-update-nodes-">第二三四步，对生成的 AST 进行操作修改 (Find Nodes &amp; Create New Nodes &amp; Update Nodes)</h3>
-<p>  Wiki 有介绍说，parse AST 的代码基本是使用<code>Visitor Pattern</code>，如：</p>
-<pre class="hljs"><code>  <span class="hljs-comment">// recast</span>
-  <span class="hljs-keyword">var</span> ast = recast.parse(src);
-  recast.visit(ast, {
-    visitIdentifier: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(path)</span> </span>{
-      <span class="hljs-comment">// do something with path</span>
-      <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    }
-  });</code></pre><p>  但是 js-codeshift 基于 <a href="https://github.com/facebook/jscodeshift#collections-and-traversal"><code>Collections</code></a> 概念，很贴心的给这些 Parser API 继续包了一层，提供了一个不一样的前端友好型 API.</p>
-<pre class="hljs"><code>  <span class="hljs-comment">// jscodeshift</span>
-  <span class="hljs-tag">jscodeshift</span>(src)
-    <span class="hljs-class">.find</span>(jscodeshift.Identifier)
-    <span class="hljs-class">.forEach</span>(<span class="hljs-function">function</span>(path) {
-      <span class="hljs-comment">// do something with path</span>
-    });
-
-  <span class="hljs-comment">// Provide jQuery-likely and F2E-friendly Syntax API</span>
-  <span class="hljs-comment">// Manipulate AST nodes conveniently.</span></code></pre><p>  读这段代码的时候，一下子觉得又似曾相识。这不就和使用 <code>jQuery</code> 操作 DOM 一样嘛。
-  可以对比下 “普通 Parser” 与 jscodeshift 操纵 AST 的区别：
-  可以看到如果使用 <a href="http://esprima.org/">esprima</a> ，AST Traverse / Walk 基本是 <code>visitor pattern</code>.
-  <a href="https://github.intra.douban.com/zhangbinliu/ast_demo/tree/esprima">https://github.intra.douban.com/zhangbinliu/ast_demo/tree/esprima</a></p>
-<h3 id="-">第五步，输出转换后的代码</h3>
-<p>  这个据 CPojer 说，根据转换后的 AST，以及一些输出 <a href="https://github.com/benjamn/recast/blob/52a7ec3eaaa37e78436841ed8afc948033a86252/lib/options.js#L61">Options</a>（比如是否单引号、tab 宽度是多少、需不需要去掉尾部分号…）是一个挺困难的过程。
-  但最终，jscodeshift 的 print API 语法却是只要一行代码即可。</p>
-<pre class="hljs"><code>  <span class="hljs-class">.toSource</span>({<span class="hljs-attribute">quote</span>: <span class="hljs-string">&#39;single&#39;</span>}); <span class="hljs-comment">// sets strings to use single quotes in transformed code.</span></code></pre><p>  其实 Recast 在这做了<a href="(https://github.com/benjamn/recast/blob/master/lib/printer.js">大量的工作</a> )。</p>
-<p>  经过这五个步骤，一次 jscodeshift 的转换过程就算完成了。</p>
-<hr>
-<h2 id="demo-time-">DEMO TIME!</h2>
-<h3 id="write-a-codemod-transform">Write a codemod transform</h3>
-<pre class="hljs"><code><span class="hljs-escape"><code>j&lt;/span&gt;scodeshift -t &amp;lt;transform.js&amp;gt; /to/file/path&lt;span class=&quot;hljs-escape&quot;&gt;</code> </span>的 <span class="hljs-escape"><code>t&lt;/span&gt;ransform.js&lt;span class=&quot;hljs-escape&quot;&gt;</code>，</span>也就是说，你打算使用 jscodeshift 对源文件进行何种变换，这里面就是变换函数；</code></pre><h4 id="problem-">Problem:</h4>
-<pre class="hljs"><code>  <span class="hljs-comment">// Before</span>
-  <span class="hljs-string">&#39;Hello, &#39;</span> + name + <span class="hljs-string">&#39;, this is a string.&#39;</span>
-  <span class="hljs-comment">// After</span>
-  <code>Hello, ${name}, &lt;span class=&quot;hljs-keyword&quot;&gt;this&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;is&lt;/span&gt; a &lt;span class=&quot;hljs-keyword&quot;&gt;string&lt;/span&gt;.</code></code></pre><h4 id="solution-">Solution:</h4>
-<ol>
-<li><p>Simplify:</p>
-<pre class="hljs"><code><span class="hljs-comment">// Before</span>
-a + b
-<span class="hljs-comment">// After</span>
-<span class="hljs-string"><code>&lt;span class=&quot;hljs-subst&quot;&gt;${a}&lt;/span&gt;&lt;span class=&quot;hljs-subst&quot;&gt;${b}&lt;/span&gt;</code></span></code></pre><p><code>a + b</code> AST:</p>
-<p><img src="https://media.github.intra.douban.com/user/62/files/e4d3c126-f36f-11e6-98aa-382c3afd9bcf" alt="image"></p>
-<p><code>${a}${b}</code> AST:</p>
-<p><img src="https://media.github.intra.douban.com/user/62/files/ea450a52-f36f-11e6-9a28-f715785d13a2" alt="image"></p>
-<p>对比两个 AST 可以发现
-我们只需要 </p>
-</li>
-<li><p>读入需转换的代码，找到 <code>BinaryExpression</code></p>
-</li>
-<li>保存 <code>BinaryExpression</code> 左右两边的值（node.left &amp; node.right)</li>
-<li>生成一个为 <code>TemlateLiteral</code> Node，<code>quasis</code> 是一个包含了三个 <code>TemplateElement</code> 的数组，<code>cookde &amp; raw keys</code> 都是 <code>&#39;&#39;</code>， <code>expressions</code> 是一个包含 node.left, node.right 值的数组。</li>
-<li><p>然后将它返回输出；</p>
-<p>Solution Example:</p>
-</li>
-<li><p><a href="http://astexplorer.net/#/gist/33b63b7dc8da6d9ea4936c631adc994d/7905ef5b30dfc0cb3c811af8a8960f11014ef402">http://astexplorer.net/#/gist/33b63b7dc8da6d9ea4936c631adc994d/7905ef5b30dfc0cb3c811af8a8960f11014ef402</a></p>
-</li>
-<li><a href="http://astexplorer.net/#/gist/a71957902ec1fd79f199eb37e5e6801a/55c4910295973b3a4d09770d94cec73d5096daa4">http://astexplorer.net/#/gist/a71957902ec1fd79f199eb37e5e6801a/55c4910295973b3a4d09770d94cec73d5096daa4</a></li>
-<li><p><a href="http://astexplorer.net/#/gist/a71957902ec1fd79f199eb37e5e6801a/cf3c898c5fe494d08a978dd1a3a3e56fc42828a8">http://astexplorer.net/#/gist/a71957902ec1fd79f199eb37e5e6801a/cf3c898c5fe494d08a978dd1a3a3e56fc42828a8</a></p>
-<p>官方没有太详细的 transform 编写指导，可以多谷歌或者学习 react-codemod/tranform or js-codemod/transform，
-个人觉得写 JS-codeshift Transform | Babel-Plugin 本质其实就是对比两棵语法树，像解谜一样，看看如何「又好又快」变换成这样。
-剩下的一开始如何读取源 JS 代码并解析成语法树，具体在 AST 上 traverse &amp; find &amp; create &amp; update （这里我猜测其实是一个递归遍历节点树的过程？），及之后如何按一定的 code style 生成我们需要的代码，都是透明且不关心的。</p>
-</li>
-</ol>
-<hr>
-<h2 id="-">总结 &amp; 开脑洞</h2>
-<ul>
-<li><p>基本处理流程：
-<img src="https://media.github.intra.douban.com/user/62/files/7fe54aa4-f370-11e6-90d8-9f191a40a5cc" alt="image"></p>
-</li>
-<li><p>AST 是很有用的一个抽象概念。一旦你理解了这些规则，唯一的限制就是解析器和你的想象力。</p>
-</li>
-<li>纯 AST parse 太过于理论，既然是工程师，还是需要自己动手写点什么来解决自己实际遇到的问题。</li>
-<li>可以继续拓展到「语法高亮」、「关键字匹配」、「代码格式化」、「作用域判断」、以及「代码压缩」、「Babel 插件」等等。</li>
-<li>渐渐深入底层进行分析，让自己对这门语言有了更多、更深入的了解，可以更好地成为产品「创造者」，而不单纯是「使用者」。</li>
-<li>Write JavaScript that write JavaScript! The best editor is JavaScript. Cool!</li>
-</ul>
-<hr>
-<h2 id="-">思考</h2>
-<ul>
-<li>可以在一个 codemod transform 里面同时进行两个变换吗？个人觉得可能会很复杂且效果不太好，因为有些 transform 并不是正交的。🤔</li>
-</ul>
-<hr>
-<h2 id="refs-">Refs:</h2>
-<ul>
-<li><a href="https://www.youtube.com/watch?v=d0pOgY8__JM">CPojer’s Talk</a></li>
-<li><a href="https://medium.com/@cpojer/effective-javascript-codemods-5a6686bb46fb#.s5kdne4xl">Effective JavaScript Codemods</a></li>
-<li><a href="https://survivejs.com/blog/codemod-interview/">Codemod Interview</a></li>
-<li><a href="https://vramana.github.io/blog/2015/12/21/codemod-tutorial/">How to write a codemod</a> 结合 CPojer’s Talk, 这个虽很长但很有用！</li>
-<li><a href="https://www.sitepoint.com/understanding-asts-building-babel-plugin/">Understanding Babel Plugin</a></li>
-<li><a href="http://tech.meituan.com/abstract-syntax-tree.html">AST 在美团的应用</a></li>
-<li><a href="http://imweb.io/topic/57b13b4f93d9938132cc8dfd">imweb</a></li>
-</ul>
-]]></description><link>/2017-02-15-fun-with-codemod-and-ast/index.html</link><guid isPermaLink="true">/2017-02-15-fun-with-codemod-and-ast/index.html</guid><category><![CDATA[programming]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Thu, 19 May 2016 18:21:00 GMT</pubDate></item><item><title><![CDATA[CSS 中那些大大小小的坑]]></title><description><![CDATA[<h1 id="css-">CSS 中那些大大小小的坑</h1>
+<span class="hljs-atom">union</span>([<span class="hljs-string">&quot;foo&quot;</span>], [<span class="hljs-string">&quot;bar&quot;</span>], [<span class="hljs-string">&quot;foo&quot;</span>]);</code></pre>]]></description><link>/2015-03-14-frontend-guidelines/index.html</link><guid isPermaLink="true">/2015-03-14-frontend-guidelines/index.html</guid><category><![CDATA[translate]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Sat, 14 Mar 2015 15:51:00 GMT</pubDate></item><item><title><![CDATA[CSS 中那些大大小小的坑]]></title><description><![CDATA[<h1 id="css-">CSS 中那些大大小小的坑</h1>
 <blockquote>
 <p>中国读者不是不善于交流，而是对基础知识掌握不够牢固，不敢交流。就如同有人提到用英文写作时所说的，最难的不是怎么写，而是写什么。英文语法错误其实是别人最容易纠正的，但你到底想要表达什么则是别人无法知道的。具体到CSS，虽然不难学，但真正彻底把原理和基本概念全搞通也不是一件容易的事。 —— 李松峰</p>
 </blockquote>
@@ -1401,7 +1401,7 @@ a + b
 <p>###CHAPTER 1 HTML标记与文档结构
 用HTML标记内容的目的是为了赋予网页语义（semantic）。换句话说，就是要给你的网页内容赋予某些用户代理（user agent）能够理解的含义。 浏览器、屏幕阅读器，以及搜索引擎放出的web爬虫都是用户代理，它们需要显示、朗读和分析网页。</p>
 <ul>
-<li><mark>文本用闭合标签，引用内容用自闭合标签。</mark>  <ul>
+<li><mark>文本用闭合标签，引用内容用自闭合标签。</mark><ul>
 <li>闭合标签与自闭合标签的区别在于，闭合标签包含的是会显示的实际内容，而自闭合标签只是给浏览器提供一个对要显示内容的<strong>引用</strong>。浏览器会在HTML页面加载时候，<strong>额外向服务器发送请求</strong>，以取得自闭合标签引用的内容。</li>
 </ul>
 </li>
@@ -1422,14 +1422,20 @@ a + b
 <ul>
 <li>为文档添加样式的三种方法：<ul>
 <li>行内样式 ：  <code>&lt;p style=&quot;font-size: 12px; font-weight: bold;&quot;&gt;Adding inline CSS styling&lt;/p&gt;</code> 作用范围：只影响它所在的标签，而且总会覆盖嵌入样式和链接样式。</li>
-<li>嵌入样式： 嵌在<code>head</code>元素中。如<br><code>&lt;head&gt;&lt;style type=&quot;text/css&quot;&gt;...&lt;/style&gt;&lt;/head&gt;</code><br>作用范围仅限于当前页面。会覆盖外部样式表，但被行内样式覆盖。</li>
-<li>链接样式：把样式集中在一个单独文件——样式表（一个拓展名为.css的文本文件）。<br>在多个HTML中连接同一个样式表：
-<code>&lt;link href=&quot;style.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot; /&gt;</code><br>作用范围：有<code>&lt;link&gt;</code>标签的页面。</li>
+<li>嵌入样式： 嵌在<code>head</code>元素中。如
+<code>&lt;head&gt;&lt;style type=&quot;text/css&quot;&gt;...&lt;/style&gt;&lt;/head&gt;</code>
+作用范围仅限于当前页面。会覆盖外部样式表，但被行内样式覆盖。</li>
+<li>链接样式：把样式集中在一个单独文件——样式表（一个拓展名为.css的文本文件）。
+在多个HTML中连接同一个样式表：
+<code>&lt;link href=&quot;style.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot; /&gt;</code>
+作用范围：有<code>&lt;link&gt;</code>标签的页面。</li>
 <li><strong>@import指令</strong>：一种@规则，可以在样式表中链接其他样式表。
-<code>import url(css/style2.css)</code><br>注意：@import必须出现在样式表其他样式之前，否则不会被加载。<em>（见link css与@import css 的区别）</em></li>
+<code>import url(css/style2.css)</code>
+注意：@import必须出现在样式表其他样式之前，否则不会被加载。<em>（见link css与@import css 的区别）</em></li>
 </ul>
 </li>
-<li>一般上下文选择符。 基于祖先或同胞元素选择一个元素。<br>  <code>tag1 tag2 {statements}</code>  <strong>只要tag2在整个结构层次中有个tag1的祖先元素，无论上下文之间隔着多少层次没有关系</strong>。</li>
+<li>一般上下文选择符。 基于祖先或同胞元素选择一个元素。
+  <code>tag1 tag2 {statements}</code>  <strong>只要tag2在整个结构层次中有个tag1的祖先元素，无论上下文之间隔着多少层次没有关系</strong>。</li>
 <li>子选择符<code>&gt;</code> <code>tag1 &gt; tag2</code>   标签2必须是标签1的子元素。</li>
 <li>紧邻同胞选择符<code>+</code> <code>tag1 + tag2</code>   标签2必须紧跟在其同胞标签1后面。</li>
 <li>一般同胞选择符<code>~</code> <code>tag1 ~ tag2</code>  标签2必须跟（不一定紧跟）在其同胞标签1后面。</li>
@@ -1441,22 +1447,25 @@ a + b
 <li><strong>ID属性</strong>：ID用于页内导航链接。<ul>
 <li><code>&lt;a href=&quot;#bio&quot;&gt;Biography&lt;/a&gt;
   &lt;h3 id=&quot;bio&quot;&gt;Biography&lt;/h3&gt;
-  &lt;p&gt;....&lt;/p&gt;</code><br><code>href</code>属性值开头的<code>#</code>表示链接的目标在当前页面中，因而不会触发浏览器加载页面（如果没有#，浏览器会尝试加载bio目录下的默认页面）。会跳到h3元素的位置。
-<code>&lt;a href=&quot;#&quot;&gt;Back to Top&lt;/a&gt;</code> 点击该链接返回页面顶部。<br>另外，如果不知道href放什么URL，可以用#作为占位符，但不能留空，因为href属性值为空的链接行为跟正常链接不一样。</li>
+  &lt;p&gt;....&lt;/p&gt;</code>
+<code>href</code>属性值开头的<code>#</code>表示链接的目标在当前页面中，因而不会触发浏览器加载页面（如果没有#，浏览器会尝试加载bio目录下的默认页面）。会跳到h3元素的位置。
+<code>&lt;a href=&quot;#&quot;&gt;Back to Top&lt;/a&gt;</code> 点击该链接返回页面顶部。
+另外，如果不知道href放什么URL，可以用#作为占位符，但不能留空，因为href属性值为空的链接行为跟正常链接不一样。</li>
 </ul>
 </li>
 <li><strong>ID</strong>是为了唯一的标识一个元素。每个ID名在页面中只能用一次。给页面中每个顶级区域都添加一个ID，得到明确的上下文。</li>
 <li><strong>类</strong>是为了标识一组具有相同特征的元素。</li>
-<li><strong>属性名选择符</strong> <code>标签名[属性名]</code>，选择任何带有属性名的标签名。<br>  什么时候使用？一般经常给alt和title属性设定相同的值。alt属性中的文本会在图片因故未能加载时显示，或者由屏幕朗读器朗读出来。而title属性会在用户鼠标移动到图片上时，显示一个包含相应文本的提示。</li>
+<li><strong>属性名选择符</strong> <code>标签名[属性名]</code>，选择任何带有属性名的标签名。
+  什么时候使用？一般经常给alt和title属性设定相同的值。alt属性中的文本会在图片因故未能加载时显示，或者由屏幕朗读器朗读出来。而title属性会在用户鼠标移动到图片上时，显示一个包含相应文本的提示。</li>
 <li><strong>属性值选择符</strong> <code>标签名[属性名=&quot;属性值&quot;]</code>，选择任何带有值为属性值的属性名的标签名。</li>
 <li><strong>UI伪类</strong>在HTML元素处于某种状态时应用CSS。<ul>
 <li>链接伪类。<code>::link/::visited / ::hover / ::active</code></li>
 <li><code>:focus</code>伪类。<code>e:focus</code>在单击它获得焦点时候改变CSS。</li>
-<li><strong><code>:target</code>伪类</strong>。 <code>e:target</code>如果用户点击一个指向页面中其他元素的链接，则那个元素就是目标（target），可以用:target伪类选中它。  <pre class="hljs"><code>&lt;<span class="hljs-tag">a</span> href=<span class="hljs-string">&quot;#more_info&quot;</span>&gt;More Information&lt;/a&gt;
+<li><strong><code>:target</code>伪类</strong>。 <code>e:target</code>如果用户点击一个指向页面中其他元素的链接，则那个元素就是目标（target），可以用:target伪类选中它。<pre class="hljs"><code>&lt;<span class="hljs-tag">a</span> href=<span class="hljs-string">&quot;#more_info&quot;</span>&gt;More Information&lt;/a&gt;
 &lt;<span class="hljs-tag">h2</span> id=<span class="hljs-string">&quot;more_info&quot;</span>&gt;This is the information you are looking <span class="hljs-keyword">for</span>.&lt;/h2&gt;</code></pre>那么规则<code>#more_info:target {background: #eee;}</code>会在用户单击链接转向ID为more_info的元素时候，为该元素（h2）添加浅灰色背景，以便在一大堆引证中识别。（实例见Wikipedia）</li>
 </ul>
 </li>
-<li>结构伪类 <ul>
+<li>结构伪类<ul>
 <li><code>li:frist-child</code>&amp;<code>li:last-child</code>代表一组同胞元素中第一个或最后一个元素。</li>
 <li><code>e:nth-child(n)</code> e为元素名，n表示一个数值（也可以使用odd或even）。用于提高表格的可读性，对表格的所有行交替应用不同颜色。</li>
 </ul>
@@ -1470,7 +1479,7 @@ a + b
 <li>继承：文本样式（颜色）及字体（字号）。不继承元素盒子的定位和显示方式（边距、边框等）。<strong>所以使用相对字体单位（em和百分比）要格外小心！</strong></li>
 <li>层叠：样式在文档层次中逐层叠加。<ul>
 <li>层叠顺序：浏览器默认CSS-&gt;用户CSS-&gt;作者链接CSS(按照它们链接到页面的先后顺序)-&gt;作者嵌入CSS-&gt;作者行内CSS。</li>
-<li>层叠规则：    <ol>
+<li>层叠规则：<ol>
 <li>找到应用给每个元素和属性的所有声明。</li>
 <li>按顺序和权重排序。 <code>!important;</code>用于加重声明的权重。</li>
 <li>按特指度（specificity）排序。ID&gt;类&gt;标签名。但设定的样式胜过继承的样式。</li>
@@ -1489,14 +1498,16 @@ a + b
 </ul>
 <hr>
 <p>###CHAPTER 3 定位元素
-要掌握CSS，核心就是要掌握元素定位！<br>可见页面的版式 主要由三个属性控制：position 属性、display 属性和 float 属性。 position：控制页面上元素间的位置关系；display：控制元素是堆叠、并排还是根本不在页面上出现；float：提供控制的方式，以便把元素组成多栏布局。</p>
-<p><strong>！！此处添加一张描述盒模型的图！！</strong>  </p>
+要掌握CSS，核心就是要掌握元素定位！
+可见页面的版式 主要由三个属性控制：position 属性、display 属性和 float 属性。 position：控制页面上元素间的位置关系；display：控制元素是堆叠、并排还是根本不在页面上出现；float：提供控制的方式，以便把元素组成多栏布局。</p>
+<p><strong>！！此处添加一张描述盒模型的图！！</strong></p>
 <ul>
 <li>HTML页面实际由一堆盒子组成。默认情况下，每个盒子的边框不可见，背景也是透明。</li>
 <li>三组属性：<ul>
 <li>边框（border）：宽窄、样式和颜色。</li>
 <li>内边距（padding）：盒子内容区与边框的间距。</li>
-<li>外边距（margin）：盒子与相邻元素的间距。<br>如何理解？<strong>外边距是边框向外推其他元素，内边距是边框向内推元素的内容。</strong></li>
+<li>外边距（margin）：盒子与相邻元素的间距。
+如何理解？<strong>外边距是边框向外推其他元素，内边距是边框向内推元素的内容。</strong></li>
 </ul>
 </li>
 <li>简写样式：<code>margin{top, right, bottom, left}</code></li>
@@ -1518,17 +1529,18 @@ a + b
 <li>为设定了宽度的盒子添加边框、内边距和外边距，会导致盒子扩展得更宽。实际上，盒子的<code>width</code>属性设定的只是盒子内容区的宽度，而非盒子要占据的水平宽度。</li>
 </ul>
 </li>
-<li><p>浮动与清除<br>浮动可以实现：1. 传统出版物的文字绕排图片的效果。2. 可以让原来上下堆叠的块级元素变成左右并列，从而实现布局中的分栏。</p>
+<li><p>浮动与清除
+浮动可以实现：1. 传统出版物的文字绕排图片的效果。2. 可以让原来上下堆叠的块级元素变成左右并列，从而实现布局中的分栏。</p>
 <ul>
 <li><p>浮动元素会脱离常规文档流，在原来紧跟其后的元素就会在空间的允许下，向上提升到与浮动元素平起平坐。</p>
 <blockquote>
-<p>尽量把这个元素往上放，能放多高放多高，直到碰到某个元素的边界为止。  -- Eric Meyer  </p>
+<p>尽量把这个元素往上放，能放多高放多高，直到碰到某个元素的边界为止。  -- Eric Meyer</p>
 </blockquote>
 </li>
 <li><p>浮动非图片元素时，必须给它设定宽度，否则后果难料。</p>
 </li>
 <li>浮动元素脱离文档流，父元素也不会再包围它。三种围住浮动元素：<ol>
-<li>为父元素添加<code>overflow: hidden</code>。实际上<code>overflow: hidden</code>声明的真正用途是防止包含元素被超大内容撑大，包含元素依然保持其设定的宽度，而超大的子内容则会被容器剪切掉（之前有在下拉菜单的顶级元素上应用这个声明，结果作为其子元素的下拉菜单没有被显示，就是因为其被父元素剪切了），除此之外，它能可靠地迫使父元素包含其浮动的子元素。 </li>
+<li>为父元素添加<code>overflow: hidden</code>。实际上<code>overflow: hidden</code>声明的真正用途是防止包含元素被超大内容撑大，包含元素依然保持其设定的宽度，而超大的子内容则会被容器剪切掉（之前有在下拉菜单的顶级元素上应用这个声明，结果作为其子元素的下拉菜单没有被显示，就是因为其被父元素剪切了），除此之外，它能可靠地迫使父元素包含其浮动的子元素。</li>
 <li>同时浮动父元素。浮动父元素后，不管其子元素是否浮动，它总是会紧紧包围（也称收缩包裹）住它的子元素。</li>
 <li>添加非浮动的清除元素。原理：给父元素的最后添加一个非浮动的子元素，然后清除该子元素。由于包含元素一定会包围非浮动的子元素，而且清除会让这个子元素位于（清除一侧）浮动元素的下方，因此包含元素一定会包含这个子元素——以及前面的浮动元素。此种方法一共有两种方式：</li>
 </ol>
@@ -1558,19 +1570,67 @@ a + b
     <span class="hljs-rule"><span class="hljs-attribute">clear</span>:<span class="hljs-value"> both</span></span>;
 }</span></code></pre><p><code>clear: both</code> 意味这section中新增的子元素会清除左右浮动元素。</p>
 <p>####定位
-<code>position</code>有4个属性：static、relative、absolute、fixed，默认为static。<br><strong>static（静态定位）</strong>：块级元素在常规文档流中自上而下的堆叠。<br><strong>relative（相对定位）</strong>：到底相对哪里定位？相对的是它原来在文档流中的位置（或者默认位置）。<br><code>p{ position: relative; top:25px; left:30px;}</code><br>注意：top,left为正（负）值意味着把元素向下（上）、向右（左）移动。<br><strong>absolute(绝对定位)</strong>：绝对定位会把元素彻底从文档流中拿出来。<br><code>p{ position: absolute; top:25px; left:30px;}</code><br>绝对定位元素默认的<em>定位上下文</em>是body。但绝对定位元素的任何祖先元素都可以成为它的定位上下文，只要你把相应的祖先元素<code>position：relative;</code><br><strong>fixed（固定定位）</strong>：固定定位元素也被完全移除了文档流，但固定定位的定位上下文是视口（浏览器窗口或手持设备的屏幕），因此它不会随页面而移动。一般情况下，常用来创建位于顶部或左右侧，不随页面滚动而移动的导航元素。</p>
+<code>position</code>有4个属性：static、relative、absolute、fixed，默认为static。
+<strong>static（静态定位）</strong>：块级元素在常规文档流中自上而下的堆叠。
+<strong>relative（相对定位）</strong>：到底相对哪里定位？相对的是它原来在文档流中的位置（或者默认位置）。
+<code>p{ position: relative; top:25px; left:30px;}</code>
+注意：top,left为正（负）值意味着把元素向下（上）、向右（左）移动。
+<strong>absolute(绝对定位)</strong>：绝对定位会把元素彻底从文档流中拿出来。
+<code>p{ position: absolute; top:25px; left:30px;}</code>
+绝对定位元素默认的<em>定位上下文</em>是body。但绝对定位元素的任何祖先元素都可以成为它的定位上下文，只要你把相应的祖先元素<code>position：relative;</code>
+<strong>fixed（固定定位）</strong>：固定定位元素也被完全移除了文档流，但固定定位的定位上下文是视口（浏览器窗口或手持设备的屏幕），因此它不会随页面而移动。一般情况下，常用来创建位于顶部或左右侧，不随页面滚动而移动的导航元素。</p>
 <p>####显示属性
 display 把块级元素变成行内元素（或相反），可以使原先的行内元素填满其父元素。
 <code>display: none</code>：该元素及所有包含在其中的元素，都不会在页面中显示。它们原先占据的所有空间也都会被“回收”，就好像相关的标记根本不存在一样。
 <code>visibility</code>默认为visible，若设置为<code>hidden</code>，元素会隐藏，但它占据的页面空间仍然在（也就是只在页面上隐形了而已咯）。</p>
 <p>####背景
-<strong>！！此处添加盒模型三维透视图！！</strong><br>CSS每个元素盒子可以想象成两个图层组成。
-<strong>背景颜色</strong><br>元素的前景层包含内容（如文本或图片）和边框，元素的背景层可以用实色填充（background-color属性），也可以包含任意多个背景图片（使用background-image属性），背景图片叠加在背景颜色之上。<br><em>注意</em> 关于<code>color</code>属性：前景色属性，作用范围是元素的内容和边框。影响边框的前提是border没有设定边框颜色（或者<code>border-color</code>没有设定），边框就会使用color属性设定的字体颜色。默认为黑色。<br><strong>背景图片</strong><br>指定背景图片来源：<code>background-image: url(images/path);</code><br>默认情况下，比元素小的背景图片以元素左上角为起点，水平和垂直方向上重复出现，直至填满整个背景空间。所以元素盒子底部和右侧的圆形图案都只显示了一部分。<br><strong>背景重复</strong><br><code>background-repeat</code>：<br><code>repeat</code>：默认值， 水平与垂直方向均重复；<br><code>repeat-x</code>：只在水平方向重复；<br> <code>repeat-y</code>：只在垂直方向重复；<br> <code>no-repeat</code>：在任何方向上均不重复，即只让背景图片显示一次。
- <strong>CSS3背景</strong><br> <code>background-repeat: round</code> ：通过调整图片大小来适应背景区来确保图片不被剪切；<br> <code>background-repeat: space</code>： 通过在图片间添加空白来适应背景区域。<br><strong>背景位置</strong><br><code>background-position</code>：该属性有五个关键字值。<code>top、left、bottom、right和center</code>。 关键字中任意两个组合起来都可以作为该属性值。<br><strong>注意</strong>，<code>background-position</code>属性会同时设定元素和图片的原点。原点决定了元素和图片中某一点的水平和垂直坐标。默认情况下。<code>background-position</code>的原点位于左上角，即元素左上角和图片的左上角是对齐的。<br>但是当把起点位置改为center center（50% 50% 也是一样的效果），如
+<strong>！！此处添加盒模型三维透视图！！</strong>
+CSS每个元素盒子可以想象成两个图层组成。
+<strong>背景颜色</strong>
+元素的前景层包含内容（如文本或图片）和边框，元素的背景层可以用实色填充（background-color属性），也可以包含任意多个背景图片（使用background-image属性），背景图片叠加在背景颜色之上。
+<em>注意</em> 关于<code>color</code>属性：前景色属性，作用范围是元素的内容和边框。影响边框的前提是border没有设定边框颜色（或者<code>border-color</code>没有设定），边框就会使用color属性设定的字体颜色。默认为黑色。
+<strong>背景图片</strong>
+指定背景图片来源：<code>background-image: url(images/path);</code>
+默认情况下，比元素小的背景图片以元素左上角为起点，水平和垂直方向上重复出现，直至填满整个背景空间。所以元素盒子底部和右侧的圆形图案都只显示了一部分。
+<strong>背景重复</strong>
+<code>background-repeat</code>：
+<code>repeat</code>：默认值， 水平与垂直方向均重复；
+<code>repeat-x</code>：只在水平方向重复；
+ <code>repeat-y</code>：只在垂直方向重复；
+ <code>no-repeat</code>：在任何方向上均不重复，即只让背景图片显示一次。
+ <strong>CSS3背景</strong>
+ <code>background-repeat: round</code> ：通过调整图片大小来适应背景区来确保图片不被剪切；
+ <code>background-repeat: space</code>： 通过在图片间添加空白来适应背景区域。
+<strong>背景位置</strong>
+<code>background-position</code>：该属性有五个关键字值。<code>top、left、bottom、right和center</code>。 关键字中任意两个组合起来都可以作为该属性值。
+<strong>注意</strong>，<code>background-position</code>属性会同时设定元素和图片的原点。原点决定了元素和图片中某一点的水平和垂直坐标。默认情况下。<code>background-position</code>的原点位于左上角，即元素左上角和图片的左上角是对齐的。
+但是当把起点位置改为center center（50% 50% 也是一样的效果），如
 <code>p#center {background-position: center;}</code>
-若只设一个关键字值（不是数值），则另一个也会取相同的值。<br>设定了图片中心点与元素中心点重合，然后向水平和垂直方向重复。
-如再设置<code>background-repeat: no-repeat</code> 则会实现图片在背景区域内居中的效果。<br><strong>比较设置背景位置三个值：关键字、百分比、绝对或相对单位的数值。</strong><br><strong>关键字</strong>：顺序不重要。<br><strong>数值</strong>：第一个值表示水平位置，第二个值表示垂直位置。要是只设定一个值，则将其用来设定水平位置，垂直位置被设为<code>center</code>。<br>使用关键字和百分比，设定的值同时应用于元素和图片。<br><strong>像素等绝对单位数值</strong>：设定图片的左上角会被放在距离元素左上角指定位置的地方。<br>有趣的是，还可以设置负值，或者足够大的正值，实现显示部分图片。<br><strong>背景尺寸</strong><br><code>background-size</code>：<br>50%：缩放图片，使其填充背景区的一半。<br>100px 50px：把图片调整到100px宽，50px高。<br>cover：拉大图片，使其完全填满背景区；保持宽高比。<br>contain：缩放图片，使其恰好适合背景区；保持宽高比。<br><strong>背景粘附</strong><br><code>background-attachment</code>：控制滚动元素内的背景图片是否随元素滚动而移动。<br><code>scroll</code>：属性默认值，即背景图片随元素移动。<br><code>fixed</code>： 背景图片不随元素滚动而移动。<br><code>inherit</code> ：继承初始值。<br><strong>附</strong>：原书关于<code>background-attachment</code>属性设置并没有讲太多内容，但是在制作现代网页设计常见的<strong>视差滚动效果</strong>时候，是个重要属性。当然，在实现更amazing的效果时候会较复杂，需要结合CSS3的多背景图片属性，还有JavaScript(jQuery)来对页面进行控制。感兴趣请戳 <a href="http://isux.tencent.com/parallax-scrolling.html">Tencent ISUX「视“差”滚动浅析」</a>。
-<strong>其他CSS3背景属性</strong><br><code>background-clip</code>： 控制背景绘制区域的范围。如让背景颜色和背景图片只出现在内容区，而不出现在内边距区域。<br><code>background-origin</code>：控制背景定位区域的原点，可以设定盒子左上角以外的位置。<br><code>background-break</code>：控制分离元素（比如跨越多行的行内盒子）的显示效果。  </p>
+若只设一个关键字值（不是数值），则另一个也会取相同的值。
+设定了图片中心点与元素中心点重合，然后向水平和垂直方向重复。
+如再设置<code>background-repeat: no-repeat</code> 则会实现图片在背景区域内居中的效果。
+<strong>比较设置背景位置三个值：关键字、百分比、绝对或相对单位的数值。</strong>
+<strong>关键字</strong>：顺序不重要。
+<strong>数值</strong>：第一个值表示水平位置，第二个值表示垂直位置。要是只设定一个值，则将其用来设定水平位置，垂直位置被设为<code>center</code>。
+使用关键字和百分比，设定的值同时应用于元素和图片。
+<strong>像素等绝对单位数值</strong>：设定图片的左上角会被放在距离元素左上角指定位置的地方。
+有趣的是，还可以设置负值，或者足够大的正值，实现显示部分图片。
+<strong>背景尺寸</strong>
+<code>background-size</code>：
+50%：缩放图片，使其填充背景区的一半。
+100px 50px：把图片调整到100px宽，50px高。
+cover：拉大图片，使其完全填满背景区；保持宽高比。
+contain：缩放图片，使其恰好适合背景区；保持宽高比。
+<strong>背景粘附</strong>
+<code>background-attachment</code>：控制滚动元素内的背景图片是否随元素滚动而移动。
+<code>scroll</code>：属性默认值，即背景图片随元素移动。
+<code>fixed</code>： 背景图片不随元素滚动而移动。
+<code>inherit</code> ：继承初始值。
+<strong>附</strong>：原书关于<code>background-attachment</code>属性设置并没有讲太多内容，但是在制作现代网页设计常见的<strong>视差滚动效果</strong>时候，是个重要属性。当然，在实现更amazing的效果时候会较复杂，需要结合CSS3的多背景图片属性，还有JavaScript(jQuery)来对页面进行控制。感兴趣请戳 <a href="http://isux.tencent.com/parallax-scrolling.html">Tencent ISUX「视“差”滚动浅析」</a>。
+<strong>其他CSS3背景属性</strong>
+<code>background-clip</code>： 控制背景绘制区域的范围。如让背景颜色和背景图片只出现在内容区，而不出现在内边距区域。
+<code>background-origin</code>：控制背景定位区域的原点，可以设定盒子左上角以外的位置。
+<code>background-break</code>：控制分离元素（比如跨越多行的行内盒子）的显示效果。</p>
 <p>####多背景图片
 CSS3中可以给元素添加多个背景图片，使用简写属性<code>background</code>如下：</p>
 <pre class="hljs"><code>    <span class="hljs-tag">p</span> <span class="hljs-rules">{
@@ -1581,16 +1641,23 @@ CSS3中可以给元素添加多个背景图片，使用简写属性<code>backgro
         <span class="hljs-function">url</span>(images/<span class="hljs-number">03</span>.png) <span class="hljs-number">140px</span> -<span class="hljs-number">30px</span> no-repeat <span class="hljs-hexcolor">#ffbd75</span></span></span>;
     }</span></code></pre><p><strong>注意</strong>：CSS规则中先列出的图片显示在上层，更接近前景。</p>
 <p>####背景渐变
-<code>linear-gradient</code>:<br><code>radial-gradient</code>:</p>
+<code>linear-gradient</code>:
+<code>radial-gradient</code>:</p>
 <hr>
 <p>###Chapter 4 字体和文本</p>
 <blockquote>
 <p>一个网站的品质如何，有时候只要看看它用的字体就能一目了然。如果说图片是蛋糕上的糖衣，那么排版才是卓越设计的根本。</p>
 </blockquote>
-<p>接触CSS这么久后，发现字体与排版是门大学问（也就是说，是个深坑…），只有经验丰富的设计师，才能创造出专业水准的网页排版吧。  </p>
-<p><strong>难道字体和文本不是一回事？</strong><br>啊哈，当然不是。<br><strong>字体</strong>是“文字的不同体式”，或“字的形体结构”。根据外观，字体可以分为不同<em>类别</em>（font collection），包括衬线字体（serif）、无衬线字体（sans-serif）和等宽字体（monospace）。每一类字体可以继续分为不同的<em>字体族</em>（font family），比如 Times 和 Helvetica。而字体族中又可以包含不同的<em>字形</em>（font face），反应了相应字体族基本设计的不同变化，例如 Times Roman、Times Bold、Helvetica Condensed、Bodoni italic。<br><strong>文本</strong>就是一组字或者字符，比如章标题、段落正文等，跟使用什么字体无关。<br>CSS为字体和文本分别定义了属性。字体属性主要用于描述一类字体的大小和外观（什么字体族，多大字号，粗体还是斜体）。文本属性描述对文本的处理方式（行高或者字符间距，有没有下划线和缩进）。  </p>
+<p>接触CSS这么久后，发现字体与排版是门大学问（也就是说，是个深坑…），只有经验丰富的设计师，才能创造出专业水准的网页排版吧。</p>
+<p><strong>难道字体和文本不是一回事？</strong>
+啊哈，当然不是。
+<strong>字体</strong>是“文字的不同体式”，或“字的形体结构”。根据外观，字体可以分为不同<em>类别</em>（font collection），包括衬线字体（serif）、无衬线字体（sans-serif）和等宽字体（monospace）。每一类字体可以继续分为不同的<em>字体族</em>（font family），比如 Times 和 Helvetica。而字体族中又可以包含不同的<em>字形</em>（font face），反应了相应字体族基本设计的不同变化，例如 Times Roman、Times Bold、Helvetica Condensed、Bodoni italic。
+<strong>文本</strong>就是一组字或者字符，比如章标题、段落正文等，跟使用什么字体无关。
+CSS为字体和文本分别定义了属性。字体属性主要用于描述一类字体的大小和外观（什么字体族，多大字号，粗体还是斜体）。文本属性描述对文本的处理方式（行高或者字符间距，有没有下划线和缩进）。</p>
 <p>####字体族
-一般应该给整个页面<code>body</code>设定一种主字体，然后只对那些需要使用不同字体的元素再应用font-family。<br>有些字体在用户机器上不支持，那么就应该设置字体栈来指定本地字体。为了保险，字体栈的后面应补上大多数操作系统都内置的字体。<br><strong>注意</strong>如果字体名像 Trebuchet MS 一样多于一个单词（有空格），应该加上引号：&quot;Trebuchet MS &quot;。  </p>
+一般应该给整个页面<code>body</code>设定一种主字体，然后只对那些需要使用不同字体的元素再应用font-family。
+有些字体在用户机器上不支持，那么就应该设置字体栈来指定本地字体。为了保险，字体栈的后面应补上大多数操作系统都内置的字体。
+<strong>注意</strong>如果字体名像 Trebuchet MS 一样多于一个单词（有空格），应该加上引号：&quot;Trebuchet MS &quot;。</p>
 <p>####字体大小
 浏览器样式表默认为每个HTML元素都设定了font-size，所以你在设定 font-size 的时候，其实就是在修改默认值。</p>
-]]></description><link>/CSS-design-guide-notes.html</link><guid isPermaLink="true">/CSS-design-guide-notes.html</guid><category><![CDATA[frontend]]></category><category><![CDATA[notes]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Mon, 10 Nov 2014 09:08:00 GMT</pubDate></item></channel></rss>
+]]></description><link>/2014-11-10-css-design-guide-notes/index.html</link><guid isPermaLink="true">/2014-11-10-css-design-guide-notes/index.html</guid><category><![CDATA[frontend]]></category><category><![CDATA[notes]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Mon, 10 Nov 2014 09:08:00 GMT</pubDate></item></channel></rss>
