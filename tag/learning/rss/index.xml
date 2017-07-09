@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[undefined - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Sun, 09 Jul 2017 01:04:19 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/tag/undefined/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[跟随前进者的步伐]]></title><description><![CDATA[<p>每个人，在人生不同阶段，或多或少是需要一些鸡血的。</p>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[undefined - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Sun, 09 Jul 2017 02:12:01 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/tag/undefined/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[跟随前进者的步伐]]></title><description><![CDATA[<p>每个人，在人生不同阶段，或多或少是需要一些鸡血的。</p>
 <p>自从工作以来，也确实觉得自己懒癌，且很多事情缺乏自控力和自律。</p>
 <p>只记得乔老爷子说过，</p>
 <blockquote>
@@ -35,8 +35,10 @@ Web 标准专家。除了 Web 领域牛逼以外，还涉足 Unicode &amp; Bash�
 CSS Tricks 的创始人和维护者。介绍很多很棒的你肯定会用到的前端技巧。（其实他的个人网站<a href="http://chriscoyier.net/">在这</a>）</li>
 <li><a href="kennethreitz.org">Kenneth Reitz</a>
 Python Request 库维护者。唔，喜欢拿徕卡拍照且减肥成功的人生赢家。</li>
+<li><a href="https://feross.org/">Feross Aboukhadijeh</a>
+WebTorrent 作者之一。JS Standard Style 作者。斯坦福毕业的一小哥，兴趣爱好广泛。</li>
 </ul>
-<p>####Chinese:</p>
+<h4 id="chinese-">Chinese:</h4>
 <ul>
 <li><a href="https://imququ.com/">Jerry Qu</a>
 360 的屈屈，高产技术博客作者。</li>
