@@ -45,8 +45,7 @@
         </header>
 
         <section class="post-content">
-            <h1 id="notes-of-10-react-mini-patterns-and-project-creator">Notes of 10 React mini-patterns and Project Creator</h1>
-<p>很早之前就一直在读的一篇文章，<a href="https://hackernoon.com/10-react-mini-patterns-c1da92f068c5">10 个React Mini 设计模式</a>，
+            <p>很早之前就一直在读的一篇文章，<a href="https://hackernoon.com/10-react-mini-patterns-c1da92f068c5">10 个React Mini 设计模式</a>，
 一边做 <code>Creator</code> 项目，也一边终于把它精读完。
 结合自己的开发时候的项目经验，做了点笔记。
 <code>Creator</code> 项目是一个多端（Web + Mobile）React SPA，且有一些表单填写和复杂的交互组件，自己单独封装了一个很简单的基于事件的 <code>Store</code>，开发过程中收获很大，这些细节之后可以细说。</p>
@@ -563,7 +562,7 @@ Price.defaultProps = {
 <span class="hljs-class">.then</span>(normalizeSearchResultsApiData) <span class="hljs-comment">// the do-it-all data massager</span>
 <span class="hljs-class">.then</span>(normalData =&gt; {
     <span class="hljs-comment">// dispatch normalData to the store here</span>
-});</code></pre><p>**这里推荐徐飞在 QCon 上分享的 <a href="https://zhuanlan.zhihu.com/p/26426054">单页引用的数据流方案探索</a></p>
+});</code></pre><p><strong>这里推荐徐飞在 QCon 上分享的 <a href="https://zhuanlan.zhihu.com/p/26426054">单页引用的数据流方案探索</a></strong></p>
 <h2 id="-10-importing-components-without-relative-paths">#10 Importing components without relative paths</h2>
 <p>Turn</p>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> Button <span class="hljs-keyword">from</span> <span class="hljs-string">&#39;../../../../Button/Button.jsx&#39;</span>;
