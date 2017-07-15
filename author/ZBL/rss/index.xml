@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[ZBL - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Tue, 11 Jul 2017 16:31:00 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/author/ZBL/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[从十个 React 迷你设计模式谈开去]]></title><description><![CDATA[<p>很早之前就一直在读的一篇文章，<a href="https://hackernoon.com/10-react-mini-patterns-c1da92f068c5">10 个React Mini 设计模式</a>，
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[ZBL - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Sat, 15 Jul 2017 02:59:19 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/author/ZBL/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[从十个 React 迷你设计模式谈开去]]></title><description><![CDATA[<p>很早之前就一直在读的一篇文章，<a href="https://hackernoon.com/10-react-mini-patterns-c1da92f068c5">10 个React Mini 设计模式</a>，
 一边做 <code>Creator</code> 项目，也一边终于把它精读完。
 结合自己的开发时候的项目经验，做了点笔记。
 <code>Creator</code> 项目是一个多端（Web + Mobile）React SPA，且有一些表单填写和复杂的交互组件，自己单独封装了一个很简单的基于事件的 <code>Store</code>，开发过程中收获很大，这些细节之后可以细说。</p>
@@ -876,6 +876,11 @@ CSS Tricks 的创始人和维护者。介绍很多很棒的你肯定会用到的
 Python Request 库维护者。唔，喜欢拿徕卡拍照且减肥成功的人生赢家。</li>
 <li><a href="https://feross.org/">Feross Aboukhadijeh</a>
 WebTorrent 作者之一。JS Standard Style 作者。斯坦福毕业的一小哥，兴趣爱好广泛。</li>
+<li><a href="http://www.p01.org/">Mathieu &#39;p01&#39; Henri</a>
+代码艺术家，JS1K 的积极参与和获奖者。A very COOL guy.<blockquote>
+<p>Creative coder, technical speaker, demoscener, JavaScript developer and size optimizer extraordinary.</p>
+</blockquote>
+</li>
 </ul>
 <h4 id="chinese-">Chinese:</h4>
 <ul>
@@ -2504,7 +2509,124 @@ CSS为字体和文本分别定义了属性。字体属性主要用于描述一�
 <strong>注意</strong>如果字体名像 Trebuchet MS 一样多于一个单词（有空格），应该加上引号：&quot;Trebuchet MS &quot;。</p>
 <p>####字体大小
 浏览器样式表默认为每个HTML元素都设定了font-size，所以你在设定 font-size 的时候，其实就是在修改默认值。</p>
-]]></description><link>/2014-11-10-css-design-guide-notes/index.html</link><guid isPermaLink="true">/2014-11-10-css-design-guide-notes/index.html</guid><category><![CDATA[frontend]]></category><category><![CDATA[notes]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Mon, 10 Nov 2014 09:08:00 GMT</pubDate></item><item><title><![CDATA[写在百度电面后]]></title><description><![CDATA[<h1 id="-">写在百度电面后</h1>
+]]></description><link>/2014-11-10-css-design-guide-notes/index.html</link><guid isPermaLink="true">/2014-11-10-css-design-guide-notes/index.html</guid><category><![CDATA[frontend]]></category><category><![CDATA[notes]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Mon, 10 Nov 2014 09:08:00 GMT</pubDate></item><item><title><![CDATA[Ali校招笔试题思考]]></title><description><![CDATA[<h1 id="ali-">Ali校招笔试题思考</h1>
+<p>昨晚搭着末班车，参加了阿里今年的实习生在线笔试。
+回忆之前惨不忍睹的内推面试，玩了整整一个寒假后接到了不期而至的面试电话，连之前一些基础的还算熟悉的题都答得不流畅自然一气呵成，我就知道我悲剧了。
+痛定思痛，作为一个即将毕业的大四老鸟（只是说年龄...)，在被各种鄙视，各种蜚语，各种不确定存在的黑暗时期，依旧不屈不挠地学习思考着，我都要被自己感动了。
+笔试题只有一个小时，13道题，一开始是单项选择和不定项选择，考了AMD编码规范、闭包、setTimeout的异步、前端安全及一些我认为蛮有意思的小题，挺考基础的，不是太难，但要细心，我居然也慢悠悠做，时间就那么过去了一半。后来看到了六大道问答题，基本是编程，涉及CSS3、原生JS、事件处理、Ajax等，就渐渐慌了，写代码的手居然有了渐冻症的感觉，心理素质有待提高。
+于是在有差不多一半大题没完成的情况下，被迫交了卷。交卷后才灵感突现，猛然想起了那些题的解法，还是代码经验不够啊。为了防止再出现这样的情况，在这里贴下题目思路和解答。</p>
+<hr>
+<p>关于CSS，有题是用<code>HTML&amp;CSS</code>实现一个九宫格，外边框为1px，内部无边框。之前没有做过九宫格布局，当时又很捉急居然被卡住了。交完卷后突然在想，这不就是考<code>float</code>的嘛。
+遂编码如下：</p>
+<pre class="hljs"><code><span class="hljs-doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">html</span> <span class="hljs-attribute">lang</span>=<span class="hljs-value">&quot;en&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">charset</span>=<span class="hljs-value">&quot;UTF-8&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>九宫格<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">style</span>&gt;</span><span class="css">
+      <span class="hljs-tag">ul</span> <span class="hljs-rules">{
+          <span class="hljs-rule"><span class="hljs-attribute">list-style</span>:<span class="hljs-value"> none</span></span>;
+          <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">158px</span></span></span>;
+          <span class="hljs-rule"><span class="hljs-attribute">height</span>:<span class="hljs-value"> <span class="hljs-number">158px</span></span></span>;
+      }</span>
+      <span class="hljs-tag">li</span> <span class="hljs-rules">{
+          <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">50px</span></span></span>; <span class="hljs-rule"><span class="hljs-attribute">height</span>:<span class="hljs-value"> <span class="hljs-number">50px</span></span></span>;
+          <span class="hljs-comment">/<em>box-sizing: border-box;</em>/</span>
+          <span class="hljs-rule"><span class="hljs-attribute">background-color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#888</span></span></span>;
+          <span class="hljs-rule"><span class="hljs-attribute">float</span>:<span class="hljs-value"> left</span></span>;
+      }</span>
+      <span class="hljs-class">.one</span>,<span class="hljs-class">.four</span>, <span class="hljs-class">.seven</span><span class="hljs-rules">{
+      <span class="hljs-rule"><span class="hljs-attribute">border-left</span>:<span class="hljs-value"> <span class="hljs-number">3px</span> solid red</span></span>;
+          <span class="hljs-comment">/<em>z-index: 2;</em>/</span>
+      }</span>
+      <span class="hljs-class">.one</span>, <span class="hljs-class">.two</span>, <span class="hljs-class">.three</span> <span class="hljs-rules">{
+          <span class="hljs-rule"><span class="hljs-attribute">border-top</span>:<span class="hljs-value"> <span class="hljs-number">3px</span> solid red</span></span>;
+      }</span>
+      <span class="hljs-class">.three</span>, <span class="hljs-class">.six</span>, <span class="hljs-class">.nine</span> <span class="hljs-rules">{
+          <span class="hljs-rule"><span class="hljs-attribute">border-right</span>:<span class="hljs-value"> <span class="hljs-number">3px</span> solid red</span></span>;
+      }</span>
+      <span class="hljs-class">.seven</span>, <span class="hljs-class">.eight</span>, <span class="hljs-class">.nine</span> <span class="hljs-rules">{
+          <span class="hljs-rule"><span class="hljs-attribute">border-bottom</span>:<span class="hljs-value"> <span class="hljs-number">3px</span> solid red</span></span>;
+      }</span>
+
+    </span><span class="hljs-tag">&lt;/<span class="hljs-title">style</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>
+    HTML CSS 九宫格 外边框1px 内部无边框
+    <span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ul</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;list&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;one&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;two&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;three&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;four&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;five&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;six&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;seven&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;eight&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;nine&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">ul</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span></code></pre><p>其实就是每个盒子固定宽高，父元素也固定宽高，分别为盒子宽高的3倍+左右（或上下）两边的边框宽度，然后都浮动起来。内部无边框外部有边框也容易实现，只要把最外圈的盒子按顺序设定 <code>border-top</code>、<code>border-bottom</code>、<code>border-left</code>、<code>border-right</code>即可。
+思考：</p>
+<ul>
+<li>一开始把父元素刚好设为盒子宽高的3倍，盒子设定为<code>box-sizing: border-box</code>后，发现边框自动隐藏了，所以要体现有边框还是不能这样；</li>
+<li>该题不难，其实还可以拓展成N宫格，<code>父元素的宽高 = N*盒子宽高 + 2*border-width</code>，相当于做个图片墙。</li>
+</ul>
+<p>JS跨浏览器事件处理：给你个超链接按钮，用户点击后不进行链接跳转，而是提示“用户名不能为空”，要尽可能兼容更多的浏览器。
+这题考的也就是跨浏览器的事件处理啦，之前看过《JavaScript高级程序设计》时候，专门有一小节讲跨浏览器事件处理，给出了完整的解决方案，自己也用心写了<code>Code Snippet</code>笔记，但是实践少，考试时做的不太顺利，这里重新整理下贴下代码。
+（Ghost Gist 托管，若无显示请戳 <a href="https://gist.github.com/githubzbl/8170f1e96e7bf3c66ca5">跨浏览器事件处理Gist</a>）</p>
+<script src="https://gist.github.com/githubzbl/8170f1e96e7bf3c66ca5.js"></script>
+
+<p>思考：</p>
+<ul>
+<li>事件处理很简单，关键就在兼容浏览器，这里就得照顾到IE；</li>
+<li>当时考试时居然把<code>&lt;script&gt;</code>标签及其里面的代码写到了<code>&lt;head&gt;</code>里面，导致<code>document.getElementById(&#39;btn&#39;)</code>返回的一直是<code>undefined</code>，现在想想给自己跪了，<code>DOM</code>都没准备好哪来的<code>getElementById()</code>。</li>
+</ul>
+<p>JS统计字符串中出现次数最多的字符并打印统计信息。
+这题当时看的时候居然看成<em>找出现最多的字符串</em>，心想天哪噜大阿里真厉害前端还考字符子串问题，这算法……，时间紧迫，遂想都没想直接跳过了。交卷后仔细回想才发现是<em>找字符</em>啊！再给自己跪下*2。
+在老道那本《Good Parts》里有个gist是去计算一段文本中每个单词的出现次数，因为每个单词是用空格符隔开，所以思路也可以迁移到单个字符。思考后编码如下：
+（Ghost Gist 托管，若无显示请戳 <a href="https://gist.github.com/githubzbl/a0ab1b7dd4f0128e9d6d">字符计数</a>）</p>
+<p><script src="https://gist.github.com/githubzbl/a0ab1b7dd4f0128e9d6d.js"></script>
+思考：</p>
+<ul>
+<li>将字符串分成单个字符很简单，甚至不用<code>RegExp</code>；</li>
+<li>分成单个字符后存入一个对象，巧妙的是对象的属性即为该字符，属性值为该字符在字符串中出现的次数；</li>
+<li>最后简单的用<code>for in</code>遍历属性排序，当然老道说<code>for in</code>不好，不知道这个地方需不需要改善。</li>
+</ul>
+<p>JS 给定一个http接口，传入一个员工id，返回员工的详细信息，接口形式为：<code>http://localhost/query?id=</code>，要求在前端实现一个根据一批员工id，通过ajax查询员工信息的功能。
+Ajax show time, finally.
+之前只写过几个Ajax，并不是太熟练，所以这题拿不准。
+既然给了URL，一般就是要考<code>RegExp</code>啦，但是这个只要根据<code>id</code>查询就好，是不是只用<code>url.split(&#39;=&#39;)</code>，然后就知道ID了呢？
+HTTP接口应该也就是写个函数模块吧。暂时给思路如下，待完善。</p>
+<pre class="hljs"><code> $(<span class="hljs-built_in">document</span>).ready(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">url</span>) </span>{
+   <span class="hljs-keyword">var</span> id = url.split(<span class="hljs-string">&#39;=&#39;</span>)[<span class="hljs-number">1</span>];
+   $(<span class="hljs-string">&#39;.btn&#39;</span>).click(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">id</span>) </span>{
+        $.ajax({
+            url: <span class="hljs-string">&#39;<a href="http://localhost/query?id=">http://localhost/query?id=</a>&#39;</span>,
+            type: <span class="hljs-string">&#39;GET&#39;</span>,
+            dataType: <span class="hljs-string">&#39;html&#39;</span>,
+            data: {param1: id},
+        })
+        .done(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;success&quot;</span>);
+        })
+        .fail(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;error&quot;</span>);
+        })
+        .always(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;complete&quot;</span>);
+        });
+    });
+  });</code></pre><hr>
+<p>差不多就这些了，想到新思路再来更新吧。前端坑是很多，但也很有趣，感觉自己终于入门了呢。
+还是那句，希望自己在成为大牛的道路上越走越远。</p>
+<hr>
+<p>续：觉得做的一般也收到了面试通知。但阿里又说“针对2015届招聘已结束，无论面试结果如何我们都不能承诺您能加入”。伤心归伤心，毕竟迟了那么点。
+但再怎么着也要执着走下去。
+<strong>“It&#39;s never too late to start.”</strong></p>
+]]></description><link>/2014-11-04-alibaba-interview-thought/index.html</link><guid isPermaLink="true">/2014-11-04-alibaba-interview-thought/index.html</guid><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Tue, 04 Nov 2014 08:13:00 GMT</pubDate></item><item><title><![CDATA[写在百度电面后]]></title><description><![CDATA[<h1 id="-">写在百度电面后</h1>
 <p>Desperado.</p>
 <figure>
 <img src="http://zbl-ghost-backup.qiniudn.com/blogcover_roadtothesky_2880x900.jpg" alt="road to the sky">
@@ -2626,124 +2748,7 @@ You&#39;re a prisioner walking through this world all alone.
     让你自己成为一个持续学习和思考的人，并只写你真正思考和总结之后的产物，其他一切就会随之而来。
 </blockquote>
 加油吧，希望能在通往大牛的道路上越走越远。</p>
-]]></description><link>/2014-11-04-baidu-interview-thought/index.html</link><guid isPermaLink="true">/2014-11-04-baidu-interview-thought/index.html</guid><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Tue, 04 Nov 2014 08:13:00 GMT</pubDate></item><item><title><![CDATA[Ali校招笔试题思考]]></title><description><![CDATA[<h1 id="ali-">Ali校招笔试题思考</h1>
-<p>昨晚搭着末班车，参加了阿里今年的实习生在线笔试。
-回忆之前惨不忍睹的内推面试，玩了整整一个寒假后接到了不期而至的面试电话，连之前一些基础的还算熟悉的题都答得不流畅自然一气呵成，我就知道我悲剧了。
-痛定思痛，作为一个即将毕业的大四老鸟（只是说年龄...)，在被各种鄙视，各种蜚语，各种不确定存在的黑暗时期，依旧不屈不挠地学习思考着，我都要被自己感动了。
-笔试题只有一个小时，13道题，一开始是单项选择和不定项选择，考了AMD编码规范、闭包、setTimeout的异步、前端安全及一些我认为蛮有意思的小题，挺考基础的，不是太难，但要细心，我居然也慢悠悠做，时间就那么过去了一半。后来看到了六大道问答题，基本是编程，涉及CSS3、原生JS、事件处理、Ajax等，就渐渐慌了，写代码的手居然有了渐冻症的感觉，心理素质有待提高。
-于是在有差不多一半大题没完成的情况下，被迫交了卷。交卷后才灵感突现，猛然想起了那些题的解法，还是代码经验不够啊。为了防止再出现这样的情况，在这里贴下题目思路和解答。</p>
-<hr>
-<p>关于CSS，有题是用<code>HTML&amp;CSS</code>实现一个九宫格，外边框为1px，内部无边框。之前没有做过九宫格布局，当时又很捉急居然被卡住了。交完卷后突然在想，这不就是考<code>float</code>的嘛。
-遂编码如下：</p>
-<pre class="hljs"><code><span class="hljs-doctype">&lt;!DOCTYPE html&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">html</span> <span class="hljs-attribute">lang</span>=<span class="hljs-value">&quot;en&quot;</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">charset</span>=<span class="hljs-value">&quot;UTF-8&quot;</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>九宫格<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-title">style</span>&gt;</span><span class="css">
-      <span class="hljs-tag">ul</span> <span class="hljs-rules">{
-          <span class="hljs-rule"><span class="hljs-attribute">list-style</span>:<span class="hljs-value"> none</span></span>;
-          <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">158px</span></span></span>;
-          <span class="hljs-rule"><span class="hljs-attribute">height</span>:<span class="hljs-value"> <span class="hljs-number">158px</span></span></span>;
-      }</span>
-      <span class="hljs-tag">li</span> <span class="hljs-rules">{
-          <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">50px</span></span></span>; <span class="hljs-rule"><span class="hljs-attribute">height</span>:<span class="hljs-value"> <span class="hljs-number">50px</span></span></span>;
-          <span class="hljs-comment">/<em>box-sizing: border-box;</em>/</span>
-          <span class="hljs-rule"><span class="hljs-attribute">background-color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#888</span></span></span>;
-          <span class="hljs-rule"><span class="hljs-attribute">float</span>:<span class="hljs-value"> left</span></span>;
-      }</span>
-      <span class="hljs-class">.one</span>,<span class="hljs-class">.four</span>, <span class="hljs-class">.seven</span><span class="hljs-rules">{
-      <span class="hljs-rule"><span class="hljs-attribute">border-left</span>:<span class="hljs-value"> <span class="hljs-number">3px</span> solid red</span></span>;
-          <span class="hljs-comment">/<em>z-index: 2;</em>/</span>
-      }</span>
-      <span class="hljs-class">.one</span>, <span class="hljs-class">.two</span>, <span class="hljs-class">.three</span> <span class="hljs-rules">{
-          <span class="hljs-rule"><span class="hljs-attribute">border-top</span>:<span class="hljs-value"> <span class="hljs-number">3px</span> solid red</span></span>;
-      }</span>
-      <span class="hljs-class">.three</span>, <span class="hljs-class">.six</span>, <span class="hljs-class">.nine</span> <span class="hljs-rules">{
-          <span class="hljs-rule"><span class="hljs-attribute">border-right</span>:<span class="hljs-value"> <span class="hljs-number">3px</span> solid red</span></span>;
-      }</span>
-      <span class="hljs-class">.seven</span>, <span class="hljs-class">.eight</span>, <span class="hljs-class">.nine</span> <span class="hljs-rules">{
-          <span class="hljs-rule"><span class="hljs-attribute">border-bottom</span>:<span class="hljs-value"> <span class="hljs-number">3px</span> solid red</span></span>;
-      }</span>
-
-    </span><span class="hljs-tag">&lt;/<span class="hljs-title">style</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>
-    HTML CSS 九宫格 外边框1px 内部无边框
-    <span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-title">ul</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;list&quot;</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;one&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;two&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;three&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;four&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;five&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;six&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;seven&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;eight&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;nine&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-title">ul</span>&gt;</span>
-
-<span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span></code></pre><p>其实就是每个盒子固定宽高，父元素也固定宽高，分别为盒子宽高的3倍+左右（或上下）两边的边框宽度，然后都浮动起来。内部无边框外部有边框也容易实现，只要把最外圈的盒子按顺序设定 <code>border-top</code>、<code>border-bottom</code>、<code>border-left</code>、<code>border-right</code>即可。
-思考：</p>
-<ul>
-<li>一开始把父元素刚好设为盒子宽高的3倍，盒子设定为<code>box-sizing: border-box</code>后，发现边框自动隐藏了，所以要体现有边框还是不能这样；</li>
-<li>该题不难，其实还可以拓展成N宫格，<code>父元素的宽高 = N*盒子宽高 + 2*border-width</code>，相当于做个图片墙。</li>
-</ul>
-<p>JS跨浏览器事件处理：给你个超链接按钮，用户点击后不进行链接跳转，而是提示“用户名不能为空”，要尽可能兼容更多的浏览器。
-这题考的也就是跨浏览器的事件处理啦，之前看过《JavaScript高级程序设计》时候，专门有一小节讲跨浏览器事件处理，给出了完整的解决方案，自己也用心写了<code>Code Snippet</code>笔记，但是实践少，考试时做的不太顺利，这里重新整理下贴下代码。
-（Ghost Gist 托管，若无显示请戳 <a href="https://gist.github.com/githubzbl/8170f1e96e7bf3c66ca5">跨浏览器事件处理Gist</a>）</p>
-<script src="https://gist.github.com/githubzbl/8170f1e96e7bf3c66ca5.js"></script>
-
-<p>思考：</p>
-<ul>
-<li>事件处理很简单，关键就在兼容浏览器，这里就得照顾到IE；</li>
-<li>当时考试时居然把<code>&lt;script&gt;</code>标签及其里面的代码写到了<code>&lt;head&gt;</code>里面，导致<code>document.getElementById(&#39;btn&#39;)</code>返回的一直是<code>undefined</code>，现在想想给自己跪了，<code>DOM</code>都没准备好哪来的<code>getElementById()</code>。</li>
-</ul>
-<p>JS统计字符串中出现次数最多的字符并打印统计信息。
-这题当时看的时候居然看成<em>找出现最多的字符串</em>，心想天哪噜大阿里真厉害前端还考字符子串问题，这算法……，时间紧迫，遂想都没想直接跳过了。交卷后仔细回想才发现是<em>找字符</em>啊！再给自己跪下*2。
-在老道那本《Good Parts》里有个gist是去计算一段文本中每个单词的出现次数，因为每个单词是用空格符隔开，所以思路也可以迁移到单个字符。思考后编码如下：
-（Ghost Gist 托管，若无显示请戳 <a href="https://gist.github.com/githubzbl/a0ab1b7dd4f0128e9d6d">字符计数</a>）</p>
-<p><script src="https://gist.github.com/githubzbl/a0ab1b7dd4f0128e9d6d.js"></script>
-思考：</p>
-<ul>
-<li>将字符串分成单个字符很简单，甚至不用<code>RegExp</code>；</li>
-<li>分成单个字符后存入一个对象，巧妙的是对象的属性即为该字符，属性值为该字符在字符串中出现的次数；</li>
-<li>最后简单的用<code>for in</code>遍历属性排序，当然老道说<code>for in</code>不好，不知道这个地方需不需要改善。</li>
-</ul>
-<p>JS 给定一个http接口，传入一个员工id，返回员工的详细信息，接口形式为：<code>http://localhost/query?id=</code>，要求在前端实现一个根据一批员工id，通过ajax查询员工信息的功能。
-Ajax show time, finally.
-之前只写过几个Ajax，并不是太熟练，所以这题拿不准。
-既然给了URL，一般就是要考<code>RegExp</code>啦，但是这个只要根据<code>id</code>查询就好，是不是只用<code>url.split(&#39;=&#39;)</code>，然后就知道ID了呢？
-HTTP接口应该也就是写个函数模块吧。暂时给思路如下，待完善。</p>
-<pre class="hljs"><code> $(<span class="hljs-built_in">document</span>).ready(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">url</span>) </span>{
-   <span class="hljs-keyword">var</span> id = url.split(<span class="hljs-string">&#39;=&#39;</span>)[<span class="hljs-number">1</span>];
-   $(<span class="hljs-string">&#39;.btn&#39;</span>).click(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">id</span>) </span>{
-        $.ajax({
-            url: <span class="hljs-string">&#39;<a href="http://localhost/query?id=">http://localhost/query?id=</a>&#39;</span>,
-            type: <span class="hljs-string">&#39;GET&#39;</span>,
-            dataType: <span class="hljs-string">&#39;html&#39;</span>,
-            data: {param1: id},
-        })
-        .done(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;success&quot;</span>);
-        })
-        .fail(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;error&quot;</span>);
-        })
-        .always(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;complete&quot;</span>);
-        });
-    });
-  });</code></pre><hr>
-<p>差不多就这些了，想到新思路再来更新吧。前端坑是很多，但也很有趣，感觉自己终于入门了呢。
-还是那句，希望自己在成为大牛的道路上越走越远。</p>
-<hr>
-<p>续：觉得做的一般也收到了面试通知。但阿里又说“针对2015届招聘已结束，无论面试结果如何我们都不能承诺您能加入”。伤心归伤心，毕竟迟了那么点。
-但再怎么着也要执着走下去。
-<strong>“It&#39;s never too late to start.”</strong></p>
-]]></description><link>/2014-11-04-alibaba-interview-thought/index.html</link><guid isPermaLink="true">/2014-11-04-alibaba-interview-thought/index.html</guid><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Tue, 04 Nov 2014 08:13:00 GMT</pubDate></item><item><title><![CDATA[oh My Ghostium]]></title><description><![CDATA[<p><img src="http://zbl-ghost-backup.qiniudn.com/oh-my-ghostium.jpg" alt="oh my ghostium"></p>
+]]></description><link>/2014-11-04-baidu-interview-thought/index.html</link><guid isPermaLink="true">/2014-11-04-baidu-interview-thought/index.html</guid><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Tue, 04 Nov 2014 08:13:00 GMT</pubDate></item><item><title><![CDATA[oh My Ghostium]]></title><description><![CDATA[<p><img src="http://zbl-ghost-backup.qiniudn.com/oh-my-ghostium.jpg" alt="oh my ghostium"></p>
 <p>之前装了Wordpress扔在大洋彼岸一个Arizona搬瓦工的VPS后就再没去理过它，想想也有半年了。<br>后来分析觉得，首先肯定是自己懒惰浮躁，静不下来写东西。其次是博客页面没有漂亮到让我有一种打开就想写的冲动。<br>但是他们说<strong><a href="http://mindhacks.cn/2009/02/15/why-you-should-start-blogging-now/">为什么你应该（从现在开始就）写博客</a></strong>，于是紧跟大牛的步伐，虽然没有什么牛逼技术可以跟别人分享，但是看看大牛写的技术文章谢谢心得也是一种进步。于是就开始了<em>万劫不复的折腾深渊</em>...<br>在谷歌搜寻平台的时候看到了一个同是F2E的一个博客<a href="http://luolei.org">罗磊的独立博客</a>，瞬间被大Banner的设计吸引到，看了很久后拖到了网页末尾，扫到了一行字<em>本博客基于拽酷炫的 GHOST</em>。<br>比较了<em>Ghost/Jekyll/Octo/Hexo</em> 等等之后，认为<strong><a href="https://ghost.org">Ghost</a></strong>还是最适合我： </p>
 <ol>
 <li>基于 <strong>Node.js</strong> 的博客平台。</li>
