@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[ZBL - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Sat, 15 Jul 2017 02:59:19 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/author/ZBL/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[从十个 React 迷你设计模式谈开去]]></title><description><![CDATA[<p>很早之前就一直在读的一篇文章，<a href="https://hackernoon.com/10-react-mini-patterns-c1da92f068c5">10 个React Mini 设计模式</a>，
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[ZBL - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Wed, 02 Aug 2017 17:16:55 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/author/ZBL/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[从十个 React 迷你设计模式谈开去]]></title><description><![CDATA[<p>很早之前就一直在读的一篇文章，<a href="https://hackernoon.com/10-react-mini-patterns-c1da92f068c5">10 个React Mini 设计模式</a>，
 一边做 <code>Creator</code> 项目，也一边终于把它精读完。
 结合自己的开发时候的项目经验，做了点笔记。
 <code>Creator</code> 项目是一个多端（Web + Mobile）React SPA，且有一些表单填写和复杂的交互组件，自己单独封装了一个很简单的基于事件的 <code>Store</code>，开发过程中收获很大，这些细节之后可以细说。</p>
@@ -656,7 +656,215 @@ req.keys().forEach(<span class="hljs-function"><span class="hljs-params">(key)</
 我所失去的都是侥幸，我所拥有的都是人生。</p>
 <p>也许现在还是会记得，大学时候的自己，曾靠在洒满阳光的图书馆窗前，手里捧着一本好玩的书，啜一口热咖啡，看银杏叶飘落。<br/>
 我们都将孤独地长大，不要害怕。</p>
-]]></description><link>/2017-02-28-perhaps-we-all-need-medicine/index.html</link><guid isPermaLink="true">/2017-02-28-perhaps-we-all-need-medicine/index.html</guid><category><![CDATA[thoughts]]></category><category><![CDATA[psychology]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Mon, 27 Feb 2017 16:49:00 GMT</pubDate></item><item><title><![CDATA[豆瓣、北京、工作，及终于与自己握手言和的 2016]]></title><description><![CDATA[<h1 id="-2016">豆瓣、北京、工作，及终于与自己握手言和的 2016</h1>
+]]></description><link>/2017-02-28-perhaps-we-all-need-medicine/index.html</link><guid isPermaLink="true">/2017-02-28-perhaps-we-all-need-medicine/index.html</guid><category><![CDATA[thoughts]]></category><category><![CDATA[psychology]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Mon, 27 Feb 2017 16:49:00 GMT</pubDate></item><item><title><![CDATA[Fun with Codemod & AST]]></title><description><![CDATA[<h1 id="fun-with-codemod-ast">Fun with Codemod &amp; AST</h1>
+<hr>
+<h2 id="content">Content</h2>
+<ul>
+<li>背景</li>
+<li>Codemod</li>
+<li>jscodeshift</li>
+<li>Demo Time</li>
+<li>Refs</li>
+</ul>
+<hr>
+<h2 id="-">背景</h2>
+<p>作为一个自信而自豪的前端弄潮儿（F2E），我们总是希望能够在这个每天都在飞速迭代的行业，与时渐进。
+前端们是一群不安分的人，大家喜爱新框架、新语法，而 JavaScript 也是一门非常灵活的语言，它提供给我们的 API 也在与时渐进。比如，当 <code>ES2015 ES2016 ES2017…</code> 出来的时候，那些新语法糖，简洁漂亮，且更易于理解逻辑，于是我们都想去尝试下。
+但是尝试归尝试，对于新项目尝试起来成本很低，只需要把新功能都用新语法编写就好。
+而创建新项目的同时，其实我们也在维护着一些已有的旧项目。如果你还并没怎么理它们，可能它们还活得不错。但是一旦 PM 心情好想加个新功能，或者你哪天心情好想去更新下代码库，然后看到自己之前写的那些代码，那些现在其实可以更优雅漂亮的代码，是不是手里特痒痒特想把它们更新了？
+执行力强的前端儿可能说干就干了，嗯，就假设我们有个项目 Project，里面使用的是用<code>ES5</code> 版 <code>React</code> 作为 <code>UI View</code>。然后它大概四个页面<code>(Page)</code>，每个页面包含大概四个组件<code>(Component)</code>，然后你从某个看起来比较小、不容易出错的<code>Component</code> 入手，开始一行一行改写代码，嗯，<code>var React = require(&#39;react’)</code> 改为 <code>import React from &#39;react’</code>， <code>var API = ‘/j/app/xxx’</code> 改为 <code>const API = ‘/j/app/xxx’</code>，<code>var foo</code> 改为 <code>let foo</code>，<code>function () {…}</code> 改为 <code>() =&gt; {…}</code>，<code>module.exports = React.createClass({…})</code> 改为 <code>export default class MyComponent extends React.Component {…}</code> … 
+天哪，有完没完，一个组件改完下来，你已经感到身体被掏空，望了望 <code>Components</code> 列表，更不用说，重新 <code>build</code> 过的测试还没过。你陷入了绝望...</p>
+<p>那么有没有更快一点的办法呢？
+稍微有点经验的前端儿可能想到「正则表达式匹配替换」。Bash <code>Awk | Sed</code> 命令，或者 Vim <code>:%s/var/let/g</code>。可是如果需要有些变量是 <code>const</code> 类型，有些是 <code>let</code>，而有些保持 <code>var</code> 不变怎么办？再比如说 </p>
+<pre class="hljs"><code><span class="hljs-tag">merge</span>(a, {<span class="hljs-attribute">b</span>: <span class="hljs-number">1</span>}, c);  <span class="hljs-comment">// Old</span>
+
+需要变为
+
+({..<span class="hljs-class">.a</span>, <span class="hljs-tag">b</span>: <span class="hljs-tag">1</span>, ..<span class="hljs-class">.c</span>});  <span class="hljs-comment">// New</span></code></pre><p>这里光是这个函数的 <code>arguments</code> 就可能有多种形式，比如 <code>variable</code>，一个匿名函数返回的 Object 或者 <code>Plain Object</code> 那种。
+这里相当于是一个 <code>Context-non-free</code> 的问题，也就是上下文语义很重要。
+这样的话，无论再怎么强大的<code>RegExp</code> 也无能为力。因为正则的本质，其实是根据一定的 <code>Pattern</code> 来匹配字符串，但是在真正的代码里面，所有的字符串都有语义，都有上下文，这里的正则表达式会既复杂又无用。
+所以，我们得换一个维度思考问题。</p>
+<hr>
+<h2 id="codemod">Codemod</h2>
+<p>对「代码库的批量迁移更新」，其实也是程序员的一个需求，所以也感激地，已经有一群懒惰又聪明的程序员造出了工具：<code>Codemod</code>，将「大型仓库代码的批量迁移」自动化，省时省力。</p>
+<p>好吧，所以 Codemod 到底是什么呢？
+官方文档这样写着：</p>
+<blockquote>
+<p>Codemod is a tool/library to assist you with large-scale codebase refactors that can be partially automated but still require human oversight and occasional intervention.</p>
+</blockquote>
+<p>这样看来，可以很好的解决我们的需求了。
+基于 Codemod，又出现了针对 JavaScript 代码迁移的工具 <a href="https://github.com/facebook/jscodeshift">Facebook jscoodeshift</a>，
+基于 jscodeshift，又构建了迁移一般 JavaScript 代码（比如 ES5 -&gt; ES2015) 的工具 <a href="https://github.com/cpojer/js-codemod">js-codemod</a> 和迁移 React 相关项目的 <a href="https://github.com/reactjs/react-codemod">react-codemod</a>。</p>
+<p>嗯，这么看来，我们的事情就变得容易多了。
+根据上面那些工具的官方文档，我们只需要按顺序执行以下命令：</p>
+<pre class="hljs"><code>&gt; npm i -g jscodeshift
+&gt; git clone https:<span class="hljs-comment">//github.com/reactjs/react-codemod.git</span>
+&gt; git clone https:<span class="hljs-comment">//github.com/cpojer/js-codemod.git</span>
+&gt; jscodeshift -t react-codemod/transforms/<span class="hljs-keyword">class</span>.js --<span class="hljs-keyword">mixin</span>-<span class="hljs-keyword">module</span>-name=react-addons-<span class="hljs-keyword">pure</span>-render-<span class="hljs-keyword">mixin</span> --flow=<span class="hljs-literal">true</span> --<span class="hljs-keyword">pure</span>-component=<span class="hljs-literal">true</span> --remove-runtime-proptypes=<span class="hljs-literal">false</span> src/register/component/myComponent.jsx
+&gt; jscodeshift -t js-codemod/transforms/no-vars.js ./src/register/component/myComponent.jsx</code></pre><p>然后，再次 <code>git status</code> 一下或者直接打开刚才 transform 的 <code>myComponent.jsx</code> 文件查看，你会发现，神奇般，你的代码都成为了它们应该成为的样子。</p>
+<p>这里暂时以我之前做的 Accounts 项目为例：
+<a href="https://github.intra.douban.com/accounts/accounts/pull/553/files#diff-b2286efdea6a62288250264e82bd948b">https://github.intra.douban.com/accounts/accounts/pull/553/files#diff-b2286efdea6a62288250264e82bd948b</a></p>
+<ul>
+<li>基本步骤如下：</li>
+<li>因为是第一次使用 <code>codemod</code>，所以比较谨慎，一个一个 <code>component</code> 来；</li>
+<li>先用 <code>react-codemod</code> 转，把大部头代码迁移；</li>
+<li>然后 <code>js-codemod</code> 小步更新整理；</li>
+<li>然后再根据一些自己的 Code Style 做些细节上的修改。比如使用 <code>standard-format</code> 工具格式化代码，符合我个人写的代码风格。</li>
+<li>毕竟 JS 太过于灵活，每个人写代码时候风格和结构都是各异的，有时候的转换还是会出现一些与想象中不一致的结果，官方文档也是说仍然需要人工干预，所以会手动修改下代码细节；</li>
+<li>一切组件迁移就绪，<code>npm run test</code> 测试通过以后，重新 <code>build</code> 运行</li>
+</ul>
+<p>这里我把已有的十几个组件和页面文件，全部使用上面的工具进行了更新。
+然后当你重新 <code>build</code> 后，你会发现测试仍然通过，组件功能仍然 work，但是代码库却是使用新语法糖进行了大规模彻彻底底地更新！简直太神奇了！
+那么，它是怎么做到的呢？</p>
+<hr>
+<h2 id="jscodeshift">jscodeshift</h2>
+<p>让我们来重新读一下 jscodeshift 的<a href="https://github.com/facebook/jscodeshift#jscodeshift-">文档</a>。</p>
+<blockquote>
+<p>jscodeshift is a toolkit for running codemods over multiple JS files. It provides:</p>
+</blockquote>
+<ul>
+<li>A runner, which executes the provided transform for each file passed to it. It also outputs a summary of how many files have (not) been transformed.</li>
+<li>A wrapper around recast, providing a different API. Recast is an AST-to-AST transform tool and also tries to preserve the style of original code as much as possible.</li>
+</ul>
+<p>那么这里就出现了两个关键的概念：<em>Runner</em> 及 <em>AST</em>。</p>
+<ul>
+<li>Runner，</li>
+<li><blockquote>
+<p>A runner/worker feature that can apply transforms to thousands of files in parallel.
+-- <a href="https://medium.com/@cpojer/effective-javascript-codemods-5a6686bb46fb#.sg03sd9eq">CPojer Effective JavaScript Codemods</a></p>
+</blockquote>
+</li>
+<li><p>AST，Abstract Syntax Tree，抽象语法分析树。</p>
+</li>
+</ul>
+<p>为了更好理解以上概念，先来看一下之前运行 jscodeshift 命令过程。
+我们先是把一个里面包含了 JS 代码的源文件传给了它，然后它读取了源代码，又根据写好的 <code>transform.js</code> 对源代码进行了相应的变换，最后输出了变换后的 JS 代码，覆盖了原文件。
+简单的说，就是 
+<code>SourceCode =&gt; codemod =&gt; ObjectCode</code></p>
+<p>那么再详细一点，根据 jscodeshift 作者之一的 CPojer 在一次 JSConf 上对这个工具的介绍，jscodeshift 操作基本是按以下过程：
+<code>Parse =&gt; Find =&gt; Create =&gt; Update =&gt; Print</code></p>
+<ol>
+<li>Parse: SourceCode =&gt; AST （Tree Nodes)</li>
+<li>Find: Find the Nodes we want to replace         // Transform</li>
+<li>Create: Create the New Nodes we want to insert  // Transform</li>
+<li>Update: Update the AST at the right location    // Transform</li>
+<li>Print: Print it back into JavaScript Source with proper formatting and should like human wrote this.</li>
+</ol>
+<h3 id="-parse-ast-">第一步，将源代码解析 (parse) 成 AST.</h3>
+<p>我们知道自然语言（Natural Language)，无论什么语种，都会有「主语」「动词」「宾语」「标点符号」来描述一个现实世界所发生的事件。
+而在计算机编程语言 (Programming Language)，无论什么语种，都会有「类型」「运算符」「流程语句」「函数」「对象」等概念来表达计算机中存在内存中的0和1，以及背后运算与逻辑。
+不同的语言，都会配之不同的语法分析器(parser)。
+对于自然语言，我们的大脑就是一个 Parser。对于编程语言，语法分析器是把源代码作为字符串读入、解析，并建立语法树的程序。</p>
+<p>什么是语法树？摘自 Wiki 一段：</p>
+<blockquote>
+<p>计算机科学中，抽象语法树（abstract syntax tree 或者缩写为 AST），或者语法树（syntax tree），是源代码的抽象语法结构的树状表现形式，这里特指编程语言的源代码。树上的每个节点都表示源代码中的一种结构。之所以说语法是「抽象」的，是因为这里的语法并不会表示出真实语法中出现的每个细节。</p>
+</blockquote>
+<p>这么说其实还是有点抽象，我们先打开 <a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree">wiki</a> 看到 wikipedia 这个图，</p>
+<p><img src="https://media.github.intra.douban.com/user/62/files/9d7500be-f370-11e6-972f-f5ede1c448f8" alt="image"></p>
+<p>前端er 一定会觉得很相似，这里不就是 DOM 语法树的终极抽象版本吗，只是把一个个 DOM Nodes 换成了一个个更加无语义的字符 Token。
+FB 有一个很棒的工具 <a href="http://astexplorer.net/">ASTExplorer</a>，可以用来更形象地展示。</p>
+<p>比如说，我们现在就只有一个很简单的表达式<code>a+b</code>，这里是 recast Parser 解析后的 AST 结构：</p>
+<p><img src="https://media.github.intra.douban.com/user/62/files/758a6076-f370-11e6-97e4-f6152c3814bf" alt="image"></p>
+<p>看上去特别复杂。注意那些蓝色字体 <code>File</code>, <code>Programme</code>,<code>ExpressionStatement</code>,<code>Identifier</code>… 这些都是 AST Nodes，其他的都是和这个 Node 相关的数据。</p>
+<p>根据前文可以知道，每种语言的 AST 都是不同的。有专门的 Parser 来生成 AST。</p>
+<p>关于 <a href="https://en.wikipedia.org/wiki/Parsing#Parser">Parser</a> 又是一门很深的学问了。
+在 ASTExplorer.net 上可以看到有很多 parser，比较著名的有 <a href="https://github.com/jquery/esprima/blob/master/src/parser.ts">Esprima(jQuery)</a>，Uglify-JS, Babylon(Babel), Acorn(Tern / Webpack), 及 jscodeshift 使用的 recast. 虽然有很多 Parser，但是基本上，一个 parser 的结构都差不多，对源代码进行词法分析，生成 Tokens，对 Tokens 进行语法分析，然后生成 AST。</p>
+<p><img src="https://media.github.intra.douban.com/user/62/files/5751ac04-f370-11e6-849e-692ab4b47bbf" alt="image"></p>
+<p>具体可以参考看下 <a href="http://esprima.org/demo/parse.html#">Esprima Parse Demo</a>。
+生成的 AST 都遵循一个统一标准 <a href="https://github.com/estree/estree/blob/master/es5.md">ESTree</a> or <a href="parser API https://developer.mozilla.org/en-US/docs/Mozilla/Projects/SpiderMonkey/Parser_API">Mozilla SpiderMonkey</a>，也就是说都会返回 ESTree Compatible AST.</p>
+<h3 id="-ast-find-nodes-create-new-nodes-update-nodes-">第二三四步，对生成的 AST 进行操作修改 (Find Nodes &amp; Create New Nodes &amp; Update Nodes)</h3>
+<p>Wiki 有介绍说，parse AST 的代码基本是使用<code>Visitor Pattern</code>，如：</p>
+<pre class="hljs"><code><span class="hljs-comment">// recast</span>
+<span class="hljs-keyword">var</span> ast = recast.parse(src);
+recast.visit(ast, {
+visitIdentifier: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(path)</span> </span>{
+<span class="hljs-comment">// do something with path</span>
+<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+}
+});</code></pre><p>但是 js-codeshift 基于 <a href="https://github.com/facebook/jscodeshift#collections-and-traversal"><code>Collections</code></a> 概念，很贴心的给这些 Parser API 继续包了一层，提供了一个不一样的前端友好型 API.</p>
+<pre class="hljs"><code><span class="hljs-comment">// jscodeshift</span>
+  <span class="hljs-tag">jscodeshift</span>(src)
+<span class="hljs-class">.find</span>(jscodeshift.Identifier)
+  <span class="hljs-class">.forEach</span>(<span class="hljs-function">function</span>(path) {
+      <span class="hljs-comment">// do something with path</span>
+      });
+
+<span class="hljs-comment">// Provide jQuery-likely and F2E-friendly Syntax API</span>
+<span class="hljs-comment">// Manipulate AST nodes conveniently.</span></code></pre><p>读这段代码的时候，一下子觉得又似曾相识。这不就和使用 <code>jQuery</code> 操作 DOM 一样嘛。
+可以对比下 “普通 Parser” 与 jscodeshift 操纵 AST 的区别：
+可以看到如果使用 <a href="http://esprima.org/">esprima</a> ，AST Traverse / Walk 基本是 <code>visitor pattern</code>.
+<a href="https://github.intra.douban.com/zhangbinliu/ast_demo/tree/esprima">https://github.intra.douban.com/zhangbinliu/ast_demo/tree/esprima</a></p>
+<h3 id="-">第五步，输出转换后的代码</h3>
+<p>这个据 CPojer 说，根据转换后的 AST，以及一些输出 <a href="https://github.com/benjamn/recast/blob/52a7ec3eaaa37e78436841ed8afc948033a86252/lib/options.js#L61">Options</a>（比如是否单引号、tab 宽度是多少、需不需要去掉尾部分号…）是一个挺困难的过程。
+但最终，jscodeshift 的 print API 语法却是只要一行代码即可。</p>
+<pre class="hljs"><code><span class="hljs-class">.toSource</span>({<span class="hljs-attribute">quote</span>: <span class="hljs-string">&#39;single&#39;</span>}); <span class="hljs-comment">// sets strings to use single quotes in transformed code.</span></code></pre><p>其实 Recast 在这做了<a href="(https://github.com/benjamn/recast/blob/master/lib/printer.js">大量的工作</a> )。</p>
+<p>经过这五个步骤，一次 jscodeshift 的转换过程就算完成了。</p>
+<hr>
+<h2 id="demo-time-">DEMO TIME!</h2>
+<h3 id="write-a-codemod-transform">Write a codemod transform</h3>
+<p><code>jscodeshift -t &lt;transform.js&gt; /to/file/path</code> 的 <code>transform.js</code>，也就是说，你打算使用 jscodeshift 对源文件进行何种变换，这里面就是变换函数；</p>
+<h4 id="problem-">Problem:</h4>
+<pre class="hljs"><code><span class="hljs-comment">// Before</span>
+<span class="hljs-string">&#39;Hello, &#39;</span> + name + <span class="hljs-string">&#39;, this is a string.&#39;</span>
+<span class="hljs-comment">// After</span>
+<code>Hello, ${name}, &lt;span class=&quot;hljs-keyword&quot;&gt;this&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;is&lt;/span&gt; a &lt;span class=&quot;hljs-keyword&quot;&gt;string&lt;/span&gt;.</code></code></pre><h4 id="solution-">Solution:</h4>
+<ol>
+<li>Simplify:</li>
+</ol>
+<pre class="hljs"><code><span class="hljs-comment">// Before</span>
+a + b
+<span class="hljs-comment">// After</span>
+<span class="hljs-string"><code>&lt;span class=&quot;hljs-subst&quot;&gt;${a}&lt;/span&gt;&lt;span class=&quot;hljs-subst&quot;&gt;${b}&lt;/span&gt;</code></span></code></pre><p><code>a + b</code> AST:</p>
+<p><img src="https://media.github.intra.douban.com/user/62/files/e4d3c126-f36f-11e6-98aa-382c3afd9bcf" alt="image"></p>
+<p><code>${a}${b}</code> AST:</p>
+<p><img src="https://media.github.intra.douban.com/user/62/files/ea450a52-f36f-11e6-9a28-f715785d13a2" alt="image"></p>
+<p>对比两个 AST 可以发现
+我们只需要 </p>
+<ol>
+<li>读入需转换的代码，找到 <code>BinaryExpression</code></li>
+<li>保存 <code>BinaryExpression</code> 左右两边的值（node.left &amp; node.right)</li>
+<li>生成一个为 <code>TemlateLiteral</code> Node，<code>quasis</code> 是一个包含了三个 <code>TemplateElement</code> 的数组，<code>cookde &amp; raw keys</code> 都是 <code>&#39;&#39;</code>， <code>expressions</code> 是一个包含 node.left, node.right 值的数组。</li>
+<li>然后将它返回输出；</li>
+</ol>
+<p>Solution Example:</p>
+<ol>
+<li><a href="http://astexplorer.net/#/gist/33b63b7dc8da6d9ea4936c631adc994d/7905ef5b30dfc0cb3c811af8a8960f11014ef402">http://astexplorer.net/#/gist/33b63b7dc8da6d9ea4936c631adc994d/7905ef5b30dfc0cb3c811af8a8960f11014ef402</a></li>
+<li><a href="http://astexplorer.net/#/gist/a71957902ec1fd79f199eb37e5e6801a/55c4910295973b3a4d09770d94cec73d5096daa4">http://astexplorer.net/#/gist/a71957902ec1fd79f199eb37e5e6801a/55c4910295973b3a4d09770d94cec73d5096daa4</a></li>
+<li><a href="http://astexplorer.net/#/gist/a71957902ec1fd79f199eb37e5e6801a/cf3c898c5fe494d08a978dd1a3a3e56fc42828a8">http://astexplorer.net/#/gist/a71957902ec1fd79f199eb37e5e6801a/cf3c898c5fe494d08a978dd1a3a3e56fc42828a8</a></li>
+</ol>
+<p>官方没有太详细的 transform 编写指导，可以多谷歌或者学习 react-codemod/tranform or js-codemod/transform，
+个人觉得写 JS-codeshift Transform | Babel-Plugin 本质其实就是对比两棵语法树，像解谜一样，看看如何「又好又快」变换成这样。
+剩下的一开始如何读取源 JS 代码并解析成语法树，具体在 AST 上 traverse &amp; find &amp; create &amp; update （这里我猜测其实是一个递归遍历节点树的过程？），及之后如何按一定的 code style 生成我们需要的代码，都是透明且不关心的。</p>
+<hr>
+<h2 id="-">总结 &amp; 开脑洞</h2>
+<ul>
+<li><p>基本处理流程：
+<img src="https://media.github.intra.douban.com/user/62/files/7fe54aa4-f370-11e6-90d8-9f191a40a5cc" alt="image"></p>
+</li>
+<li><p>AST 是很有用的一个抽象概念。一旦你理解了这些规则，唯一的限制就是解析器和你的想象力。</p>
+</li>
+<li>纯 AST parse 太过于理论，既然是工程师，还是需要自己动手写点什么来解决自己实际遇到的问题。</li>
+<li>可以继续拓展到「语法高亮」、「关键字匹配」、「代码格式化」、「作用域判断」、以及「代码压缩」、「Babel 插件」等等。</li>
+<li>渐渐深入底层进行分析，让自己对这门语言有了更多、更深入的了解，可以更好地成为产品「创造者」，而不单纯是「使用者」。</li>
+<li>Write JavaScript that write JavaScript! The best editor is JavaScript. Cool!</li>
+</ul>
+<hr>
+<h2 id="-">思考</h2>
+<ul>
+<li>可以在一个 codemod transform 里面同时进行两个变换吗？个人觉得可能会很复杂且效果不太好，因为有些 transform 并不是正交的。🤔</li>
+</ul>
+<hr>
+<h2 id="refs-">Refs:</h2>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=d0pOgY8__JM">CPojer’s Talk</a></li>
+<li><a href="https://medium.com/@cpojer/effective-javascript-codemods-5a6686bb46fb#.s5kdne4xl">Effective JavaScript Codemods</a></li>
+<li><a href="https://survivejs.com/blog/codemod-interview/">Codemod Interview</a></li>
+<li><a href="https://vramana.github.io/blog/2015/12/21/codemod-tutorial/">How to write a codemod</a> 结合 CPojer’s Talk, 这个虽很长但很有用！</li>
+<li><a href="https://www.sitepoint.com/understanding-asts-building-babel-plugin/">Understanding Babel Plugin</a></li>
+<li><a href="http://tech.meituan.com/abstract-syntax-tree.html">AST 在美团的应用</a></li>
+<li><a href="http://imweb.io/topic/57b13b4f93d9938132cc8dfd">imweb</a></li>
+</ul>
+]]></description><link>/2017-02-15-fun-with-codemod-and-ast/index.html</link><guid isPermaLink="true">/2017-02-15-fun-with-codemod-and-ast/index.html</guid><category><![CDATA[programming]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Tue, 14 Feb 2017 17:21:00 GMT</pubDate></item><item><title><![CDATA[豆瓣、北京、工作，及终于与自己握手言和的 2016]]></title><description><![CDATA[<h1 id="-2016">豆瓣、北京、工作，及终于与自己握手言和的 2016</h1>
 <p><img src="/content/images/2017/01/title-img.jpg" alt=""></p>
 <blockquote>
 <p>在隆冬，我终于知道，我身上有一个不可战胜的夏天。 — 加缪</p>
@@ -1155,28 +1363,25 @@ WebTorrent 作者之一。JS Standard Style 作者。斯坦福毕业的一小哥
 <p>钢琴家唯有在忘却了最根本的技术问题时，才能开始自由地创造音乐。作为一位艺术家，你必须把你自己完全地投注于你的音乐；在那短暂时光中所创造出的满足感，就是你在经过了所有努力之后，得到的最大回报。它们是上天给予你最神奇的礼物！</p>
 </li>
 </ol>
-]]></description><link>/2016-08-28-review-music-at-your-fingertips/index.html</link><guid isPermaLink="true">/2016-08-28-review-music-at-your-fingertips/index.html</guid><category><![CDATA[notes]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Sun, 28 Aug 2016 05:58:00 GMT</pubDate></item><item><title><![CDATA[移动环境下的 SEO]]></title><description><![CDATA[<h1 id="-seo">移动环境下的 SEO</h1>
-<p>真的有很久很久没来理这个博客，距离上一篇文章的发布日期是两年前。
+]]></description><link>/2016-08-28-review-music-at-your-fingertips/index.html</link><guid isPermaLink="true">/2016-08-28-review-music-at-your-fingertips/index.html</guid><category><![CDATA[notes]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Sun, 28 Aug 2016 05:58:00 GMT</pubDate></item><item><title><![CDATA[移动环境下的 SEO]]></title><description><![CDATA[<p>真的有很久很久没来理这个博客，距离上一篇文章的发布日期是两年前。
 毕业工作后来了豆瓣，最近对移动环境（主要是浏览器及微信）的 SEO 相关进行了下研究，正好在这里分享一下。</p>
+<p>以下，Enjoy。</p>
 <hr>
-<h3 id="1-seo-search-engine-optimazition">1. SEO：Search Engine Optimazition</h3>
-<p>产品：搜索引擎优化，促进内容网站信息分享／传播，提高目标转化率，留存率（补 link）</p>
+<h1 id="1-seo-search-engine-optimazition">1. SEO：Search Engine Optimazition</h1>
+<p>产品：搜索引擎优化，促进内容网站信息分享／传播，提高目标转化率，留存率</p>
 <p>工程：为各类页面实现统一的信息分享、传播，提高搜索排名（search ranking）</p>
 <p>个人觉得：</p>
 <ul>
-<li>豆瓣是一个内容网站，拥有一些 UGC 优质内容，SEO 间接帮助用户分享。</li>
+<li>豆瓣是一个内容网站，拥有一些 UGC 优质内容，SEO 间接帮助用户分享。
+且分享率越高，也会提高搜索排名。</li>
+<li>M 站的目前面向<strong> 人（User） </strong>的 UX 比较完善，但是仍需要丰富一些细节，让 <strong>Search Engine</strong> 的 UX 更好，更好地理解 M 站。</li>
 </ul>
-<p>​        且分享率越高，increase search ranking.</p>
-<ul>
-<li>m 站的面向 <strong>人（User）</strong>的 UX 比较完善，但是仍需要丰富一些细节，让 <strong>Search Engine</strong> 的 UX 更好，更能理解 m 站。</li>
-</ul>
-<p>#</p>
-<h3 id="2-seo-">2. 前端在 SEO 中的位置</h3>
+<h1 id="2-seo-">2. 前端在 SEO 中的位置</h1>
 <ul>
 <li><strong>帮助产品进行TDK （Title / Description / Keyword）优化</strong></li>
 <li><strong>添加一些 Social Meta Tag （Facebook / Twitter / G+ / WeChat / Weibo）</strong></li>
 <li>页面内容优化（HTML5 标签语义化、唯一的 H1 标题、img 设置 <code>alt</code> 属性，不需要爬虫跟踪的链接加 <code>nofollow</code>）</li>
-<li>URL 优化 （<strong>canonical</strong>，标签表示页面的唯一性。<ul>
+<li>URL 优化 (<strong>canonical</strong>，标签表示页面的唯一性)<ul>
 <li>在搜索引擎里，<strong>只有链接完全一样，才会认为是同一个链接</strong>，如果链接带上参数，虽然访问到的内容还是一样，但是在搜索引擎看来确是不同的链接，页面抓取也会出现多次，从而导致多个链接，内容一样。</li>
 <li>因此 URL 中最好是不要带上查询参数。但为了产品统计数据，总需要 <code>?from=xxx&amp;refer=xxx</code>等参数，所以使用 <code>canonical</code>标签来确保链接唯一性，避免权重分散、流失。</li>
 <li>比如 <code>m.douban.com/group/topics[?start=xxx]</code>均视为同一个页面这里的 <code>?start=xxx</code>是一个分页查询参数，所以为了确保这些页面都能继承 m.douban.group/toics 这个 url  的权重，在<code>head</code>中增加了<code>canonical</code>标签</li>
@@ -1185,8 +1390,7 @@ WebTorrent 作者之一。JS Standard Style 作者。斯坦福毕业的一小哥
 <li>Meta robots</li>
 <li>Sitemap</li>
 </ul>
-<p>#</p>
-<h3 id="3-">3. 具体实现</h3>
+<h1 id="3-">3. 具体实现</h1>
 <blockquote>
 <p><strong>统一 SNS 抓取</strong></p>
 <p>提供一个 mako 函数，统一分享的标题、图片、描述</p>
@@ -1211,9 +1415,10 @@ WebTorrent 作者之一。JS Standard Style 作者。斯坦福毕业的一小哥
 <p><a href="https://developers.facebook.com/docs/sharing/opengraph">https://developers.facebook.com/docs/sharing/opengraph</a></p>
 <p><a href="https://dev.twitter.com/cards/overview">https://dev.twitter.com/cards/overview</a></p>
 <p><a href="http://github.intra.douban.com/frodo/Talion/blob/master/views/j/wechat/__init__.py">http://github.intra.douban.com/frodo/Talion/blob/master/views/j/wechat/<strong>init</strong>.py</a> </p>
-</blockquote>
 <p>— From <a href="https://paper.dropbox.com/doc/-SEO-UVIgU3WYPUeiJv3nOPP0N">Douban FE Dropbox</a></p>
-<p><code>seo_meta()</code> Mako widget</p>
+</blockquote>
+<h1 id="-">实现方案</h1>
+<h2 id="1-seo_meta-mako-widget">1. 增加了 <code>seo_meta()</code> Mako widget</h2>
 <p> <a href="http://github.intra.douban.com/frodo/Talion/blob/master/templates/card/widgets.html#L527">http://github.intra.douban.com/frodo/Talion/blob/master/templates/card/widgets.html#L527</a></p>
 <pre class="hljs"><code><span class="xml"></span>&lt;%<span class="perl">def name=<span class="hljs-string">&quot;seo_meta(title, desc, image=None, url=None, type=None, rating_count=None, rating_val=None, wechat_timeline_title=None,wechat_chat_title=None, wechat_desc=None, wechat_image=None)&quot;</span>&gt;
     &lt;%
@@ -1278,7 +1483,7 @@ WebTorrent 作者之一。JS Standard Style 作者。斯坦福毕业的一小哥
         !getMeta(<span class="hljs-string">&#39;weixin:description&#39;</span>) &amp;&amp; setMeta(<span class="hljs-string">&#39;weixin:description&#39;</span>, getMeta(<span class="hljs-string">&#39;og:description&#39;</span>))
     })();
     &lt;<span class="hljs-regexp">/%block&gt;
-&lt;/</span><span class="hljs-variable">%def</span>&gt;</span></code></pre><h4 id="-m-seo-meta-tags">给 m 站大部分页面增加了 SEO Meta Tags</h4>
+&lt;/</span><span class="hljs-variable">%def</span>&gt;</span></code></pre><h2 id="2-m-seo-meta-tags">2. 给 m 站大部分页面增加了 SEO Meta Tags</h2>
 <p>之前分享出去抓不到自定义的 description 和 image ，现默认分享到 weixin 的 title 、 description 、image 值都和 Open Graph 一样，也可以自定义。</p>
 <p>默认情况下</p>
 <ul>
@@ -1325,7 +1530,7 @@ WebTorrent 作者之一。JS Standard Style 作者。斯坦福毕业的一小哥
 <p>（补图）</p>
 <p>(<a href="http://p.dapps.douban.com/p/38c24dc31b4d482c8095083995e43d00.blob">http://p.dapps.douban.com/p/38c24dc31b4d482c8095083995e43d00.blob</a>)</p>
 <p><a href="http://p.dapps.douban.com/p/78b40c471bab42209a0cb8ee2283c974.blob">http://p.dapps.douban.com/p/78b40c471bab42209a0cb8ee2283c974.blob</a></p>
-<h4 id="-">统一分享接口（微信重度使用患者）</h4>
+<h2 id="3-">3. 统一分享接口（微信重度使用患者）</h2>
 <ul>
 <li><a href="http://github.intra.douban.com/frodo/Talion/blob/master/static/js/card/weixin.js#L52">weixin.js</a>、 <a href="https://mp.weixin.qq.com/wiki/7/aaa137b55fb2e0456bf8dd9148dd613f.html#.E5.88.86.E4.BA.AB.E6.8E.A5.E5.8F.A3">微信 JSSDK 文档</a></li>
 </ul>
@@ -1360,15 +1565,7 @@ WebTorrent 作者之一。JS Standard Style 作者。斯坦福毕业的一小哥
 <li><p><strong>Bugs:</strong> 通过 Safari Extension 分享出来的永远抓的是 <code>apple-touch-icon</code> 😂</p>
 </li>
 </ul>
-<pre class="hljs"><code>  <span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">&quot;apple-touch-icon-precomposed&quot;</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;<a href="https://img3.doubanio.com/f/talion/315ba4fc82e5cdb5c50ef1d9f88c8aa2c5c0c4ba/pics/icon/m_logo_76.png">https://img3.doubanio.com/f/talion/315ba4fc82e5cdb5c50ef1d9f88c8aa2c5c0c4ba/pics/icon/m_logo_76.png</a>&quot;</span>&gt;</span></code></pre><p>  无论如何修改。。。</p>
-<ul>
-<li><a href="https://www.chromium.org/tab-to-search">Tab to Search</a><ul>
-<li>（补图</li>
-<li>Open Search <a href="http://github.intra.douban.com/frodo/Talion/pull/271/files#diff-a460aa3a81387aa3c4e2007ab689c0ddR1">http://github.intra.douban.com/frodo/Talion/pull/271/files#diff-a460aa3a81387aa3c4e2007ab689c0ddR1</a></li>
-</ul>
-</li>
-</ul>
-<h3 id="4-further-reading-resource">4. Further Reading &amp; Resource</h3>
+<pre class="hljs"><code>  <span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">&quot;apple-touch-icon-precomposed&quot;</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;<a href="https://img3.doubanio.com/f/talion/315ba4fc82e5cdb5c50ef1d9f88c8aa2c5c0c4ba/pics/icon/m_logo_76.png">https://img3.doubanio.com/f/talion/315ba4fc82e5cdb5c50ef1d9f88c8aa2c5c0c4ba/pics/icon/m_logo_76.png</a>&quot;</span>&gt;</span></code></pre><h1 id="4-further-reading-resource">4. Further Reading &amp; Resource</h1>
 <ol>
 <li>Sitemap &amp; <a href="http://baiduseoguide.com/news/20141128113.html">Deadlink</a></li>
 <li>Social Meta Tag Cheatsheet</li>
@@ -1385,217 +1582,7 @@ WebTorrent 作者之一。JS Standard Style 作者。斯坦福毕业的一小哥
 </ul>
 </li>
 </ol>
-]]></description><link>/2016-05-20-seo-in-mobile/index.html</link><guid isPermaLink="true">/2016-05-20-seo-in-mobile/index.html</guid><category><![CDATA[SEO]]></category><category><![CDATA[shares]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Thu, 19 May 2016 18:21:00 GMT</pubDate></item><item><title><![CDATA[Fun with Codemod & AST]]></title><description><![CDATA[<h1 id="fun-with-codemod-ast">Fun with Codemod &amp; AST</h1>
-<hr>
-<h2 id="content">Content</h2>
-<ul>
-<li>背景</li>
-<li>Codemod</li>
-<li>jscodeshift</li>
-<li>Demo Time</li>
-<li>Refs</li>
-</ul>
-<hr>
-<h2 id="-">背景</h2>
-<p>  作为一个自信而自豪的前端弄潮儿（F2E），我们总是希望能够在这个每天都在飞速迭代的行业，与时渐进。
-  前端们是一群不安分的人，大家喜爱新框架、新语法，而 JavaScript 也是一门非常灵活的语言，它提供给我们的 API 也在与时渐进。比如，当 <code>ES2015 ES2016 ES2017…</code> 出来的时候，那些新语法糖，简洁漂亮，且更易于理解逻辑，于是我们都想去尝试下。
-  但是尝试归尝试，对于新项目尝试起来成本很低，只需要把新功能都用新语法编写就好。
-  而创建新项目的同时，其实我们也在维护着一些已有的旧项目。如果你还并没怎么理它们，可能它们还活得不错。但是一旦 PM 心情好想加个新功能，或者你哪天心情好想去更新下代码库，然后看到自己之前写的那些代码，那些现在其实可以更优雅漂亮的代码，是不是手里特痒痒特想把它们更新了？
-  执行力强的前端儿可能说干就干了，嗯，就假设我们有个项目 Project，里面使用的是用<code>ES5</code> 版 <code>React</code> 作为 <code>UI View</code>。然后它大概四个页面<code>(Page)</code>，每个页面包含大概四个组件<code>(Component)</code>，然后你从某个看起来比较小、不容易出错的<code>Component</code> 入手，开始一行一行改写代码，嗯，<code>var React = require(&#39;react’)</code> 改为 <code>import React from &#39;react’</code>， <code>var API = ‘/j/app/xxx’</code> 改为 <code>const API = ‘/j/app/xxx’</code>，<code>var foo</code> 改为 <code>let foo</code>，<code>function () {…}</code> 改为 <code>() =&gt; {…}</code>，<code>module.exports = React.createClass({…})</code> 改为 <code>export default class MyComponent extends React.Component {…}</code> … 
-  天哪，有完没完，一个组件改完下来，你已经感到身体被掏空，望了望 <code>Components</code> 列表，更不用说，重新 <code>build</code> 过的测试还没过。你陷入了绝望...</p>
-<p>  那么有没有更快一点的办法呢？
-  稍微有点经验的前端儿可能想到「正则表达式匹配替换」。Bash <code>Awk | Sed</code> 命令，或者 Vim <code>:%s/var/let/g</code>。可是如果需要有些变量是 <code>const</code> 类型，有些是 <code>let</code>，而有些保持 <code>var</code> 不变怎么办？再比如说 </p>
-<pre class="hljs"><code>  <span class="hljs-tag">merge</span>(a, {<span class="hljs-attribute">b</span>: <span class="hljs-number">1</span>}, c);  <span class="hljs-comment">// Old</span>
-
-  需要变为
-
-  ({..<span class="hljs-class">.a</span>, <span class="hljs-tag">b</span>: <span class="hljs-tag">1</span>, ..<span class="hljs-class">.c</span>});  <span class="hljs-comment">// New</span></code></pre><p>  这里光是这个函数的 <code>arguments</code> 就可能有多种形式，比如 <code>variable</code>，一个匿名函数返回的 Object 或者 <code>Plain Object</code> 那种。
-  这里相当于是一个 <code>Context-non-free</code> 的问题，也就是上下文语义很重要。
-  这样的话，无论再怎么强大的<code>RegExp</code> 也无能为力。因为正则的本质，其实是根据一定的 <code>Pattern</code> 来匹配字符串，但是在真正的代码里面，所有的字符串都有语义，都有上下文，这里的正则表达式会既复杂又无用。
-  所以，我们得换一个维度思考问题。</p>
-<hr>
-<h2 id="codemod">Codemod</h2>
-<p>  对「代码库的批量迁移更新」，其实也是程序员的一个需求，所以也感激地，已经有一群懒惰又聪明的程序员造出了工具：<code>Codemod</code>，将「大型仓库代码的批量迁移」自动化，省时省力。</p>
-<p>  好吧，所以 Codemod 到底是什么呢？
-  官方文档这样写着：</p>
-<blockquote>
-<p>Codemod is a tool/library to assist you with large-scale codebase refactors that can be partially automated but still require human oversight and occasional intervention.</p>
-</blockquote>
-<p>  这样看来，可以很好的解决我们的需求了。
-  基于 Codemod，又出现了针对 JavaScript 代码迁移的工具 <a href="https://github.com/facebook/jscodeshift">Facebook jscoodeshift</a>，
-  基于 jscodeshift，又构建了迁移一般 JavaScript 代码（比如 ES5 -&gt; ES2015) 的工具 <a href="https://github.com/cpojer/js-codemod">js-codemod</a> 和迁移 React 相关项目的 <a href="https://github.com/reactjs/react-codemod">react-codemod</a>。</p>
-<p>  嗯，这么看来，我们的事情就变得容易多了。
-  根据上面那些工具的官方文档，我们只需要按顺序执行以下命令：</p>
-<pre class="hljs"><code>  &gt; npm i -g jscodeshift
-  &gt; git clone https:<span class="hljs-comment">//github.com/reactjs/react-codemod.git</span>
-  &gt; git clone https:<span class="hljs-comment">//github.com/cpojer/js-codemod.git</span>
-  &gt; jscodeshift -t react-codemod/transforms/<span class="hljs-keyword">class</span>.js --<span class="hljs-keyword">mixin</span>-<span class="hljs-keyword">module</span>-name=react-addons-<span class="hljs-keyword">pure</span>-render-<span class="hljs-keyword">mixin</span> --flow=<span class="hljs-literal">true</span> --<span class="hljs-keyword">pure</span>-component=<span class="hljs-literal">true</span> --remove-runtime-proptypes=<span class="hljs-literal">false</span> src/register/component/myComponent.jsx
-  &gt; jscodeshift -t js-codemod/transforms/no-vars.js ./src/register/component/myComponent.jsx</code></pre><p>  然后，再次 <code>git status</code> 一下或者直接打开刚才 transform 的 <code>myComponent.jsx</code> 文件查看，你会发现，神奇般，你的代码都成为了它们应该成为的样子。</p>
-<p>  这里暂时以我之前做的 Accounts 项目为例：
-  <a href="https://github.intra.douban.com/accounts/accounts/pull/553/files#diff-b2286efdea6a62288250264e82bd948b">https://github.intra.douban.com/accounts/accounts/pull/553/files#diff-b2286efdea6a62288250264e82bd948b</a></p>
-<ul>
-<li><p>基本步骤如下：</p>
-<ul>
-<li>因为是第一次使用 <code>codemod</code>，所以比较谨慎，一个一个 <code>component</code> 来；</li>
-<li>先用 <code>react-codemod</code> 转，把大部头代码迁移；</li>
-<li>然后 <code>js-codemod</code> 小步更新整理；</li>
-<li>然后再根据一些自己的 Code Style 做些细节上的修改。比如使用 <code>standard-format</code> 工具格式化代码，符合我个人写的代码风格。</li>
-<li>毕竟 JS 太过于灵活，每个人写代码时候风格和结构都是各异的，有时候的转换还是会出现一些与想象中不一致的结果，官方文档也是说仍然需要人工干预，所以会手动修改下代码细节；</li>
-<li>一切组件迁移就绪，<code>npm run test</code> 测试通过以后，重新 <code>build</code> 运行</li>
-</ul>
-<p>这里我把已有的十几个组件和页面文件，全部使用上面的工具进行了更新。
-然后当你重新 <code>build</code> 后，你会发现测试仍然通过，组件功能仍然 work，但是代码库却是使用新语法糖进行了大规模彻彻底底地更新！简直太神奇了！
-那么，它是怎么做到的呢？</p>
-</li>
-</ul>
-<hr>
-<h2 id="jscodeshift">jscodeshift</h2>
-<p>  让我们来重新读一下 jscodeshift 的<a href="https://github.com/facebook/jscodeshift#jscodeshift-">文档</a>。</p>
-<blockquote>
-<p>jscodeshift is a toolkit for running codemods over multiple JS files. It provides:</p>
-</blockquote>
-<ul>
-<li>A runner, which executes the provided transform for each file passed to it. It also outputs a summary of how many files have (not) been transformed.</li>
-<li><p>A wrapper around recast, providing a different API. Recast is an AST-to-AST transform tool and also tries to preserve the style of original code as much as possible.</p>
-<p>那么这里就出现了两个关键的概念：<em>Runner</em> 及 <em>AST</em>。</p>
-</li>
-<li><p>Runner，</p>
-</li>
-<li><blockquote>
-<p>A runner/worker feature that can apply transforms to thousands of files in parallel.</p>
-<pre class="hljs"><code>  -- <a href="span class=&quot;hljs-link_url&quot;&gt;https://medium.com/@cpojer/effective-javascript-codemods-5a6686bb46fb#.sg03sd9eq&lt;/span"><span class="hljs-link_label">CPojer Effective JavaScript Codemods</span></a></code></pre></blockquote>
-</li>
-<li><p>AST，Abstract Syntax Tree，抽象语法分析树。</p>
-<p>为了更好理解以上概念，先来看一下之前运行 jscodeshift 命令过程。
-我们先是把一个里面包含了 JS 代码的源文件传给了它，然后它读取了源代码，又根据写好的 <code>transform.js</code> 对源代码进行了相应的变换，最后输出了变换后的 JS 代码，覆盖了原文件。
-简单的说，就是 
-<code>SourceCode =&gt; codemod =&gt; ObjectCode</code></p>
-<p>那么再详细一点，根据 jscodeshift 作者之一的 CPojer 在一次 JSConf 上对这个工具的介绍，jscodeshift 操作基本是按以下过程：
-<code>Parse =&gt; Find =&gt; Create =&gt; Update =&gt; Print</code></p>
-</li>
-<li><p>Parse: SourceCode =&gt; AST （Tree Nodes)</p>
-</li>
-<li>Find: Find the Nodes we want to replace         // Transform</li>
-<li>Create: Create the New Nodes we want to insert  // Transform</li>
-<li>Update: Update the AST at the right location    // Transform</li>
-<li><p>Print: Print it back into JavaScript Source with proper formatting and should like human wrote this.</p>
-<h3 id="-parse-ast-">第一步，将源代码解析 (parse) 成 AST.</h3>
-<p>我们知道自然语言（Natural Language)，无论什么语种，都会有「主语」「动词」「宾语」「标点符号」来描述一个现实世界所发生的事件。
-而在计算机编程语言 (Programming Language)，无论什么语种，都会有「类型」「运算符」「流程语句」「函数」「对象」等概念来表达计算机中存在内存中的0和1，以及背后运算与逻辑。
-不同的语言，都会配之不同的语法分析器(parser)。
-对于自然语言，我们的大脑就是一个 Parser。对于编程语言，语法分析器是把源代码作为字符串读入、解析，并建立语法树的程序。</p>
-<p>什么是语法树？摘自 Wiki 一段：</p>
-<blockquote>
-<p>计算机科学中，抽象语法树（abstract syntax tree 或者缩写为 AST），或者语法树（syntax tree），是源代码的抽象语法结构的树状表现形式，这里特指编程语言的源代码。树上的每个节点都表示源代码中的一种结构。之所以说语法是「抽象」的，是因为这里的语法并不会表示出真实语法中出现的每个细节。</p>
-</blockquote>
-<p>这么说其实还是有点抽象，我们先打开 <a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree">wiki</a> 看到 wikipedia 这个图，</p>
-<p><img src="https://media.github.intra.douban.com/user/62/files/9d7500be-f370-11e6-972f-f5ede1c448f8" alt="image"></p>
-</li>
-</ul>
-<p>  前端er 一定会觉得很相似，这里不就是 DOM 语法树的终极抽象版本吗，只是把一个个 DOM Nodes 换成了一个个更加无语义的字符 Token。
-  FB 有一个很棒的工具 <a href="http://astexplorer.net/">ASTExplorer</a>，可以用来更形象地展示。</p>
-<p>  比如说，我们现在就只有一个很简单的表达式<code>a+b</code>，这里是 recast Parser 解析后的 AST 结构：</p>
-<p>  <img src="https://media.github.intra.douban.com/user/62/files/758a6076-f370-11e6-97e4-f6152c3814bf" alt="image"></p>
-<p>  看上去特别复杂。注意那些蓝色字体 <code>File</code>, <code>Programme</code>,<code>ExpressionStatement</code>,<code>Identifier</code>… 这些都是 AST Nodes，其他的都是和这个 Node 相关的数据。</p>
-<p>  根据前文可以知道，每种语言的 AST 都是不同的。有专门的 Parser 来生成 AST。</p>
-<p>  关于 <a href="https://en.wikipedia.org/wiki/Parsing#Parser">Parser</a> 又是一门很深的学问了。
-  在 ASTExplorer.net 上可以看到有很多 parser，比较著名的有 <a href="https://github.com/jquery/esprima/blob/master/src/parser.ts">Esprima(jQuery)</a>，Uglify-JS, Babylon(Babel), Acorn(Tern / Webpack), 及 jscodeshift 使用的 recast. 虽然有很多 Parser，但是基本上，一个 parser 的结构都差不多，对源代码进行词法分析，生成 Tokens，对 Tokens 进行语法分析，然后生成 AST。</p>
-<p>  <img src="https://media.github.intra.douban.com/user/62/files/5751ac04-f370-11e6-849e-692ab4b47bbf" alt="image"></p>
-<p>  具体可以参考看下 <a href="http://esprima.org/demo/parse.html#">Esprima Parse Demo</a>。
-  生成的 AST 都遵循一个统一标准 <a href="https://github.com/estree/estree/blob/master/es5.md">ESTree</a> or <a href="parser API https://developer.mozilla.org/en-US/docs/Mozilla/Projects/SpiderMonkey/Parser_API">Mozilla SpiderMonkey</a>，也就是说都会返回 ESTree Compatible AST.</p>
-<h3 id="-ast-find-nodes-create-new-nodes-update-nodes-">第二三四步，对生成的 AST 进行操作修改 (Find Nodes &amp; Create New Nodes &amp; Update Nodes)</h3>
-<p>  Wiki 有介绍说，parse AST 的代码基本是使用<code>Visitor Pattern</code>，如：</p>
-<pre class="hljs"><code>  <span class="hljs-comment">// recast</span>
-  <span class="hljs-keyword">var</span> ast = recast.parse(src);
-  recast.visit(ast, {
-    visitIdentifier: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(path)</span> </span>{
-      <span class="hljs-comment">// do something with path</span>
-      <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    }
-  });</code></pre><p>  但是 js-codeshift 基于 <a href="https://github.com/facebook/jscodeshift#collections-and-traversal"><code>Collections</code></a> 概念，很贴心的给这些 Parser API 继续包了一层，提供了一个不一样的前端友好型 API.</p>
-<pre class="hljs"><code>  <span class="hljs-comment">// jscodeshift</span>
-  <span class="hljs-tag">jscodeshift</span>(src)
-    <span class="hljs-class">.find</span>(jscodeshift.Identifier)
-    <span class="hljs-class">.forEach</span>(<span class="hljs-function">function</span>(path) {
-      <span class="hljs-comment">// do something with path</span>
-    });
-
-  <span class="hljs-comment">// Provide jQuery-likely and F2E-friendly Syntax API</span>
-  <span class="hljs-comment">// Manipulate AST nodes conveniently.</span></code></pre><p>  读这段代码的时候，一下子觉得又似曾相识。这不就和使用 <code>jQuery</code> 操作 DOM 一样嘛。
-  可以对比下 “普通 Parser” 与 jscodeshift 操纵 AST 的区别：
-  可以看到如果使用 <a href="http://esprima.org/">esprima</a> ，AST Traverse / Walk 基本是 <code>visitor pattern</code>.
-  <a href="https://github.intra.douban.com/zhangbinliu/ast_demo/tree/esprima">https://github.intra.douban.com/zhangbinliu/ast_demo/tree/esprima</a></p>
-<h3 id="-">第五步，输出转换后的代码</h3>
-<p>  这个据 CPojer 说，根据转换后的 AST，以及一些输出 <a href="https://github.com/benjamn/recast/blob/52a7ec3eaaa37e78436841ed8afc948033a86252/lib/options.js#L61">Options</a>（比如是否单引号、tab 宽度是多少、需不需要去掉尾部分号…）是一个挺困难的过程。
-  但最终，jscodeshift 的 print API 语法却是只要一行代码即可。</p>
-<pre class="hljs"><code>  <span class="hljs-class">.toSource</span>({<span class="hljs-attribute">quote</span>: <span class="hljs-string">&#39;single&#39;</span>}); <span class="hljs-comment">// sets strings to use single quotes in transformed code.</span></code></pre><p>  其实 Recast 在这做了<a href="(https://github.com/benjamn/recast/blob/master/lib/printer.js">大量的工作</a> )。</p>
-<p>  经过这五个步骤，一次 jscodeshift 的转换过程就算完成了。</p>
-<hr>
-<h2 id="demo-time-">DEMO TIME!</h2>
-<h3 id="write-a-codemod-transform">Write a codemod transform</h3>
-<pre class="hljs"><code><span class="hljs-escape"><code>j&lt;/span&gt;scodeshift -t &amp;lt;transform.js&amp;gt; /to/file/path&lt;span class=&quot;hljs-escape&quot;&gt;</code> </span>的 <span class="hljs-escape"><code>t&lt;/span&gt;ransform.js&lt;span class=&quot;hljs-escape&quot;&gt;</code>，</span>也就是说，你打算使用 jscodeshift 对源文件进行何种变换，这里面就是变换函数；</code></pre><h4 id="problem-">Problem:</h4>
-<pre class="hljs"><code>  <span class="hljs-comment">// Before</span>
-  <span class="hljs-string">&#39;Hello, &#39;</span> + name + <span class="hljs-string">&#39;, this is a string.&#39;</span>
-  <span class="hljs-comment">// After</span>
-  <code>Hello, ${name}, &lt;span class=&quot;hljs-keyword&quot;&gt;this&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;is&lt;/span&gt; a &lt;span class=&quot;hljs-keyword&quot;&gt;string&lt;/span&gt;.</code></code></pre><h4 id="solution-">Solution:</h4>
-<ol>
-<li><p>Simplify:</p>
-<pre class="hljs"><code><span class="hljs-comment">// Before</span>
-a + b
-<span class="hljs-comment">// After</span>
-<span class="hljs-string"><code>&lt;span class=&quot;hljs-subst&quot;&gt;${a}&lt;/span&gt;&lt;span class=&quot;hljs-subst&quot;&gt;${b}&lt;/span&gt;</code></span></code></pre><p><code>a + b</code> AST:</p>
-<p><img src="https://media.github.intra.douban.com/user/62/files/e4d3c126-f36f-11e6-98aa-382c3afd9bcf" alt="image"></p>
-<p><code>${a}${b}</code> AST:</p>
-<p><img src="https://media.github.intra.douban.com/user/62/files/ea450a52-f36f-11e6-9a28-f715785d13a2" alt="image"></p>
-<p>对比两个 AST 可以发现
-我们只需要 </p>
-</li>
-<li><p>读入需转换的代码，找到 <code>BinaryExpression</code></p>
-</li>
-<li>保存 <code>BinaryExpression</code> 左右两边的值（node.left &amp; node.right)</li>
-<li>生成一个为 <code>TemlateLiteral</code> Node，<code>quasis</code> 是一个包含了三个 <code>TemplateElement</code> 的数组，<code>cookde &amp; raw keys</code> 都是 <code>&#39;&#39;</code>， <code>expressions</code> 是一个包含 node.left, node.right 值的数组。</li>
-<li><p>然后将它返回输出；</p>
-<p>Solution Example:</p>
-</li>
-<li><p><a href="http://astexplorer.net/#/gist/33b63b7dc8da6d9ea4936c631adc994d/7905ef5b30dfc0cb3c811af8a8960f11014ef402">http://astexplorer.net/#/gist/33b63b7dc8da6d9ea4936c631adc994d/7905ef5b30dfc0cb3c811af8a8960f11014ef402</a></p>
-</li>
-<li><a href="http://astexplorer.net/#/gist/a71957902ec1fd79f199eb37e5e6801a/55c4910295973b3a4d09770d94cec73d5096daa4">http://astexplorer.net/#/gist/a71957902ec1fd79f199eb37e5e6801a/55c4910295973b3a4d09770d94cec73d5096daa4</a></li>
-<li><p><a href="http://astexplorer.net/#/gist/a71957902ec1fd79f199eb37e5e6801a/cf3c898c5fe494d08a978dd1a3a3e56fc42828a8">http://astexplorer.net/#/gist/a71957902ec1fd79f199eb37e5e6801a/cf3c898c5fe494d08a978dd1a3a3e56fc42828a8</a></p>
-<p>官方没有太详细的 transform 编写指导，可以多谷歌或者学习 react-codemod/tranform or js-codemod/transform，
-个人觉得写 JS-codeshift Transform | Babel-Plugin 本质其实就是对比两棵语法树，像解谜一样，看看如何「又好又快」变换成这样。
-剩下的一开始如何读取源 JS 代码并解析成语法树，具体在 AST 上 traverse &amp; find &amp; create &amp; update （这里我猜测其实是一个递归遍历节点树的过程？），及之后如何按一定的 code style 生成我们需要的代码，都是透明且不关心的。</p>
-</li>
-</ol>
-<hr>
-<h2 id="-">总结 &amp; 开脑洞</h2>
-<ul>
-<li><p>基本处理流程：
-<img src="https://media.github.intra.douban.com/user/62/files/7fe54aa4-f370-11e6-90d8-9f191a40a5cc" alt="image"></p>
-</li>
-<li><p>AST 是很有用的一个抽象概念。一旦你理解了这些规则，唯一的限制就是解析器和你的想象力。</p>
-</li>
-<li>纯 AST parse 太过于理论，既然是工程师，还是需要自己动手写点什么来解决自己实际遇到的问题。</li>
-<li>可以继续拓展到「语法高亮」、「关键字匹配」、「代码格式化」、「作用域判断」、以及「代码压缩」、「Babel 插件」等等。</li>
-<li>渐渐深入底层进行分析，让自己对这门语言有了更多、更深入的了解，可以更好地成为产品「创造者」，而不单纯是「使用者」。</li>
-<li>Write JavaScript that write JavaScript! The best editor is JavaScript. Cool!</li>
-</ul>
-<hr>
-<h2 id="-">思考</h2>
-<ul>
-<li>可以在一个 codemod transform 里面同时进行两个变换吗？个人觉得可能会很复杂且效果不太好，因为有些 transform 并不是正交的。🤔</li>
-</ul>
-<hr>
-<h2 id="refs-">Refs:</h2>
-<ul>
-<li><a href="https://www.youtube.com/watch?v=d0pOgY8__JM">CPojer’s Talk</a></li>
-<li><a href="https://medium.com/@cpojer/effective-javascript-codemods-5a6686bb46fb#.s5kdne4xl">Effective JavaScript Codemods</a></li>
-<li><a href="https://survivejs.com/blog/codemod-interview/">Codemod Interview</a></li>
-<li><a href="https://vramana.github.io/blog/2015/12/21/codemod-tutorial/">How to write a codemod</a> 结合 CPojer’s Talk, 这个虽很长但很有用！</li>
-<li><a href="https://www.sitepoint.com/understanding-asts-building-babel-plugin/">Understanding Babel Plugin</a></li>
-<li><a href="http://tech.meituan.com/abstract-syntax-tree.html">AST 在美团的应用</a></li>
-<li><a href="http://imweb.io/topic/57b13b4f93d9938132cc8dfd">imweb</a></li>
-</ul>
-]]></description><link>/2017-02-15-fun-with-codemod-and-ast/index.html</link><guid isPermaLink="true">/2017-02-15-fun-with-codemod-and-ast/index.html</guid><category><![CDATA[programming]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Thu, 19 May 2016 18:21:00 GMT</pubDate></item><item><title><![CDATA[[译]前端指南]]></title><description><![CDATA[<p><strong>Update</strong>
+]]></description><link>/2016-05-20-seo-in-mobile/index.html</link><guid isPermaLink="true">/2016-05-20-seo-in-mobile/index.html</guid><category><![CDATA[SEO]]></category><category><![CDATA[shares]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Thu, 19 May 2016 18:21:00 GMT</pubDate></item><item><title><![CDATA[[译]前端指南]]></title><description><![CDATA[<p><strong>Update</strong>
 以下大概写于两年前，亟待更新。</p>
 <hr>
 <p>几天前从Github上看到了这篇<a href="https://github.com/bendc/frontend-guidelines">前端编码最佳实践</a>，Star数已破4K，觉得应该是篇不错的小指南，花了点时间将它稍作翻译，也当是复习复习 <code>HTML&amp;CSS&amp;JS</code>。
@@ -2509,124 +2496,7 @@ CSS为字体和文本分别定义了属性。字体属性主要用于描述一�
 <strong>注意</strong>如果字体名像 Trebuchet MS 一样多于一个单词（有空格），应该加上引号：&quot;Trebuchet MS &quot;。</p>
 <p>####字体大小
 浏览器样式表默认为每个HTML元素都设定了font-size，所以你在设定 font-size 的时候，其实就是在修改默认值。</p>
-]]></description><link>/2014-11-10-css-design-guide-notes/index.html</link><guid isPermaLink="true">/2014-11-10-css-design-guide-notes/index.html</guid><category><![CDATA[frontend]]></category><category><![CDATA[notes]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Mon, 10 Nov 2014 09:08:00 GMT</pubDate></item><item><title><![CDATA[Ali校招笔试题思考]]></title><description><![CDATA[<h1 id="ali-">Ali校招笔试题思考</h1>
-<p>昨晚搭着末班车，参加了阿里今年的实习生在线笔试。
-回忆之前惨不忍睹的内推面试，玩了整整一个寒假后接到了不期而至的面试电话，连之前一些基础的还算熟悉的题都答得不流畅自然一气呵成，我就知道我悲剧了。
-痛定思痛，作为一个即将毕业的大四老鸟（只是说年龄...)，在被各种鄙视，各种蜚语，各种不确定存在的黑暗时期，依旧不屈不挠地学习思考着，我都要被自己感动了。
-笔试题只有一个小时，13道题，一开始是单项选择和不定项选择，考了AMD编码规范、闭包、setTimeout的异步、前端安全及一些我认为蛮有意思的小题，挺考基础的，不是太难，但要细心，我居然也慢悠悠做，时间就那么过去了一半。后来看到了六大道问答题，基本是编程，涉及CSS3、原生JS、事件处理、Ajax等，就渐渐慌了，写代码的手居然有了渐冻症的感觉，心理素质有待提高。
-于是在有差不多一半大题没完成的情况下，被迫交了卷。交卷后才灵感突现，猛然想起了那些题的解法，还是代码经验不够啊。为了防止再出现这样的情况，在这里贴下题目思路和解答。</p>
-<hr>
-<p>关于CSS，有题是用<code>HTML&amp;CSS</code>实现一个九宫格，外边框为1px，内部无边框。之前没有做过九宫格布局，当时又很捉急居然被卡住了。交完卷后突然在想，这不就是考<code>float</code>的嘛。
-遂编码如下：</p>
-<pre class="hljs"><code><span class="hljs-doctype">&lt;!DOCTYPE html&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">html</span> <span class="hljs-attribute">lang</span>=<span class="hljs-value">&quot;en&quot;</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">charset</span>=<span class="hljs-value">&quot;UTF-8&quot;</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>九宫格<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-title">style</span>&gt;</span><span class="css">
-      <span class="hljs-tag">ul</span> <span class="hljs-rules">{
-          <span class="hljs-rule"><span class="hljs-attribute">list-style</span>:<span class="hljs-value"> none</span></span>;
-          <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">158px</span></span></span>;
-          <span class="hljs-rule"><span class="hljs-attribute">height</span>:<span class="hljs-value"> <span class="hljs-number">158px</span></span></span>;
-      }</span>
-      <span class="hljs-tag">li</span> <span class="hljs-rules">{
-          <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">50px</span></span></span>; <span class="hljs-rule"><span class="hljs-attribute">height</span>:<span class="hljs-value"> <span class="hljs-number">50px</span></span></span>;
-          <span class="hljs-comment">/<em>box-sizing: border-box;</em>/</span>
-          <span class="hljs-rule"><span class="hljs-attribute">background-color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#888</span></span></span>;
-          <span class="hljs-rule"><span class="hljs-attribute">float</span>:<span class="hljs-value"> left</span></span>;
-      }</span>
-      <span class="hljs-class">.one</span>,<span class="hljs-class">.four</span>, <span class="hljs-class">.seven</span><span class="hljs-rules">{
-      <span class="hljs-rule"><span class="hljs-attribute">border-left</span>:<span class="hljs-value"> <span class="hljs-number">3px</span> solid red</span></span>;
-          <span class="hljs-comment">/<em>z-index: 2;</em>/</span>
-      }</span>
-      <span class="hljs-class">.one</span>, <span class="hljs-class">.two</span>, <span class="hljs-class">.three</span> <span class="hljs-rules">{
-          <span class="hljs-rule"><span class="hljs-attribute">border-top</span>:<span class="hljs-value"> <span class="hljs-number">3px</span> solid red</span></span>;
-      }</span>
-      <span class="hljs-class">.three</span>, <span class="hljs-class">.six</span>, <span class="hljs-class">.nine</span> <span class="hljs-rules">{
-          <span class="hljs-rule"><span class="hljs-attribute">border-right</span>:<span class="hljs-value"> <span class="hljs-number">3px</span> solid red</span></span>;
-      }</span>
-      <span class="hljs-class">.seven</span>, <span class="hljs-class">.eight</span>, <span class="hljs-class">.nine</span> <span class="hljs-rules">{
-          <span class="hljs-rule"><span class="hljs-attribute">border-bottom</span>:<span class="hljs-value"> <span class="hljs-number">3px</span> solid red</span></span>;
-      }</span>
-
-    </span><span class="hljs-tag">&lt;/<span class="hljs-title">style</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>
-    HTML CSS 九宫格 外边框1px 内部无边框
-    <span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-title">ul</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;list&quot;</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;one&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;two&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;three&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;four&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;five&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;six&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;seven&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;eight&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;nine&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-title">ul</span>&gt;</span>
-
-<span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span></code></pre><p>其实就是每个盒子固定宽高，父元素也固定宽高，分别为盒子宽高的3倍+左右（或上下）两边的边框宽度，然后都浮动起来。内部无边框外部有边框也容易实现，只要把最外圈的盒子按顺序设定 <code>border-top</code>、<code>border-bottom</code>、<code>border-left</code>、<code>border-right</code>即可。
-思考：</p>
-<ul>
-<li>一开始把父元素刚好设为盒子宽高的3倍，盒子设定为<code>box-sizing: border-box</code>后，发现边框自动隐藏了，所以要体现有边框还是不能这样；</li>
-<li>该题不难，其实还可以拓展成N宫格，<code>父元素的宽高 = N*盒子宽高 + 2*border-width</code>，相当于做个图片墙。</li>
-</ul>
-<p>JS跨浏览器事件处理：给你个超链接按钮，用户点击后不进行链接跳转，而是提示“用户名不能为空”，要尽可能兼容更多的浏览器。
-这题考的也就是跨浏览器的事件处理啦，之前看过《JavaScript高级程序设计》时候，专门有一小节讲跨浏览器事件处理，给出了完整的解决方案，自己也用心写了<code>Code Snippet</code>笔记，但是实践少，考试时做的不太顺利，这里重新整理下贴下代码。
-（Ghost Gist 托管，若无显示请戳 <a href="https://gist.github.com/githubzbl/8170f1e96e7bf3c66ca5">跨浏览器事件处理Gist</a>）</p>
-<script src="https://gist.github.com/githubzbl/8170f1e96e7bf3c66ca5.js"></script>
-
-<p>思考：</p>
-<ul>
-<li>事件处理很简单，关键就在兼容浏览器，这里就得照顾到IE；</li>
-<li>当时考试时居然把<code>&lt;script&gt;</code>标签及其里面的代码写到了<code>&lt;head&gt;</code>里面，导致<code>document.getElementById(&#39;btn&#39;)</code>返回的一直是<code>undefined</code>，现在想想给自己跪了，<code>DOM</code>都没准备好哪来的<code>getElementById()</code>。</li>
-</ul>
-<p>JS统计字符串中出现次数最多的字符并打印统计信息。
-这题当时看的时候居然看成<em>找出现最多的字符串</em>，心想天哪噜大阿里真厉害前端还考字符子串问题，这算法……，时间紧迫，遂想都没想直接跳过了。交卷后仔细回想才发现是<em>找字符</em>啊！再给自己跪下*2。
-在老道那本《Good Parts》里有个gist是去计算一段文本中每个单词的出现次数，因为每个单词是用空格符隔开，所以思路也可以迁移到单个字符。思考后编码如下：
-（Ghost Gist 托管，若无显示请戳 <a href="https://gist.github.com/githubzbl/a0ab1b7dd4f0128e9d6d">字符计数</a>）</p>
-<p><script src="https://gist.github.com/githubzbl/a0ab1b7dd4f0128e9d6d.js"></script>
-思考：</p>
-<ul>
-<li>将字符串分成单个字符很简单，甚至不用<code>RegExp</code>；</li>
-<li>分成单个字符后存入一个对象，巧妙的是对象的属性即为该字符，属性值为该字符在字符串中出现的次数；</li>
-<li>最后简单的用<code>for in</code>遍历属性排序，当然老道说<code>for in</code>不好，不知道这个地方需不需要改善。</li>
-</ul>
-<p>JS 给定一个http接口，传入一个员工id，返回员工的详细信息，接口形式为：<code>http://localhost/query?id=</code>，要求在前端实现一个根据一批员工id，通过ajax查询员工信息的功能。
-Ajax show time, finally.
-之前只写过几个Ajax，并不是太熟练，所以这题拿不准。
-既然给了URL，一般就是要考<code>RegExp</code>啦，但是这个只要根据<code>id</code>查询就好，是不是只用<code>url.split(&#39;=&#39;)</code>，然后就知道ID了呢？
-HTTP接口应该也就是写个函数模块吧。暂时给思路如下，待完善。</p>
-<pre class="hljs"><code> $(<span class="hljs-built_in">document</span>).ready(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">url</span>) </span>{
-   <span class="hljs-keyword">var</span> id = url.split(<span class="hljs-string">&#39;=&#39;</span>)[<span class="hljs-number">1</span>];
-   $(<span class="hljs-string">&#39;.btn&#39;</span>).click(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">id</span>) </span>{
-        $.ajax({
-            url: <span class="hljs-string">&#39;<a href="http://localhost/query?id=">http://localhost/query?id=</a>&#39;</span>,
-            type: <span class="hljs-string">&#39;GET&#39;</span>,
-            dataType: <span class="hljs-string">&#39;html&#39;</span>,
-            data: {param1: id},
-        })
-        .done(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;success&quot;</span>);
-        })
-        .fail(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;error&quot;</span>);
-        })
-        .always(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;complete&quot;</span>);
-        });
-    });
-  });</code></pre><hr>
-<p>差不多就这些了，想到新思路再来更新吧。前端坑是很多，但也很有趣，感觉自己终于入门了呢。
-还是那句，希望自己在成为大牛的道路上越走越远。</p>
-<hr>
-<p>续：觉得做的一般也收到了面试通知。但阿里又说“针对2015届招聘已结束，无论面试结果如何我们都不能承诺您能加入”。伤心归伤心，毕竟迟了那么点。
-但再怎么着也要执着走下去。
-<strong>“It&#39;s never too late to start.”</strong></p>
-]]></description><link>/2014-11-04-alibaba-interview-thought/index.html</link><guid isPermaLink="true">/2014-11-04-alibaba-interview-thought/index.html</guid><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Tue, 04 Nov 2014 08:13:00 GMT</pubDate></item><item><title><![CDATA[写在百度电面后]]></title><description><![CDATA[<h1 id="-">写在百度电面后</h1>
+]]></description><link>/2014-11-10-css-design-guide-notes/index.html</link><guid isPermaLink="true">/2014-11-10-css-design-guide-notes/index.html</guid><category><![CDATA[frontend]]></category><category><![CDATA[notes]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Mon, 10 Nov 2014 09:08:00 GMT</pubDate></item><item><title><![CDATA[写在百度电面后]]></title><description><![CDATA[<h1 id="-">写在百度电面后</h1>
 <p>Desperado.</p>
 <figure>
 <img src="http://zbl-ghost-backup.qiniudn.com/blogcover_roadtothesky_2880x900.jpg" alt="road to the sky">
@@ -2748,7 +2618,124 @@ You&#39;re a prisioner walking through this world all alone.
     让你自己成为一个持续学习和思考的人，并只写你真正思考和总结之后的产物，其他一切就会随之而来。
 </blockquote>
 加油吧，希望能在通往大牛的道路上越走越远。</p>
-]]></description><link>/2014-11-04-baidu-interview-thought/index.html</link><guid isPermaLink="true">/2014-11-04-baidu-interview-thought/index.html</guid><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Tue, 04 Nov 2014 08:13:00 GMT</pubDate></item><item><title><![CDATA[oh My Ghostium]]></title><description><![CDATA[<p><img src="http://zbl-ghost-backup.qiniudn.com/oh-my-ghostium.jpg" alt="oh my ghostium"></p>
+]]></description><link>/2014-11-04-baidu-interview-thought/index.html</link><guid isPermaLink="true">/2014-11-04-baidu-interview-thought/index.html</guid><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Tue, 04 Nov 2014 08:13:00 GMT</pubDate></item><item><title><![CDATA[Ali校招笔试题思考]]></title><description><![CDATA[<h1 id="ali-">Ali校招笔试题思考</h1>
+<p>昨晚搭着末班车，参加了阿里今年的实习生在线笔试。
+回忆之前惨不忍睹的内推面试，玩了整整一个寒假后接到了不期而至的面试电话，连之前一些基础的还算熟悉的题都答得不流畅自然一气呵成，我就知道我悲剧了。
+痛定思痛，作为一个即将毕业的大四老鸟（只是说年龄...)，在被各种鄙视，各种蜚语，各种不确定存在的黑暗时期，依旧不屈不挠地学习思考着，我都要被自己感动了。
+笔试题只有一个小时，13道题，一开始是单项选择和不定项选择，考了AMD编码规范、闭包、setTimeout的异步、前端安全及一些我认为蛮有意思的小题，挺考基础的，不是太难，但要细心，我居然也慢悠悠做，时间就那么过去了一半。后来看到了六大道问答题，基本是编程，涉及CSS3、原生JS、事件处理、Ajax等，就渐渐慌了，写代码的手居然有了渐冻症的感觉，心理素质有待提高。
+于是在有差不多一半大题没完成的情况下，被迫交了卷。交卷后才灵感突现，猛然想起了那些题的解法，还是代码经验不够啊。为了防止再出现这样的情况，在这里贴下题目思路和解答。</p>
+<hr>
+<p>关于CSS，有题是用<code>HTML&amp;CSS</code>实现一个九宫格，外边框为1px，内部无边框。之前没有做过九宫格布局，当时又很捉急居然被卡住了。交完卷后突然在想，这不就是考<code>float</code>的嘛。
+遂编码如下：</p>
+<pre class="hljs"><code><span class="hljs-doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">html</span> <span class="hljs-attribute">lang</span>=<span class="hljs-value">&quot;en&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">charset</span>=<span class="hljs-value">&quot;UTF-8&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>九宫格<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">style</span>&gt;</span><span class="css">
+      <span class="hljs-tag">ul</span> <span class="hljs-rules">{
+          <span class="hljs-rule"><span class="hljs-attribute">list-style</span>:<span class="hljs-value"> none</span></span>;
+          <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">158px</span></span></span>;
+          <span class="hljs-rule"><span class="hljs-attribute">height</span>:<span class="hljs-value"> <span class="hljs-number">158px</span></span></span>;
+      }</span>
+      <span class="hljs-tag">li</span> <span class="hljs-rules">{
+          <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">50px</span></span></span>; <span class="hljs-rule"><span class="hljs-attribute">height</span>:<span class="hljs-value"> <span class="hljs-number">50px</span></span></span>;
+          <span class="hljs-comment">/<em>box-sizing: border-box;</em>/</span>
+          <span class="hljs-rule"><span class="hljs-attribute">background-color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#888</span></span></span>;
+          <span class="hljs-rule"><span class="hljs-attribute">float</span>:<span class="hljs-value"> left</span></span>;
+      }</span>
+      <span class="hljs-class">.one</span>,<span class="hljs-class">.four</span>, <span class="hljs-class">.seven</span><span class="hljs-rules">{
+      <span class="hljs-rule"><span class="hljs-attribute">border-left</span>:<span class="hljs-value"> <span class="hljs-number">3px</span> solid red</span></span>;
+          <span class="hljs-comment">/<em>z-index: 2;</em>/</span>
+      }</span>
+      <span class="hljs-class">.one</span>, <span class="hljs-class">.two</span>, <span class="hljs-class">.three</span> <span class="hljs-rules">{
+          <span class="hljs-rule"><span class="hljs-attribute">border-top</span>:<span class="hljs-value"> <span class="hljs-number">3px</span> solid red</span></span>;
+      }</span>
+      <span class="hljs-class">.three</span>, <span class="hljs-class">.six</span>, <span class="hljs-class">.nine</span> <span class="hljs-rules">{
+          <span class="hljs-rule"><span class="hljs-attribute">border-right</span>:<span class="hljs-value"> <span class="hljs-number">3px</span> solid red</span></span>;
+      }</span>
+      <span class="hljs-class">.seven</span>, <span class="hljs-class">.eight</span>, <span class="hljs-class">.nine</span> <span class="hljs-rules">{
+          <span class="hljs-rule"><span class="hljs-attribute">border-bottom</span>:<span class="hljs-value"> <span class="hljs-number">3px</span> solid red</span></span>;
+      }</span>
+
+    </span><span class="hljs-tag">&lt;/<span class="hljs-title">style</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>
+    HTML CSS 九宫格 外边框1px 内部无边框
+    <span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ul</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;list&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;one&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;two&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;three&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;four&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;five&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;six&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;seven&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;eight&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;nine&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">ul</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span></code></pre><p>其实就是每个盒子固定宽高，父元素也固定宽高，分别为盒子宽高的3倍+左右（或上下）两边的边框宽度，然后都浮动起来。内部无边框外部有边框也容易实现，只要把最外圈的盒子按顺序设定 <code>border-top</code>、<code>border-bottom</code>、<code>border-left</code>、<code>border-right</code>即可。
+思考：</p>
+<ul>
+<li>一开始把父元素刚好设为盒子宽高的3倍，盒子设定为<code>box-sizing: border-box</code>后，发现边框自动隐藏了，所以要体现有边框还是不能这样；</li>
+<li>该题不难，其实还可以拓展成N宫格，<code>父元素的宽高 = N*盒子宽高 + 2*border-width</code>，相当于做个图片墙。</li>
+</ul>
+<p>JS跨浏览器事件处理：给你个超链接按钮，用户点击后不进行链接跳转，而是提示“用户名不能为空”，要尽可能兼容更多的浏览器。
+这题考的也就是跨浏览器的事件处理啦，之前看过《JavaScript高级程序设计》时候，专门有一小节讲跨浏览器事件处理，给出了完整的解决方案，自己也用心写了<code>Code Snippet</code>笔记，但是实践少，考试时做的不太顺利，这里重新整理下贴下代码。
+（Ghost Gist 托管，若无显示请戳 <a href="https://gist.github.com/githubzbl/8170f1e96e7bf3c66ca5">跨浏览器事件处理Gist</a>）</p>
+<script src="https://gist.github.com/githubzbl/8170f1e96e7bf3c66ca5.js"></script>
+
+<p>思考：</p>
+<ul>
+<li>事件处理很简单，关键就在兼容浏览器，这里就得照顾到IE；</li>
+<li>当时考试时居然把<code>&lt;script&gt;</code>标签及其里面的代码写到了<code>&lt;head&gt;</code>里面，导致<code>document.getElementById(&#39;btn&#39;)</code>返回的一直是<code>undefined</code>，现在想想给自己跪了，<code>DOM</code>都没准备好哪来的<code>getElementById()</code>。</li>
+</ul>
+<p>JS统计字符串中出现次数最多的字符并打印统计信息。
+这题当时看的时候居然看成<em>找出现最多的字符串</em>，心想天哪噜大阿里真厉害前端还考字符子串问题，这算法……，时间紧迫，遂想都没想直接跳过了。交卷后仔细回想才发现是<em>找字符</em>啊！再给自己跪下*2。
+在老道那本《Good Parts》里有个gist是去计算一段文本中每个单词的出现次数，因为每个单词是用空格符隔开，所以思路也可以迁移到单个字符。思考后编码如下：
+（Ghost Gist 托管，若无显示请戳 <a href="https://gist.github.com/githubzbl/a0ab1b7dd4f0128e9d6d">字符计数</a>）</p>
+<p><script src="https://gist.github.com/githubzbl/a0ab1b7dd4f0128e9d6d.js"></script>
+思考：</p>
+<ul>
+<li>将字符串分成单个字符很简单，甚至不用<code>RegExp</code>；</li>
+<li>分成单个字符后存入一个对象，巧妙的是对象的属性即为该字符，属性值为该字符在字符串中出现的次数；</li>
+<li>最后简单的用<code>for in</code>遍历属性排序，当然老道说<code>for in</code>不好，不知道这个地方需不需要改善。</li>
+</ul>
+<p>JS 给定一个http接口，传入一个员工id，返回员工的详细信息，接口形式为：<code>http://localhost/query?id=</code>，要求在前端实现一个根据一批员工id，通过ajax查询员工信息的功能。
+Ajax show time, finally.
+之前只写过几个Ajax，并不是太熟练，所以这题拿不准。
+既然给了URL，一般就是要考<code>RegExp</code>啦，但是这个只要根据<code>id</code>查询就好，是不是只用<code>url.split(&#39;=&#39;)</code>，然后就知道ID了呢？
+HTTP接口应该也就是写个函数模块吧。暂时给思路如下，待完善。</p>
+<pre class="hljs"><code> $(<span class="hljs-built_in">document</span>).ready(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">url</span>) </span>{
+   <span class="hljs-keyword">var</span> id = url.split(<span class="hljs-string">&#39;=&#39;</span>)[<span class="hljs-number">1</span>];
+   $(<span class="hljs-string">&#39;.btn&#39;</span>).click(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">id</span>) </span>{
+        $.ajax({
+            url: <span class="hljs-string">&#39;<a href="http://localhost/query?id=">http://localhost/query?id=</a>&#39;</span>,
+            type: <span class="hljs-string">&#39;GET&#39;</span>,
+            dataType: <span class="hljs-string">&#39;html&#39;</span>,
+            data: {param1: id},
+        })
+        .done(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;success&quot;</span>);
+        })
+        .fail(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;error&quot;</span>);
+        })
+        .always(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;complete&quot;</span>);
+        });
+    });
+  });</code></pre><hr>
+<p>差不多就这些了，想到新思路再来更新吧。前端坑是很多，但也很有趣，感觉自己终于入门了呢。
+还是那句，希望自己在成为大牛的道路上越走越远。</p>
+<hr>
+<p>续：觉得做的一般也收到了面试通知。但阿里又说“针对2015届招聘已结束，无论面试结果如何我们都不能承诺您能加入”。伤心归伤心，毕竟迟了那么点。
+但再怎么着也要执着走下去。
+<strong>“It&#39;s never too late to start.”</strong></p>
+]]></description><link>/2014-11-04-alibaba-interview-thought/index.html</link><guid isPermaLink="true">/2014-11-04-alibaba-interview-thought/index.html</guid><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Tue, 04 Nov 2014 08:13:00 GMT</pubDate></item><item><title><![CDATA[oh My Ghostium]]></title><description><![CDATA[<p><img src="http://zbl-ghost-backup.qiniudn.com/oh-my-ghostium.jpg" alt="oh my ghostium"></p>
 <p>之前装了Wordpress扔在大洋彼岸一个Arizona搬瓦工的VPS后就再没去理过它，想想也有半年了。<br>后来分析觉得，首先肯定是自己懒惰浮躁，静不下来写东西。其次是博客页面没有漂亮到让我有一种打开就想写的冲动。<br>但是他们说<strong><a href="http://mindhacks.cn/2009/02/15/why-you-should-start-blogging-now/">为什么你应该（从现在开始就）写博客</a></strong>，于是紧跟大牛的步伐，虽然没有什么牛逼技术可以跟别人分享，但是看看大牛写的技术文章谢谢心得也是一种进步。于是就开始了<em>万劫不复的折腾深渊</em>...<br>在谷歌搜寻平台的时候看到了一个同是F2E的一个博客<a href="http://luolei.org">罗磊的独立博客</a>，瞬间被大Banner的设计吸引到，看了很久后拖到了网页末尾，扫到了一行字<em>本博客基于拽酷炫的 GHOST</em>。<br>比较了<em>Ghost/Jekyll/Octo/Hexo</em> 等等之后，认为<strong><a href="https://ghost.org">Ghost</a></strong>还是最适合我： </p>
 <ol>
 <li>基于 <strong>Node.js</strong> 的博客平台。</li>

@@ -1,26 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[undefined - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Sat, 15 Jul 2017 02:59:19 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/tag/undefined/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[移动环境下的 SEO]]></title><description><![CDATA[<h1 id="-seo">移动环境下的 SEO</h1>
-<p>真的有很久很久没来理这个博客，距离上一篇文章的发布日期是两年前。
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[undefined - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Wed, 02 Aug 2017 17:16:55 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/tag/undefined/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[移动环境下的 SEO]]></title><description><![CDATA[<p>真的有很久很久没来理这个博客，距离上一篇文章的发布日期是两年前。
 毕业工作后来了豆瓣，最近对移动环境（主要是浏览器及微信）的 SEO 相关进行了下研究，正好在这里分享一下。</p>
+<p>以下，Enjoy。</p>
 <hr>
-<h3 id="1-seo-search-engine-optimazition">1. SEO：Search Engine Optimazition</h3>
-<p>产品：搜索引擎优化，促进内容网站信息分享／传播，提高目标转化率，留存率（补 link）</p>
+<h1 id="1-seo-search-engine-optimazition">1. SEO：Search Engine Optimazition</h1>
+<p>产品：搜索引擎优化，促进内容网站信息分享／传播，提高目标转化率，留存率</p>
 <p>工程：为各类页面实现统一的信息分享、传播，提高搜索排名（search ranking）</p>
 <p>个人觉得：</p>
 <ul>
-<li>豆瓣是一个内容网站，拥有一些 UGC 优质内容，SEO 间接帮助用户分享。</li>
+<li>豆瓣是一个内容网站，拥有一些 UGC 优质内容，SEO 间接帮助用户分享。
+且分享率越高，也会提高搜索排名。</li>
+<li>M 站的目前面向<strong> 人（User） </strong>的 UX 比较完善，但是仍需要丰富一些细节，让 <strong>Search Engine</strong> 的 UX 更好，更好地理解 M 站。</li>
 </ul>
-<p>​        且分享率越高，increase search ranking.</p>
-<ul>
-<li>m 站的面向 <strong>人（User）</strong>的 UX 比较完善，但是仍需要丰富一些细节，让 <strong>Search Engine</strong> 的 UX 更好，更能理解 m 站。</li>
-</ul>
-<p>#</p>
-<h3 id="2-seo-">2. 前端在 SEO 中的位置</h3>
+<h1 id="2-seo-">2. 前端在 SEO 中的位置</h1>
 <ul>
 <li><strong>帮助产品进行TDK （Title / Description / Keyword）优化</strong></li>
 <li><strong>添加一些 Social Meta Tag （Facebook / Twitter / G+ / WeChat / Weibo）</strong></li>
 <li>页面内容优化（HTML5 标签语义化、唯一的 H1 标题、img 设置 <code>alt</code> 属性，不需要爬虫跟踪的链接加 <code>nofollow</code>）</li>
-<li>URL 优化 （<strong>canonical</strong>，标签表示页面的唯一性。<ul>
+<li>URL 优化 (<strong>canonical</strong>，标签表示页面的唯一性)<ul>
 <li>在搜索引擎里，<strong>只有链接完全一样，才会认为是同一个链接</strong>，如果链接带上参数，虽然访问到的内容还是一样，但是在搜索引擎看来确是不同的链接，页面抓取也会出现多次，从而导致多个链接，内容一样。</li>
 <li>因此 URL 中最好是不要带上查询参数。但为了产品统计数据，总需要 <code>?from=xxx&amp;refer=xxx</code>等参数，所以使用 <code>canonical</code>标签来确保链接唯一性，避免权重分散、流失。</li>
 <li>比如 <code>m.douban.com/group/topics[?start=xxx]</code>均视为同一个页面这里的 <code>?start=xxx</code>是一个分页查询参数，所以为了确保这些页面都能继承 m.douban.group/toics 这个 url  的权重，在<code>head</code>中增加了<code>canonical</code>标签</li>
@@ -29,8 +26,7 @@
 <li>Meta robots</li>
 <li>Sitemap</li>
 </ul>
-<p>#</p>
-<h3 id="3-">3. 具体实现</h3>
+<h1 id="3-">3. 具体实现</h1>
 <blockquote>
 <p><strong>统一 SNS 抓取</strong></p>
 <p>提供一个 mako 函数，统一分享的标题、图片、描述</p>
@@ -55,9 +51,10 @@
 <p><a href="https://developers.facebook.com/docs/sharing/opengraph">https://developers.facebook.com/docs/sharing/opengraph</a></p>
 <p><a href="https://dev.twitter.com/cards/overview">https://dev.twitter.com/cards/overview</a></p>
 <p><a href="http://github.intra.douban.com/frodo/Talion/blob/master/views/j/wechat/__init__.py">http://github.intra.douban.com/frodo/Talion/blob/master/views/j/wechat/<strong>init</strong>.py</a> </p>
-</blockquote>
 <p>— From <a href="https://paper.dropbox.com/doc/-SEO-UVIgU3WYPUeiJv3nOPP0N">Douban FE Dropbox</a></p>
-<p><code>seo_meta()</code> Mako widget</p>
+</blockquote>
+<h1 id="-">实现方案</h1>
+<h2 id="1-seo_meta-mako-widget">1. 增加了 <code>seo_meta()</code> Mako widget</h2>
 <p> <a href="http://github.intra.douban.com/frodo/Talion/blob/master/templates/card/widgets.html#L527">http://github.intra.douban.com/frodo/Talion/blob/master/templates/card/widgets.html#L527</a></p>
 <pre class="hljs"><code><span class="xml"></span>&lt;%<span class="perl">def name=<span class="hljs-string">&quot;seo_meta(title, desc, image=None, url=None, type=None, rating_count=None, rating_val=None, wechat_timeline_title=None,wechat_chat_title=None, wechat_desc=None, wechat_image=None)&quot;</span>&gt;
     &lt;%
@@ -122,7 +119,7 @@
         !getMeta(<span class="hljs-string">&#39;weixin:description&#39;</span>) &amp;&amp; setMeta(<span class="hljs-string">&#39;weixin:description&#39;</span>, getMeta(<span class="hljs-string">&#39;og:description&#39;</span>))
     })();
     &lt;<span class="hljs-regexp">/%block&gt;
-&lt;/</span><span class="hljs-variable">%def</span>&gt;</span></code></pre><h4 id="-m-seo-meta-tags">给 m 站大部分页面增加了 SEO Meta Tags</h4>
+&lt;/</span><span class="hljs-variable">%def</span>&gt;</span></code></pre><h2 id="2-m-seo-meta-tags">2. 给 m 站大部分页面增加了 SEO Meta Tags</h2>
 <p>之前分享出去抓不到自定义的 description 和 image ，现默认分享到 weixin 的 title 、 description 、image 值都和 Open Graph 一样，也可以自定义。</p>
 <p>默认情况下</p>
 <ul>
@@ -169,7 +166,7 @@
 <p>（补图）</p>
 <p>(<a href="http://p.dapps.douban.com/p/38c24dc31b4d482c8095083995e43d00.blob">http://p.dapps.douban.com/p/38c24dc31b4d482c8095083995e43d00.blob</a>)</p>
 <p><a href="http://p.dapps.douban.com/p/78b40c471bab42209a0cb8ee2283c974.blob">http://p.dapps.douban.com/p/78b40c471bab42209a0cb8ee2283c974.blob</a></p>
-<h4 id="-">统一分享接口（微信重度使用患者）</h4>
+<h2 id="3-">3. 统一分享接口（微信重度使用患者）</h2>
 <ul>
 <li><a href="http://github.intra.douban.com/frodo/Talion/blob/master/static/js/card/weixin.js#L52">weixin.js</a>、 <a href="https://mp.weixin.qq.com/wiki/7/aaa137b55fb2e0456bf8dd9148dd613f.html#.E5.88.86.E4.BA.AB.E6.8E.A5.E5.8F.A3">微信 JSSDK 文档</a></li>
 </ul>
@@ -204,15 +201,7 @@
 <li><p><strong>Bugs:</strong> 通过 Safari Extension 分享出来的永远抓的是 <code>apple-touch-icon</code> 😂</p>
 </li>
 </ul>
-<pre class="hljs"><code>  <span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">&quot;apple-touch-icon-precomposed&quot;</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;<a href="https://img3.doubanio.com/f/talion/315ba4fc82e5cdb5c50ef1d9f88c8aa2c5c0c4ba/pics/icon/m_logo_76.png">https://img3.doubanio.com/f/talion/315ba4fc82e5cdb5c50ef1d9f88c8aa2c5c0c4ba/pics/icon/m_logo_76.png</a>&quot;</span>&gt;</span></code></pre><p>  无论如何修改。。。</p>
-<ul>
-<li><a href="https://www.chromium.org/tab-to-search">Tab to Search</a><ul>
-<li>（补图</li>
-<li>Open Search <a href="http://github.intra.douban.com/frodo/Talion/pull/271/files#diff-a460aa3a81387aa3c4e2007ab689c0ddR1">http://github.intra.douban.com/frodo/Talion/pull/271/files#diff-a460aa3a81387aa3c4e2007ab689c0ddR1</a></li>
-</ul>
-</li>
-</ul>
-<h3 id="4-further-reading-resource">4. Further Reading &amp; Resource</h3>
+<pre class="hljs"><code>  <span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">&quot;apple-touch-icon-precomposed&quot;</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;<a href="https://img3.doubanio.com/f/talion/315ba4fc82e5cdb5c50ef1d9f88c8aa2c5c0c4ba/pics/icon/m_logo_76.png">https://img3.doubanio.com/f/talion/315ba4fc82e5cdb5c50ef1d9f88c8aa2c5c0c4ba/pics/icon/m_logo_76.png</a>&quot;</span>&gt;</span></code></pre><h1 id="4-further-reading-resource">4. Further Reading &amp; Resource</h1>
 <ol>
 <li>Sitemap &amp; <a href="http://baiduseoguide.com/news/20141128113.html">Deadlink</a></li>
 <li>Social Meta Tag Cheatsheet</li>

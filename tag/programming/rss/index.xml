@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[undefined - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Sat, 15 Jul 2017 02:59:19 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/tag/undefined/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Fun with Codemod & AST]]></title><description><![CDATA[<h1 id="fun-with-codemod-ast">Fun with Codemod &amp; AST</h1>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[undefined - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Wed, 02 Aug 2017 17:16:55 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/tag/undefined/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Fun with Codemod & AST]]></title><description><![CDATA[<h1 id="fun-with-codemod-ast">Fun with Codemod &amp; AST</h1>
 <hr>
 <h2 id="content">Content</h2>
 <ul>
@@ -11,45 +11,44 @@
 </ul>
 <hr>
 <h2 id="-">背景</h2>
-<p>  作为一个自信而自豪的前端弄潮儿（F2E），我们总是希望能够在这个每天都在飞速迭代的行业，与时渐进。
-  前端们是一群不安分的人，大家喜爱新框架、新语法，而 JavaScript 也是一门非常灵活的语言，它提供给我们的 API 也在与时渐进。比如，当 <code>ES2015 ES2016 ES2017…</code> 出来的时候，那些新语法糖，简洁漂亮，且更易于理解逻辑，于是我们都想去尝试下。
-  但是尝试归尝试，对于新项目尝试起来成本很低，只需要把新功能都用新语法编写就好。
-  而创建新项目的同时，其实我们也在维护着一些已有的旧项目。如果你还并没怎么理它们，可能它们还活得不错。但是一旦 PM 心情好想加个新功能，或者你哪天心情好想去更新下代码库，然后看到自己之前写的那些代码，那些现在其实可以更优雅漂亮的代码，是不是手里特痒痒特想把它们更新了？
-  执行力强的前端儿可能说干就干了，嗯，就假设我们有个项目 Project，里面使用的是用<code>ES5</code> 版 <code>React</code> 作为 <code>UI View</code>。然后它大概四个页面<code>(Page)</code>，每个页面包含大概四个组件<code>(Component)</code>，然后你从某个看起来比较小、不容易出错的<code>Component</code> 入手，开始一行一行改写代码，嗯，<code>var React = require(&#39;react’)</code> 改为 <code>import React from &#39;react’</code>， <code>var API = ‘/j/app/xxx’</code> 改为 <code>const API = ‘/j/app/xxx’</code>，<code>var foo</code> 改为 <code>let foo</code>，<code>function () {…}</code> 改为 <code>() =&gt; {…}</code>，<code>module.exports = React.createClass({…})</code> 改为 <code>export default class MyComponent extends React.Component {…}</code> … 
-  天哪，有完没完，一个组件改完下来，你已经感到身体被掏空，望了望 <code>Components</code> 列表，更不用说，重新 <code>build</code> 过的测试还没过。你陷入了绝望...</p>
-<p>  那么有没有更快一点的办法呢？
-  稍微有点经验的前端儿可能想到「正则表达式匹配替换」。Bash <code>Awk | Sed</code> 命令，或者 Vim <code>:%s/var/let/g</code>。可是如果需要有些变量是 <code>const</code> 类型，有些是 <code>let</code>，而有些保持 <code>var</code> 不变怎么办？再比如说 </p>
-<pre class="hljs"><code>  <span class="hljs-tag">merge</span>(a, {<span class="hljs-attribute">b</span>: <span class="hljs-number">1</span>}, c);  <span class="hljs-comment">// Old</span>
+<p>作为一个自信而自豪的前端弄潮儿（F2E），我们总是希望能够在这个每天都在飞速迭代的行业，与时渐进。
+前端们是一群不安分的人，大家喜爱新框架、新语法，而 JavaScript 也是一门非常灵活的语言，它提供给我们的 API 也在与时渐进。比如，当 <code>ES2015 ES2016 ES2017…</code> 出来的时候，那些新语法糖，简洁漂亮，且更易于理解逻辑，于是我们都想去尝试下。
+但是尝试归尝试，对于新项目尝试起来成本很低，只需要把新功能都用新语法编写就好。
+而创建新项目的同时，其实我们也在维护着一些已有的旧项目。如果你还并没怎么理它们，可能它们还活得不错。但是一旦 PM 心情好想加个新功能，或者你哪天心情好想去更新下代码库，然后看到自己之前写的那些代码，那些现在其实可以更优雅漂亮的代码，是不是手里特痒痒特想把它们更新了？
+执行力强的前端儿可能说干就干了，嗯，就假设我们有个项目 Project，里面使用的是用<code>ES5</code> 版 <code>React</code> 作为 <code>UI View</code>。然后它大概四个页面<code>(Page)</code>，每个页面包含大概四个组件<code>(Component)</code>，然后你从某个看起来比较小、不容易出错的<code>Component</code> 入手，开始一行一行改写代码，嗯，<code>var React = require(&#39;react’)</code> 改为 <code>import React from &#39;react’</code>， <code>var API = ‘/j/app/xxx’</code> 改为 <code>const API = ‘/j/app/xxx’</code>，<code>var foo</code> 改为 <code>let foo</code>，<code>function () {…}</code> 改为 <code>() =&gt; {…}</code>，<code>module.exports = React.createClass({…})</code> 改为 <code>export default class MyComponent extends React.Component {…}</code> … 
+天哪，有完没完，一个组件改完下来，你已经感到身体被掏空，望了望 <code>Components</code> 列表，更不用说，重新 <code>build</code> 过的测试还没过。你陷入了绝望...</p>
+<p>那么有没有更快一点的办法呢？
+稍微有点经验的前端儿可能想到「正则表达式匹配替换」。Bash <code>Awk | Sed</code> 命令，或者 Vim <code>:%s/var/let/g</code>。可是如果需要有些变量是 <code>const</code> 类型，有些是 <code>let</code>，而有些保持 <code>var</code> 不变怎么办？再比如说 </p>
+<pre class="hljs"><code><span class="hljs-tag">merge</span>(a, {<span class="hljs-attribute">b</span>: <span class="hljs-number">1</span>}, c);  <span class="hljs-comment">// Old</span>
 
-  需要变为
+需要变为
 
-  ({..<span class="hljs-class">.a</span>, <span class="hljs-tag">b</span>: <span class="hljs-tag">1</span>, ..<span class="hljs-class">.c</span>});  <span class="hljs-comment">// New</span></code></pre><p>  这里光是这个函数的 <code>arguments</code> 就可能有多种形式，比如 <code>variable</code>，一个匿名函数返回的 Object 或者 <code>Plain Object</code> 那种。
-  这里相当于是一个 <code>Context-non-free</code> 的问题，也就是上下文语义很重要。
-  这样的话，无论再怎么强大的<code>RegExp</code> 也无能为力。因为正则的本质，其实是根据一定的 <code>Pattern</code> 来匹配字符串，但是在真正的代码里面，所有的字符串都有语义，都有上下文，这里的正则表达式会既复杂又无用。
-  所以，我们得换一个维度思考问题。</p>
+({..<span class="hljs-class">.a</span>, <span class="hljs-tag">b</span>: <span class="hljs-tag">1</span>, ..<span class="hljs-class">.c</span>});  <span class="hljs-comment">// New</span></code></pre><p>这里光是这个函数的 <code>arguments</code> 就可能有多种形式，比如 <code>variable</code>，一个匿名函数返回的 Object 或者 <code>Plain Object</code> 那种。
+这里相当于是一个 <code>Context-non-free</code> 的问题，也就是上下文语义很重要。
+这样的话，无论再怎么强大的<code>RegExp</code> 也无能为力。因为正则的本质，其实是根据一定的 <code>Pattern</code> 来匹配字符串，但是在真正的代码里面，所有的字符串都有语义，都有上下文，这里的正则表达式会既复杂又无用。
+所以，我们得换一个维度思考问题。</p>
 <hr>
 <h2 id="codemod">Codemod</h2>
-<p>  对「代码库的批量迁移更新」，其实也是程序员的一个需求，所以也感激地，已经有一群懒惰又聪明的程序员造出了工具：<code>Codemod</code>，将「大型仓库代码的批量迁移」自动化，省时省力。</p>
-<p>  好吧，所以 Codemod 到底是什么呢？
-  官方文档这样写着：</p>
+<p>对「代码库的批量迁移更新」，其实也是程序员的一个需求，所以也感激地，已经有一群懒惰又聪明的程序员造出了工具：<code>Codemod</code>，将「大型仓库代码的批量迁移」自动化，省时省力。</p>
+<p>好吧，所以 Codemod 到底是什么呢？
+官方文档这样写着：</p>
 <blockquote>
 <p>Codemod is a tool/library to assist you with large-scale codebase refactors that can be partially automated but still require human oversight and occasional intervention.</p>
 </blockquote>
-<p>  这样看来，可以很好的解决我们的需求了。
-  基于 Codemod，又出现了针对 JavaScript 代码迁移的工具 <a href="https://github.com/facebook/jscodeshift">Facebook jscoodeshift</a>，
-  基于 jscodeshift，又构建了迁移一般 JavaScript 代码（比如 ES5 -&gt; ES2015) 的工具 <a href="https://github.com/cpojer/js-codemod">js-codemod</a> 和迁移 React 相关项目的 <a href="https://github.com/reactjs/react-codemod">react-codemod</a>。</p>
-<p>  嗯，这么看来，我们的事情就变得容易多了。
-  根据上面那些工具的官方文档，我们只需要按顺序执行以下命令：</p>
-<pre class="hljs"><code>  &gt; npm i -g jscodeshift
-  &gt; git clone https:<span class="hljs-comment">//github.com/reactjs/react-codemod.git</span>
-  &gt; git clone https:<span class="hljs-comment">//github.com/cpojer/js-codemod.git</span>
-  &gt; jscodeshift -t react-codemod/transforms/<span class="hljs-keyword">class</span>.js --<span class="hljs-keyword">mixin</span>-<span class="hljs-keyword">module</span>-name=react-addons-<span class="hljs-keyword">pure</span>-render-<span class="hljs-keyword">mixin</span> --flow=<span class="hljs-literal">true</span> --<span class="hljs-keyword">pure</span>-component=<span class="hljs-literal">true</span> --remove-runtime-proptypes=<span class="hljs-literal">false</span> src/register/component/myComponent.jsx
-  &gt; jscodeshift -t js-codemod/transforms/no-vars.js ./src/register/component/myComponent.jsx</code></pre><p>  然后，再次 <code>git status</code> 一下或者直接打开刚才 transform 的 <code>myComponent.jsx</code> 文件查看，你会发现，神奇般，你的代码都成为了它们应该成为的样子。</p>
-<p>  这里暂时以我之前做的 Accounts 项目为例：
-  <a href="https://github.intra.douban.com/accounts/accounts/pull/553/files#diff-b2286efdea6a62288250264e82bd948b">https://github.intra.douban.com/accounts/accounts/pull/553/files#diff-b2286efdea6a62288250264e82bd948b</a></p>
+<p>这样看来，可以很好的解决我们的需求了。
+基于 Codemod，又出现了针对 JavaScript 代码迁移的工具 <a href="https://github.com/facebook/jscodeshift">Facebook jscoodeshift</a>，
+基于 jscodeshift，又构建了迁移一般 JavaScript 代码（比如 ES5 -&gt; ES2015) 的工具 <a href="https://github.com/cpojer/js-codemod">js-codemod</a> 和迁移 React 相关项目的 <a href="https://github.com/reactjs/react-codemod">react-codemod</a>。</p>
+<p>嗯，这么看来，我们的事情就变得容易多了。
+根据上面那些工具的官方文档，我们只需要按顺序执行以下命令：</p>
+<pre class="hljs"><code>&gt; npm i -g jscodeshift
+&gt; git clone https:<span class="hljs-comment">//github.com/reactjs/react-codemod.git</span>
+&gt; git clone https:<span class="hljs-comment">//github.com/cpojer/js-codemod.git</span>
+&gt; jscodeshift -t react-codemod/transforms/<span class="hljs-keyword">class</span>.js --<span class="hljs-keyword">mixin</span>-<span class="hljs-keyword">module</span>-name=react-addons-<span class="hljs-keyword">pure</span>-render-<span class="hljs-keyword">mixin</span> --flow=<span class="hljs-literal">true</span> --<span class="hljs-keyword">pure</span>-component=<span class="hljs-literal">true</span> --remove-runtime-proptypes=<span class="hljs-literal">false</span> src/register/component/myComponent.jsx
+&gt; jscodeshift -t js-codemod/transforms/no-vars.js ./src/register/component/myComponent.jsx</code></pre><p>然后，再次 <code>git status</code> 一下或者直接打开刚才 transform 的 <code>myComponent.jsx</code> 文件查看，你会发现，神奇般，你的代码都成为了它们应该成为的样子。</p>
+<p>这里暂时以我之前做的 Accounts 项目为例：
+<a href="https://github.intra.douban.com/accounts/accounts/pull/553/files#diff-b2286efdea6a62288250264e82bd948b">https://github.intra.douban.com/accounts/accounts/pull/553/files#diff-b2286efdea6a62288250264e82bd948b</a></p>
 <ul>
-<li><p>基本步骤如下：</p>
-<ul>
+<li>基本步骤如下：</li>
 <li>因为是第一次使用 <code>codemod</code>，所以比较谨慎，一个一个 <code>component</code> 来；</li>
 <li>先用 <code>react-codemod</code> 转，把大部头代码迁移；</li>
 <li>然后 <code>js-codemod</code> 小步更新整理；</li>
@@ -60,39 +59,40 @@
 <p>这里我把已有的十几个组件和页面文件，全部使用上面的工具进行了更新。
 然后当你重新 <code>build</code> 后，你会发现测试仍然通过，组件功能仍然 work，但是代码库却是使用新语法糖进行了大规模彻彻底底地更新！简直太神奇了！
 那么，它是怎么做到的呢？</p>
-</li>
-</ul>
 <hr>
 <h2 id="jscodeshift">jscodeshift</h2>
-<p>  让我们来重新读一下 jscodeshift 的<a href="https://github.com/facebook/jscodeshift#jscodeshift-">文档</a>。</p>
+<p>让我们来重新读一下 jscodeshift 的<a href="https://github.com/facebook/jscodeshift#jscodeshift-">文档</a>。</p>
 <blockquote>
 <p>jscodeshift is a toolkit for running codemods over multiple JS files. It provides:</p>
 </blockquote>
 <ul>
 <li>A runner, which executes the provided transform for each file passed to it. It also outputs a summary of how many files have (not) been transformed.</li>
-<li><p>A wrapper around recast, providing a different API. Recast is an AST-to-AST transform tool and also tries to preserve the style of original code as much as possible.</p>
+<li>A wrapper around recast, providing a different API. Recast is an AST-to-AST transform tool and also tries to preserve the style of original code as much as possible.</li>
+</ul>
 <p>那么这里就出现了两个关键的概念：<em>Runner</em> 及 <em>AST</em>。</p>
-</li>
-<li><p>Runner，</p>
-</li>
+<ul>
+<li>Runner，</li>
 <li><blockquote>
-<p>A runner/worker feature that can apply transforms to thousands of files in parallel.</p>
-<pre class="hljs"><code>  -- <a href="span class=&quot;hljs-link_url&quot;&gt;https://medium.com/@cpojer/effective-javascript-codemods-5a6686bb46fb#.sg03sd9eq&lt;/span"><span class="hljs-link_label">CPojer Effective JavaScript Codemods</span></a></code></pre></blockquote>
+<p>A runner/worker feature that can apply transforms to thousands of files in parallel.
+-- <a href="https://medium.com/@cpojer/effective-javascript-codemods-5a6686bb46fb#.sg03sd9eq">CPojer Effective JavaScript Codemods</a></p>
+</blockquote>
 </li>
 <li><p>AST，Abstract Syntax Tree，抽象语法分析树。</p>
+</li>
+</ul>
 <p>为了更好理解以上概念，先来看一下之前运行 jscodeshift 命令过程。
 我们先是把一个里面包含了 JS 代码的源文件传给了它，然后它读取了源代码，又根据写好的 <code>transform.js</code> 对源代码进行了相应的变换，最后输出了变换后的 JS 代码，覆盖了原文件。
 简单的说，就是 
 <code>SourceCode =&gt; codemod =&gt; ObjectCode</code></p>
 <p>那么再详细一点，根据 jscodeshift 作者之一的 CPojer 在一次 JSConf 上对这个工具的介绍，jscodeshift 操作基本是按以下过程：
 <code>Parse =&gt; Find =&gt; Create =&gt; Update =&gt; Print</code></p>
-</li>
-<li><p>Parse: SourceCode =&gt; AST （Tree Nodes)</p>
-</li>
+<ol>
+<li>Parse: SourceCode =&gt; AST （Tree Nodes)</li>
 <li>Find: Find the Nodes we want to replace         // Transform</li>
 <li>Create: Create the New Nodes we want to insert  // Transform</li>
 <li>Update: Update the AST at the right location    // Transform</li>
-<li><p>Print: Print it back into JavaScript Source with proper formatting and should like human wrote this.</p>
+<li>Print: Print it back into JavaScript Source with proper formatting and should like human wrote this.</li>
+</ol>
 <h3 id="-parse-ast-">第一步，将源代码解析 (parse) 成 AST.</h3>
 <p>我们知道自然语言（Natural Language)，无论什么语种，都会有「主语」「动词」「宾语」「标点符号」来描述一个现实世界所发生的事件。
 而在计算机编程语言 (Programming Language)，无论什么语种，都会有「类型」「运算符」「流程语句」「函数」「对象」等概念来表达计算机中存在内存中的0和1，以及背后运算与逻辑。
@@ -104,56 +104,56 @@
 </blockquote>
 <p>这么说其实还是有点抽象，我们先打开 <a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree">wiki</a> 看到 wikipedia 这个图，</p>
 <p><img src="https://media.github.intra.douban.com/user/62/files/9d7500be-f370-11e6-972f-f5ede1c448f8" alt="image"></p>
-</li>
-</ul>
-<p>  前端er 一定会觉得很相似，这里不就是 DOM 语法树的终极抽象版本吗，只是把一个个 DOM Nodes 换成了一个个更加无语义的字符 Token。
-  FB 有一个很棒的工具 <a href="http://astexplorer.net/">ASTExplorer</a>，可以用来更形象地展示。</p>
-<p>  比如说，我们现在就只有一个很简单的表达式<code>a+b</code>，这里是 recast Parser 解析后的 AST 结构：</p>
-<p>  <img src="https://media.github.intra.douban.com/user/62/files/758a6076-f370-11e6-97e4-f6152c3814bf" alt="image"></p>
-<p>  看上去特别复杂。注意那些蓝色字体 <code>File</code>, <code>Programme</code>,<code>ExpressionStatement</code>,<code>Identifier</code>… 这些都是 AST Nodes，其他的都是和这个 Node 相关的数据。</p>
-<p>  根据前文可以知道，每种语言的 AST 都是不同的。有专门的 Parser 来生成 AST。</p>
-<p>  关于 <a href="https://en.wikipedia.org/wiki/Parsing#Parser">Parser</a> 又是一门很深的学问了。
-  在 ASTExplorer.net 上可以看到有很多 parser，比较著名的有 <a href="https://github.com/jquery/esprima/blob/master/src/parser.ts">Esprima(jQuery)</a>，Uglify-JS, Babylon(Babel), Acorn(Tern / Webpack), 及 jscodeshift 使用的 recast. 虽然有很多 Parser，但是基本上，一个 parser 的结构都差不多，对源代码进行词法分析，生成 Tokens，对 Tokens 进行语法分析，然后生成 AST。</p>
-<p>  <img src="https://media.github.intra.douban.com/user/62/files/5751ac04-f370-11e6-849e-692ab4b47bbf" alt="image"></p>
-<p>  具体可以参考看下 <a href="http://esprima.org/demo/parse.html#">Esprima Parse Demo</a>。
-  生成的 AST 都遵循一个统一标准 <a href="https://github.com/estree/estree/blob/master/es5.md">ESTree</a> or <a href="parser API https://developer.mozilla.org/en-US/docs/Mozilla/Projects/SpiderMonkey/Parser_API">Mozilla SpiderMonkey</a>，也就是说都会返回 ESTree Compatible AST.</p>
+<p>前端er 一定会觉得很相似，这里不就是 DOM 语法树的终极抽象版本吗，只是把一个个 DOM Nodes 换成了一个个更加无语义的字符 Token。
+FB 有一个很棒的工具 <a href="http://astexplorer.net/">ASTExplorer</a>，可以用来更形象地展示。</p>
+<p>比如说，我们现在就只有一个很简单的表达式<code>a+b</code>，这里是 recast Parser 解析后的 AST 结构：</p>
+<p><img src="https://media.github.intra.douban.com/user/62/files/758a6076-f370-11e6-97e4-f6152c3814bf" alt="image"></p>
+<p>看上去特别复杂。注意那些蓝色字体 <code>File</code>, <code>Programme</code>,<code>ExpressionStatement</code>,<code>Identifier</code>… 这些都是 AST Nodes，其他的都是和这个 Node 相关的数据。</p>
+<p>根据前文可以知道，每种语言的 AST 都是不同的。有专门的 Parser 来生成 AST。</p>
+<p>关于 <a href="https://en.wikipedia.org/wiki/Parsing#Parser">Parser</a> 又是一门很深的学问了。
+在 ASTExplorer.net 上可以看到有很多 parser，比较著名的有 <a href="https://github.com/jquery/esprima/blob/master/src/parser.ts">Esprima(jQuery)</a>，Uglify-JS, Babylon(Babel), Acorn(Tern / Webpack), 及 jscodeshift 使用的 recast. 虽然有很多 Parser，但是基本上，一个 parser 的结构都差不多，对源代码进行词法分析，生成 Tokens，对 Tokens 进行语法分析，然后生成 AST。</p>
+<p><img src="https://media.github.intra.douban.com/user/62/files/5751ac04-f370-11e6-849e-692ab4b47bbf" alt="image"></p>
+<p>具体可以参考看下 <a href="http://esprima.org/demo/parse.html#">Esprima Parse Demo</a>。
+生成的 AST 都遵循一个统一标准 <a href="https://github.com/estree/estree/blob/master/es5.md">ESTree</a> or <a href="parser API https://developer.mozilla.org/en-US/docs/Mozilla/Projects/SpiderMonkey/Parser_API">Mozilla SpiderMonkey</a>，也就是说都会返回 ESTree Compatible AST.</p>
 <h3 id="-ast-find-nodes-create-new-nodes-update-nodes-">第二三四步，对生成的 AST 进行操作修改 (Find Nodes &amp; Create New Nodes &amp; Update Nodes)</h3>
-<p>  Wiki 有介绍说，parse AST 的代码基本是使用<code>Visitor Pattern</code>，如：</p>
-<pre class="hljs"><code>  <span class="hljs-comment">// recast</span>
-  <span class="hljs-keyword">var</span> ast = recast.parse(src);
-  recast.visit(ast, {
-    visitIdentifier: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(path)</span> </span>{
-      <span class="hljs-comment">// do something with path</span>
-      <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    }
-  });</code></pre><p>  但是 js-codeshift 基于 <a href="https://github.com/facebook/jscodeshift#collections-and-traversal"><code>Collections</code></a> 概念，很贴心的给这些 Parser API 继续包了一层，提供了一个不一样的前端友好型 API.</p>
-<pre class="hljs"><code>  <span class="hljs-comment">// jscodeshift</span>
+<p>Wiki 有介绍说，parse AST 的代码基本是使用<code>Visitor Pattern</code>，如：</p>
+<pre class="hljs"><code><span class="hljs-comment">// recast</span>
+<span class="hljs-keyword">var</span> ast = recast.parse(src);
+recast.visit(ast, {
+visitIdentifier: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(path)</span> </span>{
+<span class="hljs-comment">// do something with path</span>
+<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+}
+});</code></pre><p>但是 js-codeshift 基于 <a href="https://github.com/facebook/jscodeshift#collections-and-traversal"><code>Collections</code></a> 概念，很贴心的给这些 Parser API 继续包了一层，提供了一个不一样的前端友好型 API.</p>
+<pre class="hljs"><code><span class="hljs-comment">// jscodeshift</span>
   <span class="hljs-tag">jscodeshift</span>(src)
-    <span class="hljs-class">.find</span>(jscodeshift.Identifier)
-    <span class="hljs-class">.forEach</span>(<span class="hljs-function">function</span>(path) {
+<span class="hljs-class">.find</span>(jscodeshift.Identifier)
+  <span class="hljs-class">.forEach</span>(<span class="hljs-function">function</span>(path) {
       <span class="hljs-comment">// do something with path</span>
-    });
+      });
 
-  <span class="hljs-comment">// Provide jQuery-likely and F2E-friendly Syntax API</span>
-  <span class="hljs-comment">// Manipulate AST nodes conveniently.</span></code></pre><p>  读这段代码的时候，一下子觉得又似曾相识。这不就和使用 <code>jQuery</code> 操作 DOM 一样嘛。
-  可以对比下 “普通 Parser” 与 jscodeshift 操纵 AST 的区别：
-  可以看到如果使用 <a href="http://esprima.org/">esprima</a> ，AST Traverse / Walk 基本是 <code>visitor pattern</code>.
-  <a href="https://github.intra.douban.com/zhangbinliu/ast_demo/tree/esprima">https://github.intra.douban.com/zhangbinliu/ast_demo/tree/esprima</a></p>
+<span class="hljs-comment">// Provide jQuery-likely and F2E-friendly Syntax API</span>
+<span class="hljs-comment">// Manipulate AST nodes conveniently.</span></code></pre><p>读这段代码的时候，一下子觉得又似曾相识。这不就和使用 <code>jQuery</code> 操作 DOM 一样嘛。
+可以对比下 “普通 Parser” 与 jscodeshift 操纵 AST 的区别：
+可以看到如果使用 <a href="http://esprima.org/">esprima</a> ，AST Traverse / Walk 基本是 <code>visitor pattern</code>.
+<a href="https://github.intra.douban.com/zhangbinliu/ast_demo/tree/esprima">https://github.intra.douban.com/zhangbinliu/ast_demo/tree/esprima</a></p>
 <h3 id="-">第五步，输出转换后的代码</h3>
-<p>  这个据 CPojer 说，根据转换后的 AST，以及一些输出 <a href="https://github.com/benjamn/recast/blob/52a7ec3eaaa37e78436841ed8afc948033a86252/lib/options.js#L61">Options</a>（比如是否单引号、tab 宽度是多少、需不需要去掉尾部分号…）是一个挺困难的过程。
-  但最终，jscodeshift 的 print API 语法却是只要一行代码即可。</p>
-<pre class="hljs"><code>  <span class="hljs-class">.toSource</span>({<span class="hljs-attribute">quote</span>: <span class="hljs-string">&#39;single&#39;</span>}); <span class="hljs-comment">// sets strings to use single quotes in transformed code.</span></code></pre><p>  其实 Recast 在这做了<a href="(https://github.com/benjamn/recast/blob/master/lib/printer.js">大量的工作</a> )。</p>
-<p>  经过这五个步骤，一次 jscodeshift 的转换过程就算完成了。</p>
+<p>这个据 CPojer 说，根据转换后的 AST，以及一些输出 <a href="https://github.com/benjamn/recast/blob/52a7ec3eaaa37e78436841ed8afc948033a86252/lib/options.js#L61">Options</a>（比如是否单引号、tab 宽度是多少、需不需要去掉尾部分号…）是一个挺困难的过程。
+但最终，jscodeshift 的 print API 语法却是只要一行代码即可。</p>
+<pre class="hljs"><code><span class="hljs-class">.toSource</span>({<span class="hljs-attribute">quote</span>: <span class="hljs-string">&#39;single&#39;</span>}); <span class="hljs-comment">// sets strings to use single quotes in transformed code.</span></code></pre><p>其实 Recast 在这做了<a href="(https://github.com/benjamn/recast/blob/master/lib/printer.js">大量的工作</a> )。</p>
+<p>经过这五个步骤，一次 jscodeshift 的转换过程就算完成了。</p>
 <hr>
 <h2 id="demo-time-">DEMO TIME!</h2>
 <h3 id="write-a-codemod-transform">Write a codemod transform</h3>
-<pre class="hljs"><code><span class="hljs-escape"><code>j&lt;/span&gt;scodeshift -t &amp;lt;transform.js&amp;gt; /to/file/path&lt;span class=&quot;hljs-escape&quot;&gt;</code> </span>的 <span class="hljs-escape"><code>t&lt;/span&gt;ransform.js&lt;span class=&quot;hljs-escape&quot;&gt;</code>，</span>也就是说，你打算使用 jscodeshift 对源文件进行何种变换，这里面就是变换函数；</code></pre><h4 id="problem-">Problem:</h4>
-<pre class="hljs"><code>  <span class="hljs-comment">// Before</span>
-  <span class="hljs-string">&#39;Hello, &#39;</span> + name + <span class="hljs-string">&#39;, this is a string.&#39;</span>
-  <span class="hljs-comment">// After</span>
-  <code>Hello, ${name}, &lt;span class=&quot;hljs-keyword&quot;&gt;this&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;is&lt;/span&gt; a &lt;span class=&quot;hljs-keyword&quot;&gt;string&lt;/span&gt;.</code></code></pre><h4 id="solution-">Solution:</h4>
+<p><code>jscodeshift -t &lt;transform.js&gt; /to/file/path</code> 的 <code>transform.js</code>，也就是说，你打算使用 jscodeshift 对源文件进行何种变换，这里面就是变换函数；</p>
+<h4 id="problem-">Problem:</h4>
+<pre class="hljs"><code><span class="hljs-comment">// Before</span>
+<span class="hljs-string">&#39;Hello, &#39;</span> + name + <span class="hljs-string">&#39;, this is a string.&#39;</span>
+<span class="hljs-comment">// After</span>
+<code>Hello, ${name}, &lt;span class=&quot;hljs-keyword&quot;&gt;this&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;is&lt;/span&gt; a &lt;span class=&quot;hljs-keyword&quot;&gt;string&lt;/span&gt;.</code></code></pre><h4 id="solution-">Solution:</h4>
 <ol>
-<li><p>Simplify:</p>
+<li>Simplify:</li>
+</ol>
 <pre class="hljs"><code><span class="hljs-comment">// Before</span>
 a + b
 <span class="hljs-comment">// After</span>
@@ -163,23 +163,21 @@ a + b
 <p><img src="https://media.github.intra.douban.com/user/62/files/ea450a52-f36f-11e6-9a28-f715785d13a2" alt="image"></p>
 <p>对比两个 AST 可以发现
 我们只需要 </p>
-</li>
-<li><p>读入需转换的代码，找到 <code>BinaryExpression</code></p>
-</li>
+<ol>
+<li>读入需转换的代码，找到 <code>BinaryExpression</code></li>
 <li>保存 <code>BinaryExpression</code> 左右两边的值（node.left &amp; node.right)</li>
 <li>生成一个为 <code>TemlateLiteral</code> Node，<code>quasis</code> 是一个包含了三个 <code>TemplateElement</code> 的数组，<code>cookde &amp; raw keys</code> 都是 <code>&#39;&#39;</code>， <code>expressions</code> 是一个包含 node.left, node.right 值的数组。</li>
-<li><p>然后将它返回输出；</p>
+<li>然后将它返回输出；</li>
+</ol>
 <p>Solution Example:</p>
-</li>
-<li><p><a href="http://astexplorer.net/#/gist/33b63b7dc8da6d9ea4936c631adc994d/7905ef5b30dfc0cb3c811af8a8960f11014ef402">http://astexplorer.net/#/gist/33b63b7dc8da6d9ea4936c631adc994d/7905ef5b30dfc0cb3c811af8a8960f11014ef402</a></p>
-</li>
+<ol>
+<li><a href="http://astexplorer.net/#/gist/33b63b7dc8da6d9ea4936c631adc994d/7905ef5b30dfc0cb3c811af8a8960f11014ef402">http://astexplorer.net/#/gist/33b63b7dc8da6d9ea4936c631adc994d/7905ef5b30dfc0cb3c811af8a8960f11014ef402</a></li>
 <li><a href="http://astexplorer.net/#/gist/a71957902ec1fd79f199eb37e5e6801a/55c4910295973b3a4d09770d94cec73d5096daa4">http://astexplorer.net/#/gist/a71957902ec1fd79f199eb37e5e6801a/55c4910295973b3a4d09770d94cec73d5096daa4</a></li>
-<li><p><a href="http://astexplorer.net/#/gist/a71957902ec1fd79f199eb37e5e6801a/cf3c898c5fe494d08a978dd1a3a3e56fc42828a8">http://astexplorer.net/#/gist/a71957902ec1fd79f199eb37e5e6801a/cf3c898c5fe494d08a978dd1a3a3e56fc42828a8</a></p>
+<li><a href="http://astexplorer.net/#/gist/a71957902ec1fd79f199eb37e5e6801a/cf3c898c5fe494d08a978dd1a3a3e56fc42828a8">http://astexplorer.net/#/gist/a71957902ec1fd79f199eb37e5e6801a/cf3c898c5fe494d08a978dd1a3a3e56fc42828a8</a></li>
+</ol>
 <p>官方没有太详细的 transform 编写指导，可以多谷歌或者学习 react-codemod/tranform or js-codemod/transform，
 个人觉得写 JS-codeshift Transform | Babel-Plugin 本质其实就是对比两棵语法树，像解谜一样，看看如何「又好又快」变换成这样。
 剩下的一开始如何读取源 JS 代码并解析成语法树，具体在 AST 上 traverse &amp; find &amp; create &amp; update （这里我猜测其实是一个递归遍历节点树的过程？），及之后如何按一定的 code style 生成我们需要的代码，都是透明且不关心的。</p>
-</li>
-</ol>
 <hr>
 <h2 id="-">总结 &amp; 开脑洞</h2>
 <ul>
@@ -209,4 +207,4 @@ a + b
 <li><a href="http://tech.meituan.com/abstract-syntax-tree.html">AST 在美团的应用</a></li>
 <li><a href="http://imweb.io/topic/57b13b4f93d9938132cc8dfd">imweb</a></li>
 </ul>
-]]></description><link>/2017-02-15-fun-with-codemod-and-ast/index.html</link><guid isPermaLink="true">/2017-02-15-fun-with-codemod-and-ast/index.html</guid><category><![CDATA[programming]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Thu, 19 May 2016 18:21:00 GMT</pubDate></item></channel></rss>
+]]></description><link>/2017-02-15-fun-with-codemod-and-ast/index.html</link><guid isPermaLink="true">/2017-02-15-fun-with-codemod-and-ast/index.html</guid><category><![CDATA[programming]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Tue, 14 Feb 2017 17:21:00 GMT</pubDate></item></channel></rss>
