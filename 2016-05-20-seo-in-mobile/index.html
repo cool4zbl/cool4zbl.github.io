@@ -49,7 +49,7 @@
 毕业工作后来了豆瓣，最近对移动环境（主要是浏览器及微信）的 SEO 相关进行了下研究，正好在这里分享一下。</p>
 <p>以下，Enjoy。</p>
 <hr>
-<h1 id="1-seo-search-engine-optimazition">1. SEO：Search Engine Optimazition</h1>
+<h3 id="1-seo-search-engine-optimazition">1. SEO：Search Engine Optimazition</h3>
 <p>产品：搜索引擎优化，促进内容网站信息分享／传播，提高目标转化率，留存率</p>
 <p>工程：为各类页面实现统一的信息分享、传播，提高搜索排名（search ranking）</p>
 <p>个人觉得：</p>
@@ -58,7 +58,7 @@
 且分享率越高，也会提高搜索排名。</li>
 <li>M 站的目前面向<strong> 人（User） </strong>的 UX 比较完善，但是仍需要丰富一些细节，让 <strong>Search Engine</strong> 的 UX 更好，更好地理解 M 站。</li>
 </ul>
-<h1 id="2-seo-">2. 前端在 SEO 中的位置</h1>
+<h3 id="2-seo-">2. 前端在 SEO 中的位置</h3>
 <ul>
 <li><strong>帮助产品进行TDK （Title / Description / Keyword）优化</strong></li>
 <li><strong>添加一些 Social Meta Tag （Facebook / Twitter / G+ / WeChat / Weibo）</strong></li>
@@ -72,7 +72,7 @@
 <li>Meta robots</li>
 <li>Sitemap</li>
 </ul>
-<h1 id="3-">3. 具体实现</h1>
+<h3 id="3-">3. 具体实现</h3>
 <blockquote>
 <p><strong>统一 SNS 抓取</strong></p>
 <p>提供一个 mako 函数，统一分享的标题、图片、描述</p>
@@ -99,8 +99,8 @@
 <p><a href="http://github.intra.douban.com/frodo/Talion/blob/master/views/j/wechat/__init__.py">http://github.intra.douban.com/frodo/Talion/blob/master/views/j/wechat/<strong>init</strong>.py</a> </p>
 <p>— From <a href="https://paper.dropbox.com/doc/-SEO-UVIgU3WYPUeiJv3nOPP0N">Douban FE Dropbox</a></p>
 </blockquote>
-<h1 id="-">实现方案</h1>
-<h2 id="1-seo_meta-mako-widget">1. 增加了 <code>seo_meta()</code> Mako widget</h2>
+<h3 id="-">实现方案</h3>
+<h4 id="1-seo_meta-mako-widget">1. 增加了 <code>seo_meta()</code> Mako widget</h4>
 <p> <a href="http://github.intra.douban.com/frodo/Talion/blob/master/templates/card/widgets.html#L527">http://github.intra.douban.com/frodo/Talion/blob/master/templates/card/widgets.html#L527</a></p>
 <pre class="hljs"><code><span class="xml"></span>&lt;%<span class="perl">def name=<span class="hljs-string">&quot;seo_meta(title, desc, image=None, url=None, type=None, rating_count=None, rating_val=None, wechat_timeline_title=None,wechat_chat_title=None, wechat_desc=None, wechat_image=None)&quot;</span>&gt;
     &lt;%
@@ -165,7 +165,7 @@
         !getMeta(<span class="hljs-string">&#39;weixin:description&#39;</span>) &amp;&amp; setMeta(<span class="hljs-string">&#39;weixin:description&#39;</span>, getMeta(<span class="hljs-string">&#39;og:description&#39;</span>))
     })();
     &lt;<span class="hljs-regexp">/%block&gt;
-&lt;/</span><span class="hljs-variable">%def</span>&gt;</span></code></pre><h2 id="2-m-seo-meta-tags">2. 给 m 站大部分页面增加了 SEO Meta Tags</h2>
+&lt;/</span><span class="hljs-variable">%def</span>&gt;</span></code></pre><h4 id="2-m-seo-meta-tags">2. 给 m 站大部分页面增加了 SEO Meta Tags</h4>
 <p>之前分享出去抓不到自定义的 description 和 image ，现默认分享到 weixin 的 title 、 description 、image 值都和 Open Graph 一样，也可以自定义。</p>
 <p>默认情况下</p>
 <ul>
@@ -212,7 +212,7 @@
 <p>（补图）</p>
 <p>(<a href="http://p.dapps.douban.com/p/38c24dc31b4d482c8095083995e43d00.blob">http://p.dapps.douban.com/p/38c24dc31b4d482c8095083995e43d00.blob</a>)</p>
 <p><a href="http://p.dapps.douban.com/p/78b40c471bab42209a0cb8ee2283c974.blob">http://p.dapps.douban.com/p/78b40c471bab42209a0cb8ee2283c974.blob</a></p>
-<h2 id="3-">3. 统一分享接口（微信重度使用患者）</h2>
+<h4 id="3-">3. 统一分享接口（微信重度使用患者）</h4>
 <ul>
 <li><a href="http://github.intra.douban.com/frodo/Talion/blob/master/static/js/card/weixin.js#L52">weixin.js</a>、 <a href="https://mp.weixin.qq.com/wiki/7/aaa137b55fb2e0456bf8dd9148dd613f.html#.E5.88.86.E4.BA.AB.E6.8E.A5.E5.8F.A3">微信 JSSDK 文档</a></li>
 </ul>
@@ -247,7 +247,7 @@
 <li><p><strong>Bugs:</strong> 通过 Safari Extension 分享出来的永远抓的是 <code>apple-touch-icon</code> 😂</p>
 </li>
 </ul>
-<pre class="hljs"><code>  <span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">&quot;apple-touch-icon-precomposed&quot;</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;<a href="https://img3.doubanio.com/f/talion/315ba4fc82e5cdb5c50ef1d9f88c8aa2c5c0c4ba/pics/icon/m_logo_76.png">https://img3.doubanio.com/f/talion/315ba4fc82e5cdb5c50ef1d9f88c8aa2c5c0c4ba/pics/icon/m_logo_76.png</a>&quot;</span>&gt;</span></code></pre><h1 id="4-further-reading-resource">4. Further Reading &amp; Resource</h1>
+<pre class="hljs"><code>  <span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">&quot;apple-touch-icon-precomposed&quot;</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;<a href="https://img3.doubanio.com/f/talion/315ba4fc82e5cdb5c50ef1d9f88c8aa2c5c0c4ba/pics/icon/m_logo_76.png">https://img3.doubanio.com/f/talion/315ba4fc82e5cdb5c50ef1d9f88c8aa2c5c0c4ba/pics/icon/m_logo_76.png</a>&quot;</span>&gt;</span></code></pre><h3 id="further-reading-resource">Further Reading &amp; Resource</h3>
 <ol>
 <li>Sitemap &amp; <a href="http://baiduseoguide.com/news/20141128113.html">Deadlink</a></li>
 <li>Social Meta Tag Cheatsheet</li>
