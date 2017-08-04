@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[ZBL - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Thu, 03 Aug 2017 16:15:15 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/author/ZBL/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[从十个 React 迷你设计模式谈开去]]></title><description><![CDATA[<p>很早之前就一直在读的一篇文章，<a href="https://hackernoon.com/10-react-mini-patterns-c1da92f068c5">10 个React Mini 设计模式</a>，
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[ZBL - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Fri, 04 Aug 2017 00:42:00 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/author/ZBL/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[从十个 React 迷你设计模式谈开去]]></title><description><![CDATA[<p>很早之前就一直在读的一篇文章，<a href="https://hackernoon.com/10-react-mini-patterns-c1da92f068c5">10 个React Mini 设计模式</a>，
 一边做 <code>Creator</code> 项目，也一边终于把它精读完。
 结合自己的开发时候的项目经验，做了点笔记。
 <code>Creator</code> 项目是一个多端（Web + Mobile）React SPA，且有一些表单填写和复杂的交互组件，自己单独封装了一个很简单的基于事件的 <code>Store</code>，开发过程中收获很大，这些细节之后可以细说。</p>
@@ -656,9 +656,7 @@ req.keys().forEach(<span class="hljs-function"><span class="hljs-params">(key)</
 我所失去的都是侥幸，我所拥有的都是人生。</p>
 <p>也许现在还是会记得，大学时候的自己，曾靠在洒满阳光的图书馆窗前，手里捧着一本好玩的书，啜一口热咖啡，看银杏叶飘落。<br/>
 我们都将孤独地长大，不要害怕。</p>
-]]></description><link>/2017-02-28-perhaps-we-all-need-medicine/index.html</link><guid isPermaLink="true">/2017-02-28-perhaps-we-all-need-medicine/index.html</guid><category><![CDATA[thoughts]]></category><category><![CDATA[psychology]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Mon, 27 Feb 2017 16:49:00 GMT</pubDate></item><item><title><![CDATA[Fun with Codemod & AST]]></title><description><![CDATA[<h1 id="fun-with-codemod-ast">Fun with Codemod &amp; AST</h1>
-<hr>
-<h2 id="content">Content</h2>
+]]></description><link>/2017-02-28-perhaps-we-all-need-medicine/index.html</link><guid isPermaLink="true">/2017-02-28-perhaps-we-all-need-medicine/index.html</guid><category><![CDATA[thoughts]]></category><category><![CDATA[psychology]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Mon, 27 Feb 2017 16:49:00 GMT</pubDate></item><item><title><![CDATA[Fun with Codemod & AST]]></title><description><![CDATA[<h2 id="content">Content</h2>
 <ul>
 <li>背景</li>
 <li>Codemod</li>
@@ -864,7 +862,7 @@ a + b
 <li><a href="http://tech.meituan.com/abstract-syntax-tree.html">AST 在美团的应用</a></li>
 <li><a href="http://imweb.io/topic/57b13b4f93d9938132cc8dfd">imweb</a></li>
 </ul>
-]]></description><link>/2017-02-15-fun-with-codemod-and-ast/index.html</link><guid isPermaLink="true">/2017-02-15-fun-with-codemod-and-ast/index.html</guid><category><![CDATA[programming]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Tue, 14 Feb 2017 17:21:00 GMT</pubDate></item><item><title><![CDATA[豆瓣、北京、工作，及终于与自己握手言和的 2016]]></title><description><![CDATA[<h1 id="-2016">豆瓣、北京、工作，及终于与自己握手言和的 2016</h1>
+]]></description><link>/2017-02-15-fun-with-codemod-and-ast/index.html</link><guid isPermaLink="true">/2017-02-15-fun-with-codemod-and-ast/index.html</guid><category><![CDATA[tech]]></category><category><![CDATA[programming]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Tue, 14 Feb 2017 17:21:00 GMT</pubDate></item><item><title><![CDATA[豆瓣、北京、工作，及终于与自己握手言和的 2016]]></title><description><![CDATA[<h1 id="-2016">豆瓣、北京、工作，及终于与自己握手言和的 2016</h1>
 <p><img src="/content/images/2017/01/title-img.jpg" alt=""></p>
 <blockquote>
 <p>在隆冬，我终于知道，我身上有一个不可战胜的夏天。 — 加缪</p>

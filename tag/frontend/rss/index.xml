@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[undefined - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Thu, 03 Aug 2017 16:15:15 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/tag/undefined/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[从十个 React 迷你设计模式谈开去]]></title><description><![CDATA[<p>很早之前就一直在读的一篇文章，<a href="https://hackernoon.com/10-react-mini-patterns-c1da92f068c5">10 个React Mini 设计模式</a>，
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[undefined - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Fri, 04 Aug 2017 00:42:00 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/tag/undefined/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[从十个 React 迷你设计模式谈开去]]></title><description><![CDATA[<p>很早之前就一直在读的一篇文章，<a href="https://hackernoon.com/10-react-mini-patterns-c1da92f068c5">10 个React Mini 设计模式</a>，
 一边做 <code>Creator</code> 项目，也一边终于把它精读完。
 结合自己的开发时候的项目经验，做了点笔记。
 <code>Creator</code> 项目是一个多端（Web + Mobile）React SPA，且有一些表单填写和复杂的交互组件，自己单独封装了一个很简单的基于事件的 <code>Store</code>，开发过程中收获很大，这些细节之后可以细说。</p>
@@ -535,9 +535,7 @@ req.keys().forEach(<span class="hljs-function"><span class="hljs-params">(key)</
   const componentName = key.replace(<span class="hljs-regexp">/^.+\/([^/</span>]+)\<span class="hljs-regexp">/index.js/</span>, <span class="hljs-string">&#39;$1&#39;</span>)
   <span class="hljs-built_in">module</span>.exports[componentName] = req(key).default
 })</code></pre><p>Creator 中因为用的 <code>create-react-app</code> CLI，无法自己配置 Webpack，所以并没有用到...</p>
-]]></description><link>/2017-06-28-10-react-mini-patterns-note/index.html</link><guid isPermaLink="true">/2017-06-28-10-react-mini-patterns-note/index.html</guid><category><![CDATA[notes]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Tue, 27 Jun 2017 16:00:00 GMT</pubDate></item><item><title><![CDATA[Fun with Codemod & AST]]></title><description><![CDATA[<h1 id="fun-with-codemod-ast">Fun with Codemod &amp; AST</h1>
-<hr>
-<h2 id="content">Content</h2>
+]]></description><link>/2017-06-28-10-react-mini-patterns-note/index.html</link><guid isPermaLink="true">/2017-06-28-10-react-mini-patterns-note/index.html</guid><category><![CDATA[notes]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Tue, 27 Jun 2017 16:00:00 GMT</pubDate></item><item><title><![CDATA[Fun with Codemod & AST]]></title><description><![CDATA[<h2 id="content">Content</h2>
 <ul>
 <li>背景</li>
 <li>Codemod</li>
@@ -743,7 +741,7 @@ a + b
 <li><a href="http://tech.meituan.com/abstract-syntax-tree.html">AST 在美团的应用</a></li>
 <li><a href="http://imweb.io/topic/57b13b4f93d9938132cc8dfd">imweb</a></li>
 </ul>
-]]></description><link>/2017-02-15-fun-with-codemod-and-ast/index.html</link><guid isPermaLink="true">/2017-02-15-fun-with-codemod-and-ast/index.html</guid><category><![CDATA[programming]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Tue, 14 Feb 2017 17:21:00 GMT</pubDate></item><item><title><![CDATA[[译]前端指南]]></title><description><![CDATA[<p><strong>Update</strong>
+]]></description><link>/2017-02-15-fun-with-codemod-and-ast/index.html</link><guid isPermaLink="true">/2017-02-15-fun-with-codemod-and-ast/index.html</guid><category><![CDATA[tech]]></category><category><![CDATA[programming]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Tue, 14 Feb 2017 17:21:00 GMT</pubDate></item><item><title><![CDATA[[译]前端指南]]></title><description><![CDATA[<p><strong>Update</strong>
 以下大概写于两年前，亟待更新。</p>
 <hr>
 <p>几天前从Github上看到了这篇<a href="https://github.com/bendc/frontend-guidelines">前端编码最佳实践</a>，Star数已破4K，觉得应该是篇不错的小指南，花了点时间将它稍作翻译，也当是复习复习 <code>HTML&amp;CSS&amp;JS</code>。
