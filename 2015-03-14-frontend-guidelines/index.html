@@ -18,8 +18,12 @@
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#d55b6a">
     <meta name="theme-color" content="#ffffff">
 
-    <link rel="stylesheet" type="text/css" href="/assets/css/screen.v1.css" />
-    <!-- <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" /> -->
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.css" />
+
+    <link rel="stylesheet" type="text/css" href="/assets/built/hl-styles/atom-one-dark.css" />
+
 
     <meta name="generator" content="Ghost ?" />
 <link rel="alternate" type="application/rss+xml" title="ZBL&#39;s Doodle" href="/rss/index.xml">
@@ -698,23 +702,6 @@ Minimize dependencies. Third-party is code you don&#39;t know. Don&#39;t load an
 <span class="hljs-atom">compact</span>([<span class="hljs-string">&quot;foo&quot;</span>, <span class="hljs-number">0</span>]);
 <span class="hljs-atom">unique</span>([<span class="hljs-string">&quot;foo&quot;</span>, <span class="hljs-string">&quot;foo&quot;</span>]);
 <span class="hljs-atom">union</span>([<span class="hljs-string">&quot;foo&quot;</span>], [<span class="hljs-string">&quot;bar&quot;</span>], [<span class="hljs-string">&quot;foo&quot;</span>]);</code></pre>
-            <section itemprop="comment" class="post-comments">
-              <div id="disqus_thread"></div>
-              <script type="text/javascript">
-                var disqus_config = function () {
-                    this.page.url = 'http://zhangbinliu.me/2015-03-14-frontend-guidelines/';
-                    this.page.identifier = '4';
-                  };
-                var disqus_shortname = 'zblsdoodle';
-                (function() { // DON'T EDIT BELOW THIS LINE
-                  var d = document, s = d.createElement('script');
-                  s.async = true;
-                  s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                  s.setAttribute('data-timestamp', +new Date());
-                  (d.head || d.body).appendChild(s);
-                })();
-            </script>
-            </section>
         </section>
 
         <footer class="post-footer">
@@ -762,7 +749,6 @@ Minimize dependencies. Third-party is code you don&#39;t know. Don&#39;t load an
 
 
 
-
         <footer class="site-footer clearfix">
             <section class="copyright"><a href="http://zhangbinliu.me">ZBL&#x27;s Doodle</a> &copy; 2015</section>
             <section class="poweredby">Proudly published with <a href="https://ghost.org">Ghost</a></section>
@@ -770,10 +756,13 @@ Minimize dependencies. Third-party is code you don&#39;t know. Don&#39;t load an
 
     </div>
 
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.0.min.js"></script>
     <script src="/assets/js/jquery.min.js"></script>
     <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
     <script type="text/javascript" src="/assets/js/index.js"></script>
+
+    <script type="text/javascript" src="/assets/js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
 
 </body>
 </html>
