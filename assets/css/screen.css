@@ -186,7 +186,7 @@ body {
     max-height: 100%;
     font-family: "Merriweather", serif;
     letter-spacing: 0.01rem;
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     line-height: 1.75em;
     color: #3A4145;
     -webkit-font-feature-settings: 'kern' 1;
@@ -249,12 +249,12 @@ a {
 }
 
 a:hover {
-  color: #e74c3c;
+    color: #e74c3c;
 }
 
 p, ul, ol, dl {
-  -webkit-font-feature-settings: 'liga' 1, 'onum' 1, 'kern' 1;
-  -moz-font-feature-settings: 'liga' 1, 'onum' 1, 'kern' 1;
+    -webkit-font-feature-settings: 'liga' 1, 'onum' 1, 'kern' 1;
+    -moz-font-feature-settings: 'liga' 1, 'onum' 1, 'kern' 1;
     -o-font-feature-settings: 'liga' 1, 'onum' 1, 'kern' 1;
     margin: 0 0 1.75em 0;
     text-rendering: geometricPrecision;
@@ -295,12 +295,16 @@ li li {
     margin: 0;
 }
 
+li > p:last-of-type {
+    margin-bottom: 0;
+}
+
 hr {
     display: block;
     height: 1px;
     border: 0;
     border-top: #EFEFEF 1px solid;
-    margin: 2em 0;
+    margin: 3.2em 0;
     padding: 0;
 }
 
@@ -976,19 +980,20 @@ body.nav-opened .nav {
 /* Add subtle load-in animation for content on the home page */
 .home-template .page-title {
     -webkit-animation: fade-in-down 0.6s;
-    animation: fade-in-down 0.6s;
+    animation: fade-in-down 0.6s both;
     -webkit-animation-delay: 0.2s;
     animation-delay: 0.2s;
 }
 .home-template .page-description {
     -webkit-animation: fade-in-down 0.9s;
-    animation: fade-in-down 0.9s;
+    animation: fade-in-down 0.9s both;
     -webkit-animation-delay: 0.1s;
     animation-delay: 0.1s;
 }
 
 /* Every post, on every page, gets this style on its <article> tag */
 .post {
+    font-size: .9em;
     position: relative;
     width: 80%;
     max-width: 710px;
@@ -1015,9 +1020,12 @@ body.nav-opened .nav {
     box-shadow: #FFF 0 0 0 5px;
 }
 
-body:not(.post-template) .post-title,
-body:not(.page-template) .post-title {
-    font-size: 3rem;
+body:not(.post-template) .post-title {
+    font-size: 3.6rem;
+}
+
+body.page-template .post-title {
+    font-size: 5rem;
 }
 
 .post-title a {
@@ -1026,8 +1034,8 @@ body:not(.page-template) .post-title {
 
 .post-excerpt p {
     margin: 0;
-    font-size: 0.75em;
-    line-height: 1.6em;
+    font-size: 0.9em;
+    line-height: 1.7em;
 }
 
 .read-more {
@@ -1385,6 +1393,7 @@ body:not(.page-template) .post-title {
     color: #50585D;
     letter-spacing: 0;
     text-indent: 0;
+    white-space: pre;
 }
 
 .author-meta {
@@ -1789,9 +1798,12 @@ body:not(.page-template) .post-title {
         font-size: 0.95em
     }
 
-    body:not(.post-template) .post-title,
-    body:not(.page-template) .post-title {
+    body:not(.post-template) .post-title {
         font-size: 3.2rem;
+    }
+
+    body.page-template .post-title {
+        font-size: 4.5rem;
     }
 
     hr {
@@ -1899,9 +1911,6 @@ body:not(.page-template) .post-title {
    ========================================================================== */
 
 @media only screen and (max-width: 500px) {
-    body {
-      font-size: 1.6rem;
-    }
 
     .main-header {
         margin-bottom: 15px;
@@ -2061,9 +2070,12 @@ body:not(.page-template) .post-title {
         font-size: 1.8rem;
     }
 
-    body:not(.post-template) .post-title,
-    body:not(.page-template) .post-title {
+    body:not(.post-template) .post-title {
         font-size: 2.5rem;
+    }
+
+    body.page-template .post-title {
+        font-size: 2.8rem;
     }
 
     .post-template .site-footer,
