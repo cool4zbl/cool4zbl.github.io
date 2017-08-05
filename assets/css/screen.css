@@ -2002,6 +2002,7 @@ body.page-template .post-title {
         margin-right: 16px;
         padding-bottom: 2rem;
         line-height: 1.65em;
+        line-height: 1.65;
     }
 
     .post-date {
@@ -2023,7 +2024,7 @@ body.page-template .post-title {
     }
 
     p, ul, ol, dl {
-        font-size: 1.2em;
+        font-size: 18px;
         margin: 0 0 2.5rem 0;
     }
 
@@ -2033,6 +2034,7 @@ body.page-template .post-title {
 
     .post-excerpt p {
         font-size: 0.85em;
+        font-size: 0.95em;
     }
 
     .page-description {
