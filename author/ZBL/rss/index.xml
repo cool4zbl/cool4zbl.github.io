@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[ZBL - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Sat, 05 Aug 2017 12:20:00 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/author/ZBL/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[从十个 React 迷你设计模式谈开去]]></title><description><![CDATA[<p>很早之前就一直在读的一篇文章，<a href="https://hackernoon.com/10-react-mini-patterns-c1da92f068c5">10 个React Mini 设计模式</a>，
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[ZBL - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Sat, 05 Aug 2017 17:49:40 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/author/ZBL/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[从十个 React 迷你设计模式谈开去]]></title><description><![CDATA[<p>很早之前就一直在读的一篇文章，<a href="https://hackernoon.com/10-react-mini-patterns-c1da92f068c5">10 个React Mini 设计模式</a>，
 一边做 <code>Creator</code> 项目，也一边终于把它精读完。
 结合自己的开发时候的项目经验，做了点笔记。
 <code>Creator</code> 项目是一个多端（Web + Mobile）React SPA，且有一些表单填写和复杂的交互组件，自己单独封装了一个很简单的基于事件的 <code>Store</code>，开发过程中收获很大，这些细节之后可以细说。</p>
@@ -759,17 +759,17 @@ req.keys().forEach(<span class="hljs-function"><span class="hljs-params">(key)</
 <p>计算机科学中，抽象语法树（abstract syntax tree 或者缩写为 AST），或者语法树（syntax tree），是源代码的抽象语法结构的树状表现形式，这里特指编程语言的源代码。树上的每个节点都表示源代码中的一种结构。之所以说语法是「抽象」的，是因为这里的语法并不会表示出真实语法中出现的每个细节。</p>
 </blockquote>
 <p>这么说其实还是有点抽象，我们先打开 <a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree">wiki</a> 看到 wikipedia 这个图，</p>
-<p><img src="https://media.github.intra.douban.com/user/62/files/9d7500be-f370-11e6-972f-f5ede1c448f8" alt="image"></p>
+<p><img src="../content/images/codemod_ast/ast_tree.png" alt="AST Tree"></p>
 <p>前端er 一定会觉得很相似，这里不就是 DOM 语法树的终极抽象版本吗，只是把一个个 DOM Nodes 换成了一个个更加无语义的字符 Token。
 FB 有一个很棒的工具 <a href="http://astexplorer.net/">ASTExplorer</a>，可以用来更形象地展示。</p>
 <p>比如说，我们现在就只有一个很简单的表达式<code>a+b</code>，这里是 recast Parser 解析后的 AST 结构：</p>
-<p><img src="https://media.github.intra.douban.com/user/62/files/758a6076-f370-11e6-97e4-f6152c3814bf" alt="image"></p>
+<p><img src="../content/images/codemod_ast/a+b_ast_tree.png" alt="a + b AST Tree"></p>
 <p>看上去特别复杂。注意那些蓝色字体 <code>File</code>, <code>Programme</code>,<code>ExpressionStatement</code>,<code>Identifier</code>… 这些都是 AST Nodes，其他的都是和这个 Node 相关的数据。</p>
 <p>根据前文可以知道，每种语言的 AST 都是不同的。有专门的 Parser 来生成 AST。</p>
 <p>关于 <a href="https://en.wikipedia.org/wiki/Parsing#Parser">Parser</a> 又是一门很深的学问了。</p>
 <p>在 ASTExplorer.net 上可以看到有很多 parser，比较著名的有 <a href="https://github.com/jquery/esprima/blob/master/src/parser.ts">Esprima(jQuery)</a>，Uglify-JS, Babylon(Babel), Acorn(Tern / Webpack), 及 jscodeshift 使用的 recast。</p>
 <p>虽然有很多 Parser，但是基本上，一个 parser 的结构都差不多，对源代码进行词法分析，生成 Tokens，对 Tokens 进行语法分析，然后生成 AST。</p>
-<p><img src="https://media.github.intra.douban.com/user/62/files/5751ac04-f370-11e6-849e-692ab4b47bbf" alt="image"></p>
+<p><img src="../content/images/codemod_ast/parser.png" alt="Parser"></p>
 <p>具体可以参考看下 <a href="http://esprima.org/demo/parse.html#">Esprima Parse Demo</a>。
 生成的 AST 都遵循一个统一标准 <a href="https://github.com/estree/estree/blob/master/es5.md">ESTree</a> or <a href="parser API https://developer.mozilla.org/en-US/docs/Mozilla/Projects/SpiderMonkey/Parser_API">Mozilla SpiderMonkey</a>，也就是说都会返回一个 ESTree Compatible AST。</p>
 <h3 id="-ast-find-nodes-create-new-nodes-update-nodes-">第二三四步，对生成的 AST 进行操作修改 (Find Nodes &amp; Create New Nodes &amp; Update Nodes)</h3>
@@ -804,20 +804,26 @@ visitIdentifier: <span class="hljs-function"><span class="hljs-keyword">function
 <pre class="hljs"><code>jscodeshift -t &lt;transform.js&gt; /<span class="hljs-keyword">to</span>/<span class="hljs-type">file</span>/path</code></pre><p>我们来写<code>transform.js</code>，也就是说，你打算使用 jscodeshift 对源代码进行何种变换，这里面就是变换函数。</p>
 <p>现在考虑一个 ES5 -&gt; ES6 的经典问题：</p>
 <h4 id="problem-">Problem:</h4>
-<pre class="hljs"><code><span class="hljs-comment">// Before</span>
-<span class="hljs-string">&#39;Hello, &#39;</span> + name + <span class="hljs-string">&#39;, this is a string.&#39;</span>
-<span class="hljs-comment">// After</span>
-<code>Hello, ${name}, &lt;span class=&quot;hljs-keyword&quot;&gt;this&lt;/span&gt; &lt;span class=&quot;hljs-keyword&quot;&gt;is&lt;/span&gt; a &lt;span class=&quot;hljs-keyword&quot;&gt;string&lt;/span&gt;.</code></code></pre><h4 id="solution-">Solution:</h4>
+<p><code>
+// Before
+&#39;Hello, &#39; + name + &#39;, I am a string.&#39;
+// After
+<code>Hello, ${name}, I am a string.</code>
+</code></p>
+<h4 id="solution-">Solution:</h4>
 <ol>
 <li>Simplify， 考虑一个最简单的情况</li>
 </ol>
-<pre class="hljs"><code><span class="hljs-comment">// Before</span>
+<p><code>
+// Before
 a + b
-<span class="hljs-comment">// After</span>
-<span class="hljs-string"><code>&lt;span class=&quot;hljs-subst&quot;&gt;${a}&lt;/span&gt;&lt;span class=&quot;hljs-subst&quot;&gt;${b}&lt;/span&gt;</code></span></code></pre><p><code>a + b</code> AST:</p>
-<p><img src="https://media.github.intra.douban.com/user/62/files/e4d3c126-f36f-11e6-98aa-382c3afd9bcf" alt="image"></p>
+// After
+<code>${a}${b}</code>
+</code></p>
+<p><code>a + b</code> AST:</p>
+<p><img src="../content/images/codemod_ast/a+b_ast_tree.png" alt="`a + b` AST"></p>
 <p><code>${a}${b}</code> AST:</p>
-<p><img src="https://media.github.intra.douban.com/user/62/files/ea450a52-f36f-11e6-9a28-f715785d13a2" alt="image"></p>
+<p><img src="../content/images/codemod_ast/a+b_tmpl_ast.png" alt="`${a}${b}`"></p>
 <p>对比两个 AST 可以发现，我们只需要</p>
 <ol>
 <li>读入需转换的代码，找到 <code>BinaryExpression</code></li>
@@ -915,7 +921,7 @@ a + b
 <h2 id="-">总结 &amp; 开脑洞</h2>
 <ul>
 <li><p>总结下基本处理流程：
-<img src="https://media.github.intra.douban.com/user/62/files/7fe54aa4-f370-11e6-90d8-9f191a40a5cc" alt="image"></p>
+<img src="../content/images/codemod_ast/process.png" alt="Process"></p>
 </li>
 <li><p>AST 是很有用的一个抽象概念。一旦你理解了这些规则，唯一的限制就是解析器和你的想象力。</p>
 </li>
