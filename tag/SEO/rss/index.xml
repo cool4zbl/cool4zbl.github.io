@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[undefined - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Mon, 07 Aug 2017 01:05:28 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/tag/undefined/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[移动环境下的 SEO]]></title><description><![CDATA[<p>真的有很久很久没来理这个博客，距离上一篇文章的发布日期是两年前。
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[undefined - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Mon, 07 Aug 2017 18:18:07 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/tag/undefined/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[移动环境下的 SEO]]></title><description><![CDATA[<p>真的有很久很久没来理这个博客，距离上一篇文章的发布日期是两年前。
 毕业工作后来了豆瓣，最近对移动环境（主要是浏览器及微信）的 SEO 相关进行了下研究，正好在这里分享一下。</p>
 <p>以下，Enjoy。</p>
 <hr>
@@ -163,37 +163,33 @@
 </ul>
 <p>效果截屏：</p>
 <p><a href="http://github.intra.douban.com/frodo/Talion/pull/253">http://github.intra.douban.com/frodo/Talion/pull/253</a></p>
-<p>（补图）</p>
-<p>(<a href="http://p.dapps.douban.com/p/38c24dc31b4d482c8095083995e43d00.blob">http://p.dapps.douban.com/p/38c24dc31b4d482c8095083995e43d00.blob</a>)</p>
-<p><a href="http://p.dapps.douban.com/p/78b40c471bab42209a0cb8ee2283c974.blob">http://p.dapps.douban.com/p/78b40c471bab42209a0cb8ee2283c974.blob</a></p>
 <h4 id="3-">3. 统一分享接口（微信重度使用患者）</h4>
 <ul>
 <li><a href="http://github.intra.douban.com/frodo/Talion/blob/master/static/js/card/weixin.js#L52">weixin.js</a>、 <a href="https://mp.weixin.qq.com/wiki/7/aaa137b55fb2e0456bf8dd9148dd613f.html#.E5.88.86.E4.BA.AB.E6.8E.A5.E5.8F.A3">微信 JSSDK 文档</a></li>
 </ul>
 <pre class="hljs"><code>
-          wx.onMenuShareTimeline($.extend({}, shareData,{
-              title: <span class="hljs-built_in">window</span>.getMeta(<span class="hljs-string">&#39;weixin:timeline_title&#39;</span>) || <span class="hljs-built_in">document</span>.title,
-              success: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-                  wxShareStat.target = <span class="hljs-string">&#39;timeline&#39;</span>;
-                  $.get(<span class="hljs-string">&#39;/j/wechat/shared&#39;</span>, wxShareStat);
-              },
-              cancel: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{}
-          }));
+wx.onMenuShareTimeline($.extend({}, shareData,{
+    title: <span class="hljs-built_in">window</span>.getMeta(<span class="hljs-string">&#39;weixin:timeline_title&#39;</span>) || <span class="hljs-built_in">document</span>.title,
+    success: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+        wxShareStat.target = <span class="hljs-string">&#39;timeline&#39;</span>;
+        $.get(<span class="hljs-string">&#39;/j/wechat/shared&#39;</span>, wxShareStat);
+    },
+    cancel: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{}
+}));
 
-          wx.onMenuShareAppMessage($.extend({}, shareData,{
-              title: <span class="hljs-built_in">window</span>.getMeta(<span class="hljs-string">&#39;weixin:chat_title&#39;</span>) || <span class="hljs-built_in">document</span>.title,
-              desc: <span class="hljs-built_in">window</span>.getMeta(<span class="hljs-string">&#39;weixin:description&#39;</span>) || <span class="hljs-built_in">window</span>.getMeta(<span class="hljs-string">&#39;og:description&#39;</span>),
-              success: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-                  wxShareStat.target = <span class="hljs-string">&#39;friend&#39;</span>;
-                  $.get(<span class="hljs-string">&#39;/j/wechat/shared&#39;</span>, wxShareStat);
-              },
-              cancel: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{}
-          }));</code></pre><p>  结合使用 <code>meta[name=&quot;weixin:image&quot;]</code></p>
-<pre class="hljs"><code>      &lt;meta property=<span class="hljs-string">&quot;weixin:timeline_title&quot;</span> content=<span class="hljs-string">&quot;<span class="hljs-subst">${ wechat_timeline_title <span class="hljs-keyword">or</span> <span class="hljs-string">&#39;&#39;</span> }</span>&quot;</span> /&gt;
-      &lt;meta property=<span class="hljs-string">&quot;weixin:chat_title&quot;</span> content=<span class="hljs-string">&quot;<span class="hljs-subst">${ wechat_chat_title <span class="hljs-keyword">or</span> <span class="hljs-string">&#39;&#39;</span> }</span>&quot;</span> /&gt;
-      &lt;meta property=<span class="hljs-string">&quot;weixin:description&quot;</span> content=<span class="hljs-string">&quot;<span class="hljs-subst">${ wechat_desc <span class="hljs-keyword">or</span> <span class="hljs-string">&#39;&#39;</span> }</span>&quot;</span> /&gt;
-      &lt;meta property=<span class="hljs-string">&quot;weixin:image&quot;</span> content=<span class="hljs-string">&quot;<span class="hljs-subst">${ image <span class="hljs-keyword">or</span> default_image }</span>&quot;</span> /&gt;</code></pre><p>  ​</p>
-<ul>
+wx.onMenuShareAppMessage($.extend({}, shareData,{
+    title: <span class="hljs-built_in">window</span>.getMeta(<span class="hljs-string">&#39;weixin:chat_title&#39;</span>) || <span class="hljs-built_in">document</span>.title,
+    desc: <span class="hljs-built_in">window</span>.getMeta(<span class="hljs-string">&#39;weixin:description&#39;</span>) || <span class="hljs-built_in">window</span>.getMeta(<span class="hljs-string">&#39;og:description&#39;</span>),
+    success: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+        wxShareStat.target = <span class="hljs-string">&#39;friend&#39;</span>;
+        $.get(<span class="hljs-string">&#39;/j/wechat/shared&#39;</span>, wxShareStat);
+    },
+    cancel: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{}
+}));</code></pre><p>  结合使用 <code>meta[name=&quot;weixin:image&quot;]</code></p>
+<pre class="hljs"><code>&lt;meta property=<span class="hljs-string">&quot;weixin:timeline_title&quot;</span> content=<span class="hljs-string">&quot;<span class="hljs-subst">${ wechat_timeline_title <span class="hljs-keyword">or</span> <span class="hljs-string">&#39;&#39;</span> }</span>&quot;</span> /&gt;
+&lt;meta property=<span class="hljs-string">&quot;weixin:chat_title&quot;</span> content=<span class="hljs-string">&quot;<span class="hljs-subst">${ wechat_chat_title <span class="hljs-keyword">or</span> <span class="hljs-string">&#39;&#39;</span> }</span>&quot;</span> /&gt;
+&lt;meta property=<span class="hljs-string">&quot;weixin:description&quot;</span> content=<span class="hljs-string">&quot;<span class="hljs-subst">${ wechat_desc <span class="hljs-keyword">or</span> <span class="hljs-string">&#39;&#39;</span> }</span>&quot;</span> /&gt;
+&lt;meta property=<span class="hljs-string">&quot;weixin:image&quot;</span> content=<span class="hljs-string">&quot;<span class="hljs-subst">${ image <span class="hljs-keyword">or</span> default_image }</span>&quot;</span> /&gt;</code></pre><ul>
 <li><p>自定义微信分享到聊天、朋友圈的显示内容，文案<code>setMeta()</code>, <code>getMeta()</code></p>
 </li>
 <li><p><strong>Tips:</strong> 如果没有设置 <code>wx.onMenuShareTimeline()</code>/ <code>wx.onMenuShareAppMessage()</code> 中的 title / imgUrl / desc 参数，微信内置浏览器默认抓取对应的<code>og:xxx</code> 相关。</p>
@@ -201,7 +197,11 @@
 <li><p><strong>Bugs:</strong> 通过 Safari Extension 分享出来的永远抓的是 <code>apple-touch-icon</code> 😂</p>
 </li>
 </ul>
-<pre class="hljs"><code>  <span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">&quot;apple-touch-icon-precomposed&quot;</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;<a href="https://img3.doubanio.com/f/talion/315ba4fc82e5cdb5c50ef1d9f88c8aa2c5c0c4ba/pics/icon/m_logo_76.png">https://img3.doubanio.com/f/talion/315ba4fc82e5cdb5c50ef1d9f88c8aa2c5c0c4ba/pics/icon/m_logo_76.png</a>&quot;</span>&gt;</span></code></pre><h3 id="further-reading-resource">Further Reading &amp; Resource</h3>
+<pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">&quot;apple-touch-icon-precomposed&quot;</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;<a href="https://img3.doubanio.com/f/talion/315ba4fc82e5cdb5c50ef1d9f88c8aa2c5c0c4ba/pics/icon/m_logo_76.png">https://img3.doubanio.com/f/talion/315ba4fc82e5cdb5c50ef1d9f88c8aa2c5c0c4ba/pics/icon/m_logo_76.png</a>&quot;</span>&gt;</span></code></pre><p>微信分享效果图：
+<img src="&#39;/content/images/seo_in_mobile/seo_1.png&#39;" alt="after_seo_1">
+<img src="&#39;/content/images/seo_in_mobile/seo_2.png&#39;" alt="after_seo_2">
+<img src="&#39;/content/images/seo_in_mobile/seo_3.png&#39;" alt="after_seo_3"></p>
+<h3 id="further-reading-resource">Further Reading &amp; Resource</h3>
 <ol>
 <li>Sitemap &amp; <a href="http://baiduseoguide.com/news/20141128113.html">Deadlink</a></li>
 <li>Social Meta Tag Cheatsheet</li>
@@ -218,4 +218,4 @@
 </ul>
 </li>
 </ol>
-]]></description><link>/2016-05-20-seo-in-mobile/index.html</link><guid isPermaLink="true">/2016-05-20-seo-in-mobile/index.html</guid><category><![CDATA[SEO]]></category><category><![CDATA[shares]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Thu, 19 May 2016 18:21:00 GMT</pubDate></item></channel></rss>
+]]></description><link>/2016-05-20-seo-in-mobile/index.html</link><guid isPermaLink="true">/2016-05-20-seo-in-mobile/index.html</guid><category><![CDATA[SEO]]></category><category><![CDATA[shares]]></category><category><![CDATA[tech]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Thu, 19 May 2016 18:21:00 GMT</pubDate></item></channel></rss>

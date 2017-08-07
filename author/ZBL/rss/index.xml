@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[ZBL - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Mon, 07 Aug 2017 01:05:28 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/author/ZBL/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[从十个 React 迷你设计模式谈开去]]></title><description><![CDATA[<p>很早之前就一直在读的一篇文章，<a href="https://hackernoon.com/10-react-mini-patterns-c1da92f068c5">10 个React Mini 设计模式</a>，
-一边做 <code>Creator</code> 项目，也一边终于把它精读完。
-结合自己的开发时候的项目经验，做了点笔记。
-<code>Creator</code> 项目是一个多端（Web + Mobile）React SPA，且有一些表单填写和复杂的交互组件，自己单独封装了一个很简单的基于事件的 <code>Store</code>，开发过程中收获很大，这些细节之后可以细说。</p>
-<p>原文作者说你是不是天天写 React, 写着写着发现自己可能经常用来实现需求的，也总是那么几个方法，往大了讲其实就是开发中的 <strong>设计模式</strong>。但是这里我们称为 <strong>Mini Patterns</strong>。</p>
-<h2 id="-1-sending-data-down-and-up">#1 Sending data down and up</h2>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[ZBL - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Mon, 07 Aug 2017 18:18:07 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/author/ZBL/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[#1 Sending data down and up 数据流]]></title><description><![CDATA[<p>--
+title: 从十个 React 迷你设计模式谈开去
+tags: notes, frontend, tech</p>
+<hr>
+<p>很早之前就一直在读的一篇文章，<a href="https://hackernoon.com/10-react-mini-patterns-c1da92f068c5">10 个React Mini 设计模式</a>，</p>
+<p>一边做 <code>Creator</code> 项目，也一边终于把它精读完。</p>
+<p>结合自己的开发时候的项目经验，做了点笔记。</p>
+<p><code>Creator</code> 项目是一个多端（Web + Mobile）React SPA，且有一些表单填写和复杂的交互组件，自己单独封装了一个很简单的基于事件的 <code>Store</code>，开发过程中收获很大，这些细节之后可以细说。</p>
+<p>原文作者说你是不是天天写 React, 写着写着发现自己可能经常用来实现需求的，也总是那么几个方法，往大了讲其实就是开发中的 <strong>设计模式</strong>。这里我们称为 <strong>Mini Patterns</strong>。</p>
+<h2 id="-1-sending-data-down-and-up-">#1 Sending data down and up 数据流</h2>
 <p><img src="https://cdn-images-1.medium.com/max/2000/1*J5XOQh2WKIl0NFTAMvcVbQ.png" alt="Data-flow"></p>
 <ul>
 <li>React 数据流</li>
@@ -32,23 +36,19 @@
 </li>
 <li><p>这里项目中有个选择证件类型的 <code>Select</code>，与后端默认 身份证 = 0 / 护照 = 1，但是在 <code>e.target.value</code> 时候忘记 convert 了。所以还是需要记得判断下 <code>option</code> 的值类型。</p>
 <pre class="hljs"><code>let {<span class="hljs-keyword">name</span>, <span class="hljs-keyword">value</span>} = e.<span class="hljs-type">target</span>
-<span class="hljs-keyword">value</span> = isNaN(<span class="hljs-keyword">Number</span>(<span class="hljs-keyword">value</span>)) ? <span class="hljs-keyword">value</span> : <span class="hljs-keyword">Number</span>(<span class="hljs-keyword">value</span>)</code></pre><p>​</p>
-</li>
+<span class="hljs-keyword">value</span> = isNaN(<span class="hljs-keyword">Number</span>(<span class="hljs-keyword">value</span>)) ? <span class="hljs-keyword">value</span> : <span class="hljs-keyword">Number</span>(<span class="hljs-keyword">value</span>)</code></pre></li>
 <li><p>A set of radio buttons is functionally the same thing as a <code>&lt;select&gt;</code>, right? It’s messed up to treat them in a completely different manner when the only difference is the UI. Maybe for your app it makes sense to have a single <code>&lt;PickOneFromMany /&gt;</code> component and pass either <code>ui=&quot;radio&quot;</code> or <code>ui=&quot;dropDown&quot;</code>.</p>
 </li>
 <li><p>一堆单选按钮在功能上和一个 <code>&lt;select&gt;</code> 组件是一样的。没有必要把它们完全不一样地来对待，因为它们仅仅是 UI 不一样。其实可能只需要一个 <code>&lt;PickOneFromMany /&gt;</code> 组件就好，通过 <code>ui=&quot;radio&quot;</code> 或者<code>ui=&quot;dropdown&quot;</code> 来区分。</p>
 </li>
 <li><p><strong>React Form 与 HTML 的不同</strong></p>
-</li>
-<li><p><code>value/checked</code> 设置后用户输入无效，相当于设置了 value -&gt; controlled component.</p>
-</li>
-<li><p><code>textarea</code> 的值要设置在 value 属性</p>
-</li>
-<li><p><code>select</code> 的<code>value</code> 属性可以是数组，不建议使用 <code>option</code> 的 <code>selected</code> 属性</p>
-</li>
-<li><p><code>input/textarea</code> 的 <code>onChange</code> 每次输入都会触发，即使不失去焦点</p>
-</li>
-<li><p><code>radio/checkbox</code>  点击后触发 `onChange</p>
+<ul>
+<li><code>value/checked</code> 设置后用户输入无效，相当于设置了 value -&gt; controlled component.</li>
+<li><code>textarea</code> 的值要设置在 value 属性</li>
+<li><code>select</code> 的<code>value</code> 属性可以是数组，不建议使用 <code>option</code> 的 <code>selected</code> 属性</li>
+<li><code>input/textarea</code> 的 <code>onChange</code> 每次输入都会触发，即使不失去焦点</li>
+<li><code>radio/checkbox</code>  点击后触发 `onChange</li>
+</ul>
 </li>
 </ul>
 <h2 id="-3-binding-labels-to-inputs-with-unique-ids">#3 Binding labels to inputs with unique IDs</h2>
@@ -95,110 +95,105 @@ export const resetId = () =&gt; {
 export const getNextId = () =&gt; {
   <span class="hljs-keyword">return</span> <code>element-id-${count++}</code>;
 }</code></pre><ul>
-<li>这里大概是自动给 <code>label</code>/<code>input</code> 加上一对一的 id.</li>
-<li>Creator 中好像没有这样使用。</li>
+<li>这里大概是自动给 <code>label</code>/<code>input</code> 加上一对一的 id. 可能是为了在表单填写的时候给用户更好的体验吧。</li>
 </ul>
 <h2 id="-4-controlling-css-with-props">#4 Controlling CSS with props</h2>
 <p>Three distinct ways to control the CSS applied to a component.</p>
 <ol>
-<li><p>Using themes. (Used in Proj Creator)</p>
+<li>Using themes. (Used in Proj Creator)</li>
+</ol>
 <p><code>&lt;Button theme=&quot;secondary&quot;&gt;Hello&lt;/Button&gt;</code></p>
-<p>Tip: Do your best to only require one theme per component.</p>
-<p>这种可能适合页面主题定制化。</p>
-<p>Creator 中的 <code>&lt;Button /&gt;</code> 本来是用 theme 做区分，但是好像设计那边看起来就是一个主题，豆瓣绿经典款，所以后来改为了使用下面两种方式。</p>
-<p>​</p>
-</li>
-<li><p>Using flags. (Used too.)</p>
+<p>   Tip: Do your best to only require one theme per component.</p>
+<p>   这种可能适合页面主题定制化。</p>
+<p>   Creator 中的 <code>&lt;Button /&gt;</code> 本来是用 theme 做区分，但是好像设计那边看起来就是一个主题，豆瓣绿经典款，所以后来改为了使用下面两种方式。</p>
+<p>   ​</p>
+<ol>
+<li>Using flags. (Used too.)</li>
+</ol>
 <p><code>&lt;Button theme=&quot;secondary&quot; rounded&gt;Hello&lt;/Button&gt;</code></p>
-<p>Creator Project:</p>
-<p>```jsx
-Button.propTypes = {
-  size: PropTypes.oneOf([</p>
-<pre class="hljs"><code><span class="hljs-string">&#39;sm&#39;</span>,
-<span class="hljs-string">&#39;md&#39;</span>,
-<span class="hljs-string">&#39;lg&#39;</span>,
-<span class="hljs-string">&#39;row&#39;</span></code></pre><p>  ]),
-  status: PropTypes.oneOf(Object.values(BUTTON_STATUS)),
-  type: PropTypes.oneOf([</p>
-<pre class="hljs"><code><span class="hljs-string">&#39;submit&#39;</span>,
-<span class="hljs-string">&#39;save&#39;</span>,
-<span class="hljs-string">&#39;cancel&#39;</span>
-])</code></pre><p>}</p>
+<p>   在项目中自己写的一个 <code>Button</code> 组件：</p>
+<p>   ​</p>
+<pre class="hljs"><code> Button.propTypes = {
+   size: PropTypes.oneOf([
+     <span class="hljs-string">&#39;sm&#39;</span>,
+     <span class="hljs-string">&#39;md&#39;</span>,
+     <span class="hljs-string">&#39;lg&#39;</span>,
+     <span class="hljs-string">&#39;row&#39;</span>
+   ]),
+   status: PropTypes.oneOf(<span class="hljs-built_in">Object</span>.values(BUTTON_STATUS)),
+   type: PropTypes.oneOf([
+     <span class="hljs-string">&#39;submit&#39;</span>,
+     <span class="hljs-string">&#39;save&#39;</span>,
+     <span class="hljs-string">&#39;cancel&#39;</span>
+     ])
+ }
+ <span class="hljs-comment">// use className to control styles</span>
+ <span class="hljs-keyword">const</span> cls = classNames(<span class="hljs-string">&#39;btn&#39;</span>, {
+  [<span class="hljs-string"><code>&lt;span class=&quot;hljs-subst&quot;&gt;${prefixCls}&lt;/span&gt;-btn</code></span>]: <span class="hljs-literal">true</span>,
+  [<span class="hljs-string"><code>&lt;span class=&quot;hljs-subst&quot;&gt;${prefixCls}&lt;/span&gt;-btn-&lt;span class=&quot;hljs-subst&quot;&gt;${size}&lt;/span&gt;</code></span>]: !!size,
+  [<span class="hljs-string"><code>&lt;span class=&quot;hljs-subst&quot;&gt;${prefixCls}&lt;/span&gt;-btn-&lt;span class=&quot;hljs-subst&quot;&gt;${status}&lt;/span&gt;</code></span>]: !!status,
+  [<span class="hljs-string"><code>&lt;span class=&quot;hljs-subst&quot;&gt;${prefixCls}&lt;/span&gt;-btn-&lt;span class=&quot;hljs-subst&quot;&gt;${type}&lt;/span&gt;</code></span>]: !!type
+ }, props.className)</code></pre><ol>
+<li><p>Setting values.</p>
+<p>Pass the value of a CSS property directly. (set it as an inline style)</p>
 </li>
 </ol>
-<p>   // use className to control styles</p>
-<pre class="hljs"><code> <span class="hljs-keyword">const</span> cls = classNames(<span class="hljs-string">&#39;btn&#39;</span>, {
-   [<span class="hljs-string"><code>&lt;span class=&quot;hljs-subst&quot;&gt;${prefixCls}&lt;/span&gt;-btn</code></span>]: <span class="hljs-literal">true</span>,
-   [<span class="hljs-string"><code>&lt;span class=&quot;hljs-subst&quot;&gt;${prefixCls}&lt;/span&gt;-btn-&lt;span class=&quot;hljs-subst&quot;&gt;${size}&lt;/span&gt;</code></span>]: !!size,
-   [<span class="hljs-string"><code>&lt;span class=&quot;hljs-subst&quot;&gt;${prefixCls}&lt;/span&gt;-btn-&lt;span class=&quot;hljs-subst&quot;&gt;${status}&lt;/span&gt;</code></span>]: !!status,
-   [<span class="hljs-string"><code>&lt;span class=&quot;hljs-subst&quot;&gt;${prefixCls}&lt;/span&gt;-btn-&lt;span class=&quot;hljs-subst&quot;&gt;${type}&lt;/span&gt;</code></span>]: !!type
- }, props.className)</code></pre><pre class="hljs"><code>
-   ​
+<p><code>&lt;Icon width=&quot;25&quot; height=&quot;25&quot; type=&quot;search&quot; /&gt;</code></p>
+<p><strong>举个栗子</strong></p>
+<p>   <img src="https://cdn-images-1.medium.com/max/800/1*Kx1jOQONhFZPnGe72Fd4tQ.png" alt="creating-a-link-component"></p>
+<pre class="hljs"><code><span class="hljs-comment">// Link.js</span>
+<span class="hljs-keyword">const</span> Link = (props) =&gt; {
+ <span class="hljs-keyword">let</span> className = <code>link link--${props.theme}-theme</code>;
 
-<span class="hljs-number">3.</span> Setting values.
+ <span class="hljs-keyword">if</span> (!props.underline) className += <span class="hljs-string">&#39; link--no-underline&#39;</span>;
 
-   Pass the <span class="hljs-keyword">value</span> of a CSS property directly. (<span class="hljs-keyword">set</span> it <span class="hljs-keyword">as</span> an inline style)
+ <span class="hljs-keyword">return</span> &lt;a href={props.href} className={className}&gt;{props.children}&lt;/a&gt;;
+};
 
-   <code>&amp;lt;Icon width=&lt;span class=&quot;hljs-string&quot;&gt;&quot;25&quot;&lt;/span&gt; height=&lt;span class=&quot;hljs-string&quot;&gt;&quot;25&quot;&lt;/span&gt; type=&lt;span class=&quot;hljs-string&quot;&gt;&quot;search&quot;&lt;/span&gt; /&amp;gt;</code>
+Link.propTypes = {
+ theme: PropTypes.oneOf([
+   <span class="hljs-string">&#39;default&#39;</span>, <span class="hljs-comment">// primary color, no underline</span>
+   <span class="hljs-string">&#39;blend&#39;</span>, <span class="hljs-comment">// inherit surrounding styles</span>
+   <span class="hljs-string">&#39;primary-button&#39;</span>, <span class="hljs-comment">// primary color, solid block</span>
+ ]),
+ underline: PropTypes.<span class="hljs-keyword">bool</span>,
+ href: PropTypes.<span class="hljs-keyword">string</span>.isRequired,
+ children: PropTypes.oneOfType([
+   PropTypes.element,
+   PropTypes.array,
+   PropTypes.<span class="hljs-keyword">string</span>,
+ ]).isRequired,
+};
 
-   <span class="hljs-preprocessor">### An example</span>
+Link.defaultProps = {
+ theme: <span class="hljs-string">&#39;default&#39;</span>,
+ underline: <span class="hljs-keyword">false</span>,
+};</code></pre><pre class="hljs"><code><span class="hljs-comment">// Link.css</span>
+<span class="hljs-class">.link--default-theme</span>,
+<span class="hljs-class">.link--blend-theme</span><span class="hljs-pseudo">:hover</span> {
+ <span class="hljs-attribute">color</span>: <span class="hljs-hexcolor">#D84315</span>;
+}
 
-   <img src="https:&lt;span class=&quot;hljs-comment&quot;&gt;//cdn-images-1.medium.com/max/800/1*Kx1jOQONhFZPnGe72Fd4tQ.png" alt="creating-a-link-component"></span>
+<span class="hljs-class">.link--blend-theme</span> {
+ <span class="hljs-attribute">color</span>: inherit;
+}
 
-   <code>``jsx
-   &lt;span class=&quot;hljs-comment&quot;&gt;// Link.js&lt;/span&gt;
-   &lt;span class=&quot;hljs-keyword&quot;&gt;const&lt;/span&gt; Link = (props) =&amp;gt; {
-     &lt;span class=&quot;hljs-keyword&quot;&gt;let&lt;/span&gt; className =</code>link link--${props.theme}-theme`;
+<span class="hljs-class">.link--default-theme</span><span class="hljs-pseudo">:hover</span>,
+<span class="hljs-class">.link--blend-theme</span><span class="hljs-pseudo">:hover</span> {
+ <span class="hljs-attribute">text-decoration</span>: underline;
+}
 
-     <span class="hljs-keyword">if</span> (!props.underline) className += <span class="hljs-string">&#39; link--no-underline&#39;</span>;
+<span class="hljs-class">.link--primary-button-theme</span> {
+ <span class="hljs-attribute">display</span>: inline-block;
+ <span class="hljs-attribute">padding</span>: <span class="hljs-number">12px</span> <span class="hljs-number">25px</span>;
+ <span class="hljs-attribute">font-size</span>: <span class="hljs-number">18px</span>;
+ <span class="hljs-attribute">background</span>: <span class="hljs-hexcolor">#D84315</span>;
+ <span class="hljs-attribute">color</span>: white;
+}
 
-     <span class="hljs-keyword">return</span> &lt;a href={props.href} className={className}&gt;{props.children}&lt;/a&gt;;
-   };
-
-   Link.propTypes = {
-     theme: PropTypes.oneOf([
-       <span class="hljs-string">&#39;default&#39;</span>, <span class="hljs-comment">// primary color, no underline</span>
-       <span class="hljs-string">&#39;blend&#39;</span>, <span class="hljs-comment">// inherit surrounding styles</span>
-       <span class="hljs-string">&#39;primary-button&#39;</span>, <span class="hljs-comment">// primary color, solid block</span>
-     ]),
-     underline: PropTypes.<span class="hljs-keyword">bool</span>,
-     href: PropTypes.<span class="hljs-keyword">string</span>.isRequired,
-     children: PropTypes.oneOfType([
-       PropTypes.element,
-       PropTypes.array,
-       PropTypes.<span class="hljs-keyword">string</span>,
-     ]).isRequired,
-   };
-
-   Link.defaultProps = {
-     theme: <span class="hljs-string">&#39;default&#39;</span>,
-     underline: <span class="hljs-keyword">false</span>,
-   };</code></pre><pre class="hljs"><code>   <span class="hljs-comment">// Link.css</span>
-   <span class="hljs-class">.link--default-theme</span>,
-   <span class="hljs-class">.link--blend-theme</span><span class="hljs-pseudo">:hover</span> {
-     <span class="hljs-attribute">color</span>: <span class="hljs-hexcolor">#D84315</span>;
-   }
-
-   <span class="hljs-class">.link--blend-theme</span> {
-     <span class="hljs-attribute">color</span>: inherit;
-   }
-
-   <span class="hljs-class">.link--default-theme</span><span class="hljs-pseudo">:hover</span>,
-   <span class="hljs-class">.link--blend-theme</span><span class="hljs-pseudo">:hover</span> {
-     <span class="hljs-attribute">text-decoration</span>: underline;
-   }
-
-   <span class="hljs-class">.link--primary-button-theme</span> {
-     <span class="hljs-attribute">display</span>: inline-block;
-     <span class="hljs-attribute">padding</span>: <span class="hljs-number">12px</span> <span class="hljs-number">25px</span>;
-     <span class="hljs-attribute">font-size</span>: <span class="hljs-number">18px</span>;
-     <span class="hljs-attribute">background</span>: <span class="hljs-hexcolor">#D84315</span>;
-     <span class="hljs-attribute">color</span>: white;
-   }
-
-   <span class="hljs-class">.link--no-underline</span> {
-     <span class="hljs-attribute">text-decoration</span>: none;
-   }</code></pre><p>   ​</p>
+<span class="hljs-class">.link--no-underline</span> {
+ <span class="hljs-attribute">text-decoration</span>: none;
+}</code></pre><p>​</p>
 <blockquote>
 <p>JavaScript is easy, but with CSS you pay for your sins — once you’ve started a mess, it’s not easy to back out of.</p>
 <p>True fact: fighting CSS specificity is the number one cause of death among web developers.</p>
@@ -216,9 +211,11 @@ Button.propTypes = {
 <p>   这 line-height 要是一只猫的话，现在也早死了吧。</p>
 <p>   React 的话，就好办了。</p>
 <ul>
-<li>控制组件的 classes ；</li>
+<li>控制组件的 classes ；<ul>
 <li>移掉所有的全局 resets 然后都把它们扔到 Button.scss 中；</li>
 <li>可以用 <code>all: unset</code> 去掉所有浏览器初始样式。</li>
+</ul>
+</li>
 </ul>
 <h2 id="-5-the-switching-component">#5 The switching component</h2>
 <p>The switching component, rendering one of many components.</p>
@@ -251,6 +248,7 @@ Page.propTypes = {
 <span class="hljs-tag">&lt;<span class="hljs-title">Page</span> <span class="hljs-attribute">page</span>=<span class="hljs-value">&quot;home&quot;</span> /&gt;</span></span></code></pre><p>If you replace the keys <code>home</code>, <code>about</code> and <code>user</code> with <code>/</code>, <code>/about</code>, and <code>/user</code>, you’ve got yourself half a router.</p>
 <p>(Future post idea: removing <code>react-router</code>.)</p>
 <p>这里 Creator 中还是使用了 <code>react-router</code> 作为 SPA 路由。</p>
+<p>个人觉得 <code>React</code>+ <code>react-router</code> + <code>webpack</code> 这样的项目，开发中使用 <code>HashRouter</code>，既能使用 <code>location.hash = xxx</code> 作组件间无刷新跳转，又能保证打包后路径访问正确（除非你实在看不惯 <code>/#/</code>，想把它干掉）。</p>
 <pre class="hljs"><code><span class="hljs-regexp">//</span> Route.jsx
 import React from <span class="hljs-string">&#39;react&#39;</span>
 import IntroPage from <span class="hljs-string">&#39;../Page/IntroPage&#39;</span>
@@ -343,8 +341,9 @@ myAppInstance.<span class="hljs-function"><span class="hljs-title">doSth</span><
 <blockquote>
 <p>Keep in mind, however, that the JSX doesn&#39;t return a component instance! It&#39;s just a <strong>ReactElement</strong>: a lightweight representation that tells React what the mounted component should look like.</p>
 </blockquote>
+<p>所以出现了：</p>
 <h3 id="ref">ref</h3>
-<p>一个神奇的属性。</p>
+<p>一个神奇的属性， 但是很有用。感觉都可以独立写篇文章来好好介绍了。</p>
 <h4 id="the-ref-callback-attribute">The ref Callback Attribute</h4>
 <ul>
 <li>可以给任意 React 组件加上 <code>ref</code> prop. 组件被调用时候会新建一个该组件实例，而 <code>ref</code> 会指向这个实例。</li>
@@ -383,7 +382,7 @@ componentDidMount() {
 <li>为防止内存泄露，当引用组件被卸载或者 <code>ref</code> 改变的时候，<code>ref = null</code>.</li>
 <li>如果用 inline function，因为每次都是一个不同的 function object，所以当组件每次更新的时候，<code>ref</code> 都会被设置为 <code>null</code> 直到组件实例再次调用它。</li>
 </ul>
-<h4 id="the-ref-string-attribute-legacy">The ref String Attribute *legacy</h4>
+<h4 id="the-ref-string-attribute-legacy-">The ref String Attribute (*legacy)</h4>
 <p>要获取一个 React 组件的引用，既可以使用 this 来获取当前 ReactComponent，也可以使用 <code>ref</code> 来获取子组件的引用。</p>
 <pre class="hljs"><code>&lt;input <span class="hljs-keyword">ref</span>=<span class="hljs-string">&quot;myInput&quot;</span> /&gt;
 
@@ -436,9 +435,10 @@ componentDidMount() {
 <p>Don’t prematurely componentize. Components aren’t like teaspoons; you <em>can </em>have too many.</p>
 <p>What I am saying: “take something that you <em>don’t</em> think should be a component, and make it a bit more like its own component (if it can be).”</p>
 </blockquote>
-<p>让那些你认为不应该成为一个组件的东西，长得更像组件一点（如果它可以的话）。</p>
+<p>让那些你并不觉得它们可以是一个组件的东西，长得更像组件一点（如果它可以的话）。</p>
 <h2 id="-8-components-for-formatting-text">#8 Components for formatting text</h2>
 <p>用来格式化的组件，也就是组件也可以工具化。</p>
+<p>一般开发时候会把工具函数都放在 <code>Utils.js</code> 中，这里提供了一个用组件思想来写工具的思路，还真是 <strong>一切皆组件</strong>。</p>
 <pre class="hljs"><code><span class="hljs-comment">// Here’s a &lt;Price&gt; component that takes a number and returns a pretty string, with or without decimals and a ‘$’ sign.</span>
 
 <span class="hljs-keyword">const</span> Price = (props) =&gt; {
@@ -476,7 +476,7 @@ Price.defaultProps = {
       &lt;p&gt;Those gumboots will <span class="hljs-literal">set</span> ya back &lt;Price showDecimals={<span class="hljs-keyword">false</span>} showSymbol={<span class="hljs-keyword">false</span>}&gt;{bootPrice}&lt;/Price&gt; bucks.&lt;/p&gt;
     &lt;/div&gt;
   );
-};</code></pre><p>这里当然可以很简单的用 less code function 来实现</p>
+};</code></pre><p>这里当然可以很简单的用 <code>function</code> 来实现。</p>
 <pre class="hljs"><code><span class="hljs-comment">// could just easily use a function</span>
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">numberToPrice</span><span class="hljs-params">(num, options = {})</span> </span>{
     <span class="hljs-keyword">const</span> showSymbol = options.showSymbol !== <span class="hljs-literal">false</span>;
@@ -512,17 +512,17 @@ Price.defaultProps = {
 <pre class="hljs"><code><span class="hljs-comment">// react/redux way</span>
 
 <span class="hljs-tag">fetch</span>(<span class="hljs-built_in"><code>/api/search?${queryParams}</code></span>)
-<span class="hljs-class">.then</span>(response =&gt; response.<span class="hljs-function">json</span>())
-<span class="hljs-class">.then</span>(normalizeSearchResultsApiData) <span class="hljs-comment">// the do-it-all data massager</span>
-<span class="hljs-class">.then</span>(normalData =&gt; {
-    <span class="hljs-comment">// dispatch normalData to the store here</span>
-});</code></pre><p><strong>这里推荐徐飞在 QCon 上分享的 <a href="https://zhuanlan.zhihu.com/p/26426054">单页引用的数据流方案探索</a></strong></p>
+  <span class="hljs-class">.then</span>(response =&gt; response.<span class="hljs-function">json</span>())
+  <span class="hljs-class">.then</span>(normalizeSearchResultsApiData) <span class="hljs-comment">// the do-it-all data massager</span>
+  <span class="hljs-class">.then</span>(normalData =&gt; {
+      <span class="hljs-comment">// dispatch normalData to the store here</span>
+});</code></pre><p><strong>关于SPA数据流的管理，推荐徐飞在 QCon 上分享的 <a href="https://zhuanlan.zhihu.com/p/26426054">单页引用的数据流方案探索</a></strong></p>
 <h2 id="-10-importing-components-without-relative-paths">#10 Importing components without relative paths</h2>
 <p>Turn</p>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> Button <span class="hljs-keyword">from</span> <span class="hljs-string">&#39;../../../../Button/Button.jsx&#39;</span>;
 <span class="hljs-keyword">import</span> Icon <span class="hljs-keyword">from</span> <span class="hljs-string">&#39;../../../../Icon/Icon.jsx&#39;</span>;
 <span class="hljs-keyword">import</span> Footer <span class="hljs-keyword">from</span> <span class="hljs-string">&#39;../../Footer/Footer.jsx&#39;</span>;</code></pre><p>Into</p>
-<pre class="hljs"><code><span class="hljs-keyword">import</span> {Button, Icon, Footer} <span class="hljs-keyword">from</span> <span class="hljs-string">&#39;Components&#39;</span>;</code></pre><p>更灵活方便使用组件。</p>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> {Button, Icon, Footer} <span class="hljs-keyword">from</span> <span class="hljs-string">&#39;Components&#39;</span>;</code></pre><p>这样就省去了相对路径的烦恼，灵活引用组件。</p>
 <p>使用 <code>Webpack2</code> 可以直接配置</p>
 <pre class="hljs"><code><span class="hljs-regexp">//</span> exports all components wherever they are
 <span class="hljs-regexp">//</span> <span class="hljs-attribute">Ref</span>: Webpack <span class="hljs-built_in">require</span>.context
@@ -535,56 +535,71 @@ req.keys().forEach(<span class="hljs-function"><span class="hljs-params">(key)</
   const componentName = key.replace(<span class="hljs-regexp">/^.+\/([^/</span>]+)\<span class="hljs-regexp">/index.js/</span>, <span class="hljs-string">&#39;$1&#39;</span>)
   <span class="hljs-built_in">module</span>.exports[componentName] = req(key).default
 })</code></pre><p>Creator 中因为用的 <code>create-react-app</code> CLI，无法自己配置 Webpack，所以并没有用到...</p>
-]]></description><link>/2017-06-28-10-react-mini-patterns-note/index.html</link><guid isPermaLink="true">/2017-06-28-10-react-mini-patterns-note/index.html</guid><category><![CDATA[notes]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Tue, 27 Jun 2017 16:00:00 GMT</pubDate></item><item><title><![CDATA[Bug makers or bug fixers]]></title><description><![CDATA[<blockquote>
-<p>世界上只有两种人： Bug makers or bug fixers.
-    —— 郫县豆瓣</p>
+<p>以上就是一些作者认为很有用的 react 开发迷你模式，虽然我接触 react 很久了，但是项目中开发就是开发，也经常 <code>C-c/v</code> 生成组件，却并没有沉下心思考总结一些基本的设计模式，也没有花时间去了解它背后的原理，需要好好反思。</p>
+<p><strong>一切皆组件。Just coding in react-way! </strong>😆</p>
+]]></description><link>/2017-06-28-10-react-mini-patterns-note/index.html</link><guid isPermaLink="true">/2017-06-28-10-react-mini-patterns-note/index.html</guid><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Tue, 27 Jun 2017 16:00:00 GMT</pubDate></item><item><title><![CDATA[Bug makers or bug fixers]]></title><description><![CDATA[<blockquote>
+<p>世界上只有两种人： Bug makers or bug fixers.</p>
+<p>​    —— 郫县豆瓣</p>
 </blockquote>
-<p>可能是周一不宜上线吧。
-下午在做某个需求的时候，突然收到了一个之前修过但却并没有修好的小 Bug。接着又收到了一个刚上线的新需求报过来的线上 Bug 反馈，然后紧接着同一个需求的两个、三个 Bug… 一大片，炸开了。最后， PM 说，”这次 Bug 太多了，都先回滚吧。”
-只是突然觉得，已经工作了一年多近两年的我，写代码的时候依然不走心。
-其实作为程序员，被人指出你代码的 bug 是难受的，除了尴尬，有时候甚至真的会感到羞耻，会有点看不起自己也觉得会被人看不起。
-我只希望自己能够在每次写代码的时候永远记住这种感觉。
-之前也是遇到过各种奇奇怪怪的线上 Bug，其实大部分都是自己写的时候不用心、测试时候不上心导致。而最近，写的时候居然总有种匆匆忙忙急着完成任务的感觉，可结果却是既没有快速完成，也没有保证质量，既不好也不快，反而耽误了很多时间在 Debug 上。
-十足的 Bug Maker.
-其实仔细反思一下，我是知道原因的。
-最近一个多月以来，老实说，自己的生活发生了一些根本性的变化。
-我重新认识了一些人，重新跟一些人建立了新的关系，重构了自己的交友圈，经历了一些或狗血或鸡汤的事，也渐渐开始了一种和原来不太一样的生活方式，开始吃以前没怎么吃过的东西，读一些以前不怎么读的书，说一些有得没得的话。就像看了一场时而卡帧，时而情节又快速前进的黑白电影，散场后的我却浑浑噩噩。
-其实不管怎么说，从整体来看，新的生活方式是很好的，是我曾经向往的那种。但可能是我本来就工作不太上心，可能是我本来就懒得总结学习，可能是我之前养成的一些坏习惯，日积月累，量变成了质变，现在终于迎来了炸裂。
-也有可能，是我还没有彻底做好开始新生活的准备。
-我可能仍然需要提醒自己，在任何时候都要保持自己的心境。</p>
+<p>可能是周一不宜上线吧。</p>
+<p>下午在做某个需求的时候，突然收到了一个之前修过但却并没有修好的小 Bug。</p>
+<p>接着又收到了一个刚上线的新需求报过来的线上 Bug 反馈，然后紧接着同一个需求的两个、三个 Bug… 一大片，炸开了。</p>
+<p>最后， PM 说，”这次 Bug 太多了，都先回滚吧。”</p>
+<p>只是突然觉得，已经工作了一年多近两年的我，写代码的时候依然不走心。</p>
+<p>其实作为程序员，被人指出你代码的 bug 是难受的，除了尴尬，有时候甚至真的会感到羞耻，会有点看不起自己也觉得会被人看不起。</p>
+<p>我只希望自己能够在每次写代码的时候永远记住这种感觉。</p>
+<p>之前也是遇到过各种奇奇怪怪的线上 Bug，其实大部分都是自己写的时候不用心、测试时候不上心导致。</p>
+<p>而最近，写的时候居然总有种匆匆忙忙急着完成任务的感觉，可结果却是既没有快速完成，也没有保证质量，既不好也不快，反而耽误了很多时间在 Debug 上。</p>
+<p>十足的 Bug Maker.</p>
+<p>其实仔细反思一下，我是知道原因的。</p>
+<p>最近一个多月以来，老实说，自己的生活发生了一些根本性的变化。</p>
+<p>我重新认识了一些人，重新跟一些人建立了新的关系，重构了自己的交友圈，经历了一些或狗血或鸡汤的事，也渐渐开始了一种和原来不太一样的生活方式，开始吃以前没怎么吃过的东西，读一些以前不怎么读的书，说一些有得没得的话。</p>
+<p>就像看了一场时而卡帧，时而情节又快速前进的黑白电影，散场后的我却浑浑噩噩。</p>
+<p>其实不管怎么说，从整体来看，新的生活方式是很好的，是我曾经向往的那种。</p>
+<p>但可能是我本来就工作不太上心，可能是我本来就懒得总结学习，可能是我之前养成的一些坏习惯，日积月累，量变成了质变，现在终于迎来了炸裂。</p>
+<p>也有可能，是我还没有彻底做好开始新生活的准备。</p>
+<p>我可能仍然需要提醒自己，在任何时候都要保持自己的心境。</p>
 <ol>
-<li>找到生活与工作的平衡点，不会被周围噪音改变自己的频率，保护自己的直觉。
-今天临时去看了下一个 bug 案发现场，居然发现自己一瞬间没有了 bug-fixing 直觉。
-之前读过一本书，说一些有伟大格局观的人，大多都有着极简生活方式，如乔布斯等。「因为只有生活方式简单的人，才更容易保护到那一刹那，获得灵感。你很难想象一个整天忙于各个社交的人，能保护到自己的直觉。反之，人们常常在无意有意与他人合谋，伤害自己的好直觉。常见的三种伤害直觉的方式有：言语；父母与配偶；运气。」
-浑浑噩噩一个多月，需要回归到规律作息，规律饮食。</li>
-<li>保持一颗热忱的心。
-个人觉得，「热忱」的状态决定未来的成就。
-每个人都希望自己在工作中被认可，有存在感。但是这些事情，如果你不热爱，就不可能把它做得真正优秀。而有了热情，才有了专注，才会坚持下来，最终发光发热。
-「人们真正注意到你的时候，不是第一眼看到你站在那里，而是发现过了这么久你居然还在那里。」
-其实我是喜欢写点代码的，有时候还会自己动手做一些小工具。
-突如其来的事情总是会有，希望自己可以调整调整，对喜欢的东西保持专注，保持一颗热忱的心。</li>
-<li>「一幅优秀的绘画作品必须比它应该有的样子更好」
-这句话出自我很喜欢的一本书《黑客与画家》。
-之前一直觉得，只有伟大的东西才是不朽的。这样导致的结果是，我对自己创造出的东西并没有太苛刻。
-书作者 Paul Grahams 举例说保存于美国国家美术馆的达·芬奇的作品《女性肖像》（Ginevrade&#39;Benci），一般人欣赏的时候都会注意到，达·芬奇在少女的头后面摆了一片树枝，他很仔细地画出了树枝上的每一片叶子。许多画家也许会觉得，那不过是放在背景里的衬托物，没有人会仔细看的，不妨简单处理一下就可以了。
-但是达·芬奇不这样想。他对作品每一部分的认真程度完全不取决于预料中会不会有人仔细看这个部分。他就像篮球巨星迈克尔·乔丹（MichaelJordan），每一球都一丝不苟，绝不降低对自己的要求。
-结果就是，「所有那些看不见的细节合并在一起，就使得这样东西产生了惊人的效果，仿佛上千个细微的声音都以同一个音调在歌唱。同样地，优秀的软件也要求对美的狂热追求。如果你查看优秀软件的内部，就会发现那些预料中没有人会看见的部分也是优美的。我对待代码的认真程度远远超过我对待其他事情。」
-既然自己选择了走这条路，做这份工作，就应该要把它踏踏实实做好。每一个细节，每一个代码片段，每一个你认为不够美的地方，都去用心创造细心打磨。
-它可能成为不了不朽，但就是明知道一切都会被时间碾碎，也要认真面对啊。</li>
-<li>不要完美过头。
-其实出 Bug 确实是无法避免的一件事。毕竟比起开发环境，线上环境更复杂多元，影响的因素更多。
-抛开之前开发过程中有点不细心不说，但我可能每次对于上线后一些紧急 Bug 太提心吊胆了。对于上线后同行发现的 Bug 更是亚历山大。而这样就导致 Hotfix 时有点畏手畏脚，修的效率也不是特别高。
-《黑客与画家》中有个关于创业公司产品快速迭代公式：
-1.搭建原型 2.上线运营 特别建议：别管Bug 3.收集反馈 4.调整产品 5.成长壮大
-所以在某种特定环境下，也不需要太追求完美。
-线上出了 bug？修了就是嘛。实在不行，先回滚咯。
-很无聊的 Bouns:  How to become a bugs fixer in JavaScript way ...</li>
+<li><p>找到生活与工作的平衡点，不会被周围噪音改变自己的频率，保护自己的直觉。</p>
+<p>今天临时去看了下一个 bug 案发现场，居然发现自己一瞬间没有了 bug-fixing 直觉。</p>
+<p>之前读过一本书，说一些有伟大格局观的人，大多都有着极简生活方式，如乔布斯等。「因为只有生活方式简单的人，才更容易保护到那一刹那，获得灵感。你很难想象一个整天忙于各个社交的人，能保护到自己的直觉。反之，人们常常在无意有意与他人合谋，伤害自己的好直觉。常见的三种伤害直觉的方式有：言语；父母与配偶；运气。」</p>
+<p>浑浑噩噩一个多月，需要回归到规律作息，规律饮食。</p>
+<p>​</p>
+</li>
+<li><p>保持一颗热忱的心。</p>
+<p>个人觉得，「热忱」的状态决定未来的成就。</p>
+<p>每个人都希望自己在工作中被认可，有存在感。但是这些事情，如果你不热爱，就不可能把它做得真正优秀。而有了热情，才有了专注，才会坚持下来，最终发光发热。</p>
+<p>「人们真正注意到你的时候，不是第一眼看到你站在那里，而是发现过了这么久你居然还在那里。」</p>
+<p>其实我是喜欢写点代码的，有时候还会自己动手做一些小工具。</p>
+<p>突如其来的事情总是会有，希望自己可以调整调整，对喜欢的东西保持专注，保持一颗热忱的心。</p>
+<p>​</p>
+</li>
+<li><p>「一幅优秀的绘画作品必须比它应该有的样子更好」</p>
+<p>这句话出自我很喜欢的一本书《黑客与画家》。</p>
+<p>之前一直觉得，只有伟大的东西才是不朽的。这样导致的结果是，我对自己创造出的东西并没有太苛刻。</p>
+<p>书作者 Paul Grahams 举例说保存于美国国家美术馆的达·芬奇的作品《女性肖像》（Ginevrade&#39;Benci），一般人欣赏的时候都会注意到，达·芬奇在少女的头后面摆了一片树枝，他很仔细地画出了树枝上的每一片叶子。</p>
+<p>许多画家也许会觉得，那不过是放在背景里的衬托物，没有人会仔细看的，不妨简单处理一下就可以了。</p>
+<p>但是达·芬奇不这样想。他对作品每一部分的认真程度完全不取决于预料中会不会有人仔细看这个部分。他就像篮球巨星迈克尔·乔丹（MichaelJordan），每一球都一丝不苟，绝不降低对自己的要求。</p>
+<p>结果就是，「所有那些看不见的细节合并在一起，就使得这样东西产生了惊人的效果，仿佛上千个细微的声音都以同一个音调在歌唱。同样地，优秀的软件也要求对美的狂热追求。如果你查看优秀软件的内部，就会发现那些预料中没有人会看见的部分也是优美的。我对待代码的认真程度远远超过我对待其他事情。」</p>
+<p>既然自己选择了走这条路，做这份工作，就应该要把它踏踏实实做好。</p>
+<p>每一个细节，每一个代码片段，每一个你认为不够美的地方，都去用心创造细心打磨。</p>
+<p>它可能成为不了不朽，但就是明知道一切都会被时间碾碎，也要认真面对啊。</p>
+<p>​</p>
+</li>
+<li><p>不要完美过头。</p>
+<p>其实出 Bug 确实是无法避免的一件事。毕竟比起开发环境，线上环境更复杂多元，影响的因素更多。</p>
+<p>抛开之前开发过程中有点不细心不说，但我可能每次对于上线后一些紧急 Bug 太提心吊胆了。对于上线后同行发现的 Bug 更是亚历山大。而这样就导致 Hotfix 时有点畏手畏脚，修的效率也不是特别高。</p>
+<p>《黑客与画家》中有个关于创业公司产品快速迭代公式：</p>
+<p>1.搭建原型 2.上线运营 特别建议：别管Bug 3.收集反馈 4.调整产品 5.成长壮大</p>
+<p>所以在某种特定环境下，也不需要太追求完美。</p>
+<p>线上出了 bug？修了就是嘛。实在不行，先回滚咯。</p>
+<p>以上。</p>
+<p>​</p>
+<p>（很无聊的 Bouns:  How to become a bugs fixer in JavaScript way ...</p>
+</li>
 </ol>
 <p><img src="/content/images/bug-fixers.png" alt="Become a bugFixer in JavaScript way"></p>
-<ul>
-<li>End -</li>
-</ul>
-]]></description><link>/2017-03-27-Bugmakers-or-bugfixers/index.html</link><guid isPermaLink="true">/2017-03-27-Bugmakers-or-bugfixers/index.html</guid><category><![CDATA[thoughts]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Sun, 26 Mar 2017 16:00:00 GMT</pubDate></item><item><title><![CDATA[可能我们都有病]]></title><description><![CDATA[<h3 id="-">焦虑、抑郁？</h3>
+]]></description><link>/2017-03-27-Bugmakers-or-bugfixers/index.html</link><guid isPermaLink="true">/2017-03-27-Bugmakers-or-bugfixers/index.html</guid><category><![CDATA[thoughts]]></category><category><![CDATA[work]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Sun, 26 Mar 2017 16:00:00 GMT</pubDate></item><item><title><![CDATA[可能我们都有病]]></title><description><![CDATA[<h3 id="-">焦虑、抑郁？</h3>
 <p>昨天在朋友圈偶然看到了一个关于「成电延时摄影」视频，突然很好奇地点进去看了下。伴随背景音乐响起，晨雾中的主楼，晨光中的银杏大道，蓝天下的宿舍楼，黄昏下的品学楼，夜幕降临的图书馆，灯光辉煌的体育馆，还有一直没机会上过课的新教学楼，碧波荡漾的东湖西湖… <br/>
 以成都的天气，作者肯定是花了很多心血的，虽然不排除后期，但是一共七千五百张照片，一帧帧下来，每一幅都是曝光完美，好像从来没有见过那么美的成电。
 仔细想想，毕业离开学校近两年，从来没有很认真地怀念过自己的大学。<br/>
@@ -1609,37 +1624,33 @@ WebTorrent 作者之一。JS Standard Style 作者。斯坦福毕业的一小哥
 </ul>
 <p>效果截屏：</p>
 <p><a href="http://github.intra.douban.com/frodo/Talion/pull/253">http://github.intra.douban.com/frodo/Talion/pull/253</a></p>
-<p>（补图）</p>
-<p>(<a href="http://p.dapps.douban.com/p/38c24dc31b4d482c8095083995e43d00.blob">http://p.dapps.douban.com/p/38c24dc31b4d482c8095083995e43d00.blob</a>)</p>
-<p><a href="http://p.dapps.douban.com/p/78b40c471bab42209a0cb8ee2283c974.blob">http://p.dapps.douban.com/p/78b40c471bab42209a0cb8ee2283c974.blob</a></p>
 <h4 id="3-">3. 统一分享接口（微信重度使用患者）</h4>
 <ul>
 <li><a href="http://github.intra.douban.com/frodo/Talion/blob/master/static/js/card/weixin.js#L52">weixin.js</a>、 <a href="https://mp.weixin.qq.com/wiki/7/aaa137b55fb2e0456bf8dd9148dd613f.html#.E5.88.86.E4.BA.AB.E6.8E.A5.E5.8F.A3">微信 JSSDK 文档</a></li>
 </ul>
 <pre class="hljs"><code>
-          wx.onMenuShareTimeline($.extend({}, shareData,{
-              title: <span class="hljs-built_in">window</span>.getMeta(<span class="hljs-string">&#39;weixin:timeline_title&#39;</span>) || <span class="hljs-built_in">document</span>.title,
-              success: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-                  wxShareStat.target = <span class="hljs-string">&#39;timeline&#39;</span>;
-                  $.get(<span class="hljs-string">&#39;/j/wechat/shared&#39;</span>, wxShareStat);
-              },
-              cancel: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{}
-          }));
+wx.onMenuShareTimeline($.extend({}, shareData,{
+    title: <span class="hljs-built_in">window</span>.getMeta(<span class="hljs-string">&#39;weixin:timeline_title&#39;</span>) || <span class="hljs-built_in">document</span>.title,
+    success: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+        wxShareStat.target = <span class="hljs-string">&#39;timeline&#39;</span>;
+        $.get(<span class="hljs-string">&#39;/j/wechat/shared&#39;</span>, wxShareStat);
+    },
+    cancel: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{}
+}));
 
-          wx.onMenuShareAppMessage($.extend({}, shareData,{
-              title: <span class="hljs-built_in">window</span>.getMeta(<span class="hljs-string">&#39;weixin:chat_title&#39;</span>) || <span class="hljs-built_in">document</span>.title,
-              desc: <span class="hljs-built_in">window</span>.getMeta(<span class="hljs-string">&#39;weixin:description&#39;</span>) || <span class="hljs-built_in">window</span>.getMeta(<span class="hljs-string">&#39;og:description&#39;</span>),
-              success: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-                  wxShareStat.target = <span class="hljs-string">&#39;friend&#39;</span>;
-                  $.get(<span class="hljs-string">&#39;/j/wechat/shared&#39;</span>, wxShareStat);
-              },
-              cancel: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{}
-          }));</code></pre><p>  结合使用 <code>meta[name=&quot;weixin:image&quot;]</code></p>
-<pre class="hljs"><code>      &lt;meta property=<span class="hljs-string">&quot;weixin:timeline_title&quot;</span> content=<span class="hljs-string">&quot;<span class="hljs-subst">${ wechat_timeline_title <span class="hljs-keyword">or</span> <span class="hljs-string">&#39;&#39;</span> }</span>&quot;</span> /&gt;
-      &lt;meta property=<span class="hljs-string">&quot;weixin:chat_title&quot;</span> content=<span class="hljs-string">&quot;<span class="hljs-subst">${ wechat_chat_title <span class="hljs-keyword">or</span> <span class="hljs-string">&#39;&#39;</span> }</span>&quot;</span> /&gt;
-      &lt;meta property=<span class="hljs-string">&quot;weixin:description&quot;</span> content=<span class="hljs-string">&quot;<span class="hljs-subst">${ wechat_desc <span class="hljs-keyword">or</span> <span class="hljs-string">&#39;&#39;</span> }</span>&quot;</span> /&gt;
-      &lt;meta property=<span class="hljs-string">&quot;weixin:image&quot;</span> content=<span class="hljs-string">&quot;<span class="hljs-subst">${ image <span class="hljs-keyword">or</span> default_image }</span>&quot;</span> /&gt;</code></pre><p>  ​</p>
-<ul>
+wx.onMenuShareAppMessage($.extend({}, shareData,{
+    title: <span class="hljs-built_in">window</span>.getMeta(<span class="hljs-string">&#39;weixin:chat_title&#39;</span>) || <span class="hljs-built_in">document</span>.title,
+    desc: <span class="hljs-built_in">window</span>.getMeta(<span class="hljs-string">&#39;weixin:description&#39;</span>) || <span class="hljs-built_in">window</span>.getMeta(<span class="hljs-string">&#39;og:description&#39;</span>),
+    success: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+        wxShareStat.target = <span class="hljs-string">&#39;friend&#39;</span>;
+        $.get(<span class="hljs-string">&#39;/j/wechat/shared&#39;</span>, wxShareStat);
+    },
+    cancel: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{}
+}));</code></pre><p>  结合使用 <code>meta[name=&quot;weixin:image&quot;]</code></p>
+<pre class="hljs"><code>&lt;meta property=<span class="hljs-string">&quot;weixin:timeline_title&quot;</span> content=<span class="hljs-string">&quot;<span class="hljs-subst">${ wechat_timeline_title <span class="hljs-keyword">or</span> <span class="hljs-string">&#39;&#39;</span> }</span>&quot;</span> /&gt;
+&lt;meta property=<span class="hljs-string">&quot;weixin:chat_title&quot;</span> content=<span class="hljs-string">&quot;<span class="hljs-subst">${ wechat_chat_title <span class="hljs-keyword">or</span> <span class="hljs-string">&#39;&#39;</span> }</span>&quot;</span> /&gt;
+&lt;meta property=<span class="hljs-string">&quot;weixin:description&quot;</span> content=<span class="hljs-string">&quot;<span class="hljs-subst">${ wechat_desc <span class="hljs-keyword">or</span> <span class="hljs-string">&#39;&#39;</span> }</span>&quot;</span> /&gt;
+&lt;meta property=<span class="hljs-string">&quot;weixin:image&quot;</span> content=<span class="hljs-string">&quot;<span class="hljs-subst">${ image <span class="hljs-keyword">or</span> default_image }</span>&quot;</span> /&gt;</code></pre><ul>
 <li><p>自定义微信分享到聊天、朋友圈的显示内容，文案<code>setMeta()</code>, <code>getMeta()</code></p>
 </li>
 <li><p><strong>Tips:</strong> 如果没有设置 <code>wx.onMenuShareTimeline()</code>/ <code>wx.onMenuShareAppMessage()</code> 中的 title / imgUrl / desc 参数，微信内置浏览器默认抓取对应的<code>og:xxx</code> 相关。</p>
@@ -1647,7 +1658,11 @@ WebTorrent 作者之一。JS Standard Style 作者。斯坦福毕业的一小哥
 <li><p><strong>Bugs:</strong> 通过 Safari Extension 分享出来的永远抓的是 <code>apple-touch-icon</code> 😂</p>
 </li>
 </ul>
-<pre class="hljs"><code>  <span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">&quot;apple-touch-icon-precomposed&quot;</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;<a href="https://img3.doubanio.com/f/talion/315ba4fc82e5cdb5c50ef1d9f88c8aa2c5c0c4ba/pics/icon/m_logo_76.png">https://img3.doubanio.com/f/talion/315ba4fc82e5cdb5c50ef1d9f88c8aa2c5c0c4ba/pics/icon/m_logo_76.png</a>&quot;</span>&gt;</span></code></pre><h3 id="further-reading-resource">Further Reading &amp; Resource</h3>
+<pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">&quot;apple-touch-icon-precomposed&quot;</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;<a href="https://img3.doubanio.com/f/talion/315ba4fc82e5cdb5c50ef1d9f88c8aa2c5c0c4ba/pics/icon/m_logo_76.png">https://img3.doubanio.com/f/talion/315ba4fc82e5cdb5c50ef1d9f88c8aa2c5c0c4ba/pics/icon/m_logo_76.png</a>&quot;</span>&gt;</span></code></pre><p>微信分享效果图：
+<img src="&#39;/content/images/seo_in_mobile/seo_1.png&#39;" alt="after_seo_1">
+<img src="&#39;/content/images/seo_in_mobile/seo_2.png&#39;" alt="after_seo_2">
+<img src="&#39;/content/images/seo_in_mobile/seo_3.png&#39;" alt="after_seo_3"></p>
+<h3 id="further-reading-resource">Further Reading &amp; Resource</h3>
 <ol>
 <li>Sitemap &amp; <a href="http://baiduseoguide.com/news/20141128113.html">Deadlink</a></li>
 <li>Social Meta Tag Cheatsheet</li>
@@ -1664,7 +1679,7 @@ WebTorrent 作者之一。JS Standard Style 作者。斯坦福毕业的一小哥
 </ul>
 </li>
 </ol>
-]]></description><link>/2016-05-20-seo-in-mobile/index.html</link><guid isPermaLink="true">/2016-05-20-seo-in-mobile/index.html</guid><category><![CDATA[SEO]]></category><category><![CDATA[shares]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Thu, 19 May 2016 18:21:00 GMT</pubDate></item><item><title><![CDATA[[译]前端指南]]></title><description><![CDATA[<p><strong>Update</strong>
+]]></description><link>/2016-05-20-seo-in-mobile/index.html</link><guid isPermaLink="true">/2016-05-20-seo-in-mobile/index.html</guid><category><![CDATA[SEO]]></category><category><![CDATA[shares]]></category><category><![CDATA[tech]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Thu, 19 May 2016 18:21:00 GMT</pubDate></item><item><title><![CDATA[[译]前端指南]]></title><description><![CDATA[<p><strong>Update</strong>
 以下大概写于两年前，亟待更新。</p>
 <hr>
 <p>几天前从Github上看到了这篇<a href="https://github.com/bendc/frontend-guidelines">前端编码最佳实践</a>，Star数已破4K，觉得应该是篇不错的小指南，花了点时间将它稍作翻译，也当是复习复习 <code>HTML&amp;CSS&amp;JS</code>。
@@ -2935,4 +2950,126 @@ HTTP接口应该也就是写个函数模块吧。暂时给思路如下，待完�
 
 <hr>
 <p> <sup id="fn1">1. 知乎：<a href="http://zhi.hu/1Ed2">怎样评价Medium的设计</a> <a href="#ref1">↩</a></sup><br><sup id="fn2">2.  <a href="https://www.codeschool.com/courses/fundamentals-of-design">Foundamental of Design by Code School</a> <a href="#ref2">↩</a></sup></p>
-]]></description><link>/2016-10-21-oops-devops/index.html</link><guid isPermaLink="true">/2016-10-21-oops-devops/index.html</guid><category><![CDATA[ghost]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Mon, 03 Nov 2014 06:40:00 GMT</pubDate></item></channel></rss>
+]]></description><link>/2016-10-21-oops-devops/index.html</link><guid isPermaLink="true">/2016-10-21-oops-devops/index.html</guid><category><![CDATA[ghost]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Mon, 03 Nov 2014 06:40:00 GMT</pubDate></item><item><title><![CDATA[index]]></title><description><![CDATA[<p><strong>- HTML</strong></p>
+<ol>
+<li>修改Drawer侧栏的导航（Navigation.hbs），增加Links如下:</li>
+</ol>
+<pre class="hljs"><code><span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-item&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;/&quot;</span> <span class="hljs-attribute">data-pjax</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">i</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;fa fa-home&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">i</span>&gt;</span>Home
+  <span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-item&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;</span></span></span><span class="hljs-expression">{{@<span class="hljs-variable">blog.url</span>}}</span><span class="xml"><span class="hljs-tag"><span class="hljs-value">/timeline/&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">i</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;fa fa-clock-o&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">i</span>&gt;</span>Timeline
+  <span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-item&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;</span></span></span><span class="hljs-expression">{{@<span class="hljs-variable">blog.url</span>}}</span><span class="xml"><span class="hljs-tag"><span class="hljs-value">/wiki/&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">i</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;fa fa-coffee&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">i</span>&gt;</span>Wiki
+  <span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-item&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;</span></span></span><span class="hljs-expression">{{@<span class="hljs-variable">blog.url</span>}}</span><span class="xml"><span class="hljs-tag"><span class="hljs-value">/book/&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">i</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;fa fa-camera-retro&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">i</span>&gt;</span>Portfolio
+  <span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-item&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;</span></span></span><span class="hljs-expression">{{@<span class="hljs-variable">blog.url</span>}}</span><span class="xml"><span class="hljs-tag"><span class="hljs-value">/about/&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">i</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;fa fa-comment-o&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">i</span>&gt;</span>About Me
+  <span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-item&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;</span></span></span><span class="hljs-expression">{{@<span class="hljs-variable">blog.url</span>}}</span><span class="xml"><span class="hljs-tag"><span class="hljs-value">/rss/&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">i</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;fa fa-rss&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">i</span>&gt;</span>Subscribe to Feed
+  <span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-divider&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-item drawer-list-title&quot;</span>&gt;</span>
+  Follow me
+<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-item&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;<a href="http://twitter.com/cool4zbl">http://twitter.com/cool4zbl</a>&quot;</span> <span class="hljs-attribute">target</span>=<span class="hljs-value">&quot;_blank&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">i</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;fa fa-twitter&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">i</span>&gt;</span>Twitter
+  <span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-item&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;<a href="http://github.com/githubzbl">http://github.com/githubzbl</a>&quot;</span> <span class="hljs-attribute">target</span>=<span class="hljs-value">&quot;_blank&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">i</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;fa fa-github&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">i</span>&gt;</span>Github
+  <span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span></span></code></pre><ol>
+<li>在博客文章内容页（post.hbs）删除了分享到G+图标，增加了分享到微博图标：  <pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;#&quot;</span> <span class="hljs-attribute">data-action</span>=<span class="hljs-value">&quot;share-weibo&quot;</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">i</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;fa fa-fw fa-lg fa-weibo&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">i</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span></code></pre></li>
+</ol>
+<p>CSS(main.css)  </p>
+<ol>
+<li>字体类型及大小。<br>原来的字体太小，而且因为主题原作者不说汉语，所以默认在主题内显示的汉字为宋体，且行高较小，不方便阅读。发现这么几篇文章：<a href="https://ruby-china.org/topics/14005">web中文字体应用指南</a>//<a href="http://lepture.com/zh/2014/chinese-fonts-and-yue-css">適合閱讀的中文字體</a>//<a href="http://informationarchitects.net/blog/the-web-is-all-about-typography-period/">網頁上95%的內容其實都是&quot;typography“</a> 
+特别是第二篇。于是根据自己的喜好，同时照顾到广大Mac、Windows用户，字体样式如下：  <pre class="hljs"><code><span class="hljs-comment">/<em> 文章内容 衬线字体 </em>/</span>
+<span class="hljs-tag">body</span> {
+ <span class="hljs-attribute">font</span>: <span class="hljs-number">400</span> <span class="hljs-number">20px</span>/<span class="hljs-number">1.62</span> <span class="hljs-string">&quot;Lora&quot;</span>, Georgia, <span class="hljs-string">&quot;Xin Gothic&quot;</span>, <span class="hljs-string">&quot;STXihei&quot;</span>, Cambria, <span class="hljs-string">&quot;Droid Sans Fallback&quot;</span>, <span class="hljs-string">&quot;Microsoft YaHei&quot;</span>, sans-serif;
+ <span class="hljs-attribute">background</span>: <span class="hljs-hexcolor">#fff</span>;
+ <span class="hljs-attribute">color</span>: <span class="hljs-hexcolor">#333</span>
+}
+<span class="hljs-comment">/<em> 文章标题、按钮等 非衬线 </em>/</span><br><span class="hljs-attribute">font-family</span>: <span class="hljs-string">&quot;Lato&quot;</span>,<span class="hljs-string">&quot;Myriad Pro&quot;</span>,<span class="hljs-string">&quot;Lucida Grande&quot;</span>,<span class="hljs-string">&quot;Lucida Sans Unicode&quot;</span>,<span class="hljs-string">&quot;Lucida Sans&quot;</span>,Geneva,Verdana,sans-serif;
+<span class="hljs-comment">/<em> Footer底部字体 Optima更为优雅低调 </em>/</span>
+<span class="hljs-attribute">font-family</span>: Optima, sans-serif;</code></pre></li>
+</ol>
+<p>注：&quot;Xin Gothic&quot; 信黑体；&quot;STXihei&quot; 华文细黑；&quot;Hiragino Sans GB&quot; 冬青黑体<br><strong>Lato &amp; Lora</strong> 同为 Transitional Fonts。<a href="https://www.codeschool.com/courses/fundamentals-of-design">Foundamentals of Design by code school</a></p>
+<ol>
+<li><p>主页（index.hbs）的封面/边距/文章摘要  </p>
+<ul>
+<li>原来的<code>cover</code>大概占据了页面的30%，看起来图片有点喧宾夺主，经过反复折腾后，觉得25%的比例最不错。  <pre class="hljs"><code><span class="hljs-class">.cover</span> <span class="hljs-rules">{
+<span class="hljs-rule"><span class="hljs-attribute">position</span>:<span class="hljs-value"> relative</span></span>;
+<span class="hljs-rule"><span class="hljs-attribute">top</span>:<span class="hljs-value"> <span class="hljs-number">0</span></span></span>;
+<span class="hljs-rule"><span class="hljs-attribute">left</span>:<span class="hljs-value"> <span class="hljs-number">0</span></span></span>;
+<span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">25%</span></span></span>;
+<span class="hljs-rule"><span class="hljs-attribute">height</span>:<span class="hljs-value"> <span class="hljs-number">100%</span></span></span>;
+<span class="hljs-rule"><span class="hljs-attribute">z-index</span>:<span class="hljs-value"> <span class="hljs-number">100</span>
+</span></span></span>}</code></pre></li>
+<li><p>主页右侧文章内容偏上，如果是英文内容还好，但是中文的话感觉一块块的，特别突兀，调整<code>padding</code>，使内边距更大。反复比较后，6%看起来最自然。</p>
+<pre class="hljs"><code><span class="hljs-class">.wrapper-container</span> <span class="hljs-rules">{
+<span class="hljs-rule"><span class="hljs-attribute">position</span>:<span class="hljs-value"> relative</span></span>;
+<span class="hljs-rule"><span class="hljs-attribute">padding</span>:<span class="hljs-value"> <span class="hljs-number">6%</span> <span class="hljs-number">10%</span> <span class="hljs-number">40px</span> <span class="hljs-number">185px</span></span></span>;
+<span class="hljs-rule"><span class="hljs-attribute">max-width</span>:<span class="hljs-value"> <span class="hljs-number">910px</span>
+</span></span></span>}</code></pre><ul>
+<li>主页右侧的文章摘要(post/list.hbs)原来为<br><code>&lt;section itemprop=&quot;description&quot; class=&quot;post-item-excerpt&quot;&gt;
+&lt;p&gt;{{excerpt words=&quot;35&quot;}}&amp;hellip;&lt;/p&gt;
+&lt;/section&gt;</code></li>
+</ul>
+<p>如果是英文内容还好，但是对于中文内容，Ghost貌似对这个支持不太好（因为是按空格来计算word数量），所以显示的摘要往往会过多，查看文档后发现有另一种<code>character</code>字符数计数方式。很高兴地修改如下：<br><code>&lt;section itemprop=&quot;description&quot; class=&quot;post-item-excerpt&quot;&gt;
+&lt;p&gt;{{excerpt characters=&quot;140&quot;}}&amp;hellip;&lt;/p&gt;
+&lt;/section&gt;</code></p>
+</li>
+</ul>
+</li>
+<li><p>全局导航栏(drawer.hbs)<br> 每个导航栏(.drawer-list-item)字体过小，且挨得太近。参考了一下我最喜欢的<strong>Medium</strong>设计后，修改如下：  </p>
+<pre class="hljs"><code>  <span class="hljs-class">.drawer-list-item</span> <span class="hljs-rules">{
+ <span class="hljs-rule"><span class="hljs-attribute">font-family</span>:<span class="hljs-value"> <span class="hljs-string">&quot;Lato&quot;</span>,<span class="hljs-string">&quot;Myriad Pro&quot;</span>,<span class="hljs-string">&quot;Lucida Grande&quot;</span>,<span class="hljs-string">&quot;Lucida Sans Unicode&quot;</span>,<span class="hljs-string">&quot;Lucida Sans&quot;</span>,Geneva,Verdana,sans-serif</span></span>;
+ <span class="hljs-rule"><span class="hljs-attribute">font-weight</span>:<span class="hljs-value"> <span class="hljs-number">600</span></span></span>;
+ <span class="hljs-rule"><span class="hljs-attribute">font-size</span>:<span class="hljs-value"> .<span class="hljs-number">9em</span></span></span>;
+ <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#9c9c9c</span></span></span>;
+ <span class="hljs-rule"><span class="hljs-attribute">line-height</span>:<span class="hljs-value"> <span class="hljs-number">2.2</span></span></span>;
+ }</span></code></pre></li>
+<li><p>博客内容分页(post.hbs)<br> 对于作者的头像<code>.post-author-avatar</code>，原作者可能了为了保证质量，头像不被随意拉伸，<code>language-css .post-author-avatar { width: 100%; height: 100%; border-radius: 100% }</code>，采取了长宽度100%，但是四个角自然圆角，所以如果传的头像是矩形就会出现椭圆形的效果，但是个人觉得还是圆形头像更精致。所以为了保证无论上传何种比例的图片，得到的都是圆形的头像，那么就采用固定长宽度（此处在看Ghost后台时候，发现默认的作者头像就是圆形，查看源代码发现使用的是<code>js-model-image</code>，涉及到JS还未深入研究）。   </p>
+<pre class="hljs"><code> <span class="hljs-class">.post-author-avatar</span> <span class="hljs-rules">{
+ <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">80px</span></span></span>;
+ <span class="hljs-rule"><span class="hljs-attribute">height</span>:<span class="hljs-value"> <span class="hljs-number">80px</span></span></span>;
+ <span class="hljs-rule"><span class="hljs-attribute">display</span>:<span class="hljs-value"> block</span></span>;
+ <span class="hljs-rule"><span class="hljs-attribute">margin-bottom</span>:<span class="hljs-value"> <span class="hljs-number">10px</span>
+ </span></span></span>}</code></pre></li>
+</ol>
+<hr>
+<p>大体地方修改完毕，把修改后主题上传到VPS，重启Ghost服务（Ghost无法实时探测到<code>content/theme/</code>内容改变）。<br>Well done.</p>
+<p>优化：<br>对于谷歌字体在国内<del>访问速度不佳</del>无法访问，使用了<a href="http://libs.useso.com/">360网站卫士加速库</a> <code>language-html &lt;link href=&quot;//fonts.useso.com/css?family=***&quot;&gt;</code></p>
+<p>待解决问题：</p>
+<ul>
+<li>微博官方的分享按钮太花哨，想使用FontAwesome的图标但还未解决如何触发微博分享；  </li>
+<li>把博客内容页面<code>post</code>样式从<code>main.css</code>中分离出来，方便以后Ghost升级做<em>所见即所得</em> (but we highly recommend keeping your post styles in a separate file (post.css) from other styles for your theme (style.css) so that you will quickly be able to take advantage of this feature in the future.)；  </li>
+<li>在<code>post</code>页面加入一个返回顶部的小箭头；  </li>
+<li>在<code>post</code>页面应用类似于Medium文章打开后顶部为震撼图片的大Banner。 </li>
+<li>学习使用JS-model-image 自动切割Avatar及Logo  </li>
+<li>Navigation各种链接网页的相关建设及完善  </li>
+<li>博文搜索  </li>
+<li>画个网站结构图 site-map</li>
+</ul>
+]]></description><link>/2014-11-03-oh-my-ghostium/index.html</link><guid isPermaLink="true">/2014-11-03-oh-my-ghostium/index.html</guid><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Sun, 02 Nov 2014 16:00:00 GMT</pubDate></item></channel></rss>

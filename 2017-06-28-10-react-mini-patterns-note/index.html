@@ -29,7 +29,7 @@
 <link rel="alternate" type="application/rss+xml" title="ZBL&#39;s Doodle" href="/rss/index.xml">
 <link rel="canonical" href="http://zhangbinliu.me/2017-06-28-10-react-mini-patterns-note/" />
 </head>
-<body class="author-template author-ZBL post-template tag-notes tag-frontend nav-closed">
+<body class="author-template author-ZBL post-template nav-closed">
 
     
 
@@ -45,22 +45,27 @@
 </header>
 
 <main class="content" role="main">
-    <article class="post tag-notes tag-frontend">
+    <article class="post">
 
         <header class="post-header">
-            <h1 class="post-title">从十个 React 迷你设计模式谈开去</h1>
+            <h1 class="post-title">#1 Sending data down and up 数据流</h1>
             <section class="post-meta">
-                <time class="post-date" datetime="2017-06-28">28 June 2017</time>  on <a href="/tag/notes/">notes</a>, <a href="/tag/frontend/">frontend</a>
+                <time class="post-date" datetime="2017-06-28">28 June 2017</time> 
             </section>
         </header>
 
+
         <section class="post-content">
-            <p>很早之前就一直在读的一篇文章，<a href="https://hackernoon.com/10-react-mini-patterns-c1da92f068c5">10 个React Mini 设计模式</a>，
-一边做 <code>Creator</code> 项目，也一边终于把它精读完。
-结合自己的开发时候的项目经验，做了点笔记。
-<code>Creator</code> 项目是一个多端（Web + Mobile）React SPA，且有一些表单填写和复杂的交互组件，自己单独封装了一个很简单的基于事件的 <code>Store</code>，开发过程中收获很大，这些细节之后可以细说。</p>
-<p>原文作者说你是不是天天写 React, 写着写着发现自己可能经常用来实现需求的，也总是那么几个方法，往大了讲其实就是开发中的 <strong>设计模式</strong>。但是这里我们称为 <strong>Mini Patterns</strong>。</p>
-<h2 id="-1-sending-data-down-and-up">#1 Sending data down and up</h2>
+          <p>--
+title: 从十个 React 迷你设计模式谈开去
+tags: notes, frontend, tech</p>
+<hr>
+<p>很早之前就一直在读的一篇文章，<a href="https://hackernoon.com/10-react-mini-patterns-c1da92f068c5">10 个React Mini 设计模式</a>，</p>
+<p>一边做 <code>Creator</code> 项目，也一边终于把它精读完。</p>
+<p>结合自己的开发时候的项目经验，做了点笔记。</p>
+<p><code>Creator</code> 项目是一个多端（Web + Mobile）React SPA，且有一些表单填写和复杂的交互组件，自己单独封装了一个很简单的基于事件的 <code>Store</code>，开发过程中收获很大，这些细节之后可以细说。</p>
+<p>原文作者说你是不是天天写 React, 写着写着发现自己可能经常用来实现需求的，也总是那么几个方法，往大了讲其实就是开发中的 <strong>设计模式</strong>。这里我们称为 <strong>Mini Patterns</strong>。</p>
+<h2 id="-1-sending-data-down-and-up-">#1 Sending data down and up 数据流</h2>
 <p><img src="https://cdn-images-1.medium.com/max/2000/1*J5XOQh2WKIl0NFTAMvcVbQ.png" alt="Data-flow"></p>
 <ul>
 <li>React 数据流</li>
@@ -88,23 +93,19 @@
 </li>
 <li><p>这里项目中有个选择证件类型的 <code>Select</code>，与后端默认 身份证 = 0 / 护照 = 1，但是在 <code>e.target.value</code> 时候忘记 convert 了。所以还是需要记得判断下 <code>option</code> 的值类型。</p>
 <pre class="hljs"><code>let {<span class="hljs-keyword">name</span>, <span class="hljs-keyword">value</span>} = e.<span class="hljs-type">target</span>
-<span class="hljs-keyword">value</span> = isNaN(<span class="hljs-keyword">Number</span>(<span class="hljs-keyword">value</span>)) ? <span class="hljs-keyword">value</span> : <span class="hljs-keyword">Number</span>(<span class="hljs-keyword">value</span>)</code></pre><p>​</p>
-</li>
+<span class="hljs-keyword">value</span> = isNaN(<span class="hljs-keyword">Number</span>(<span class="hljs-keyword">value</span>)) ? <span class="hljs-keyword">value</span> : <span class="hljs-keyword">Number</span>(<span class="hljs-keyword">value</span>)</code></pre></li>
 <li><p>A set of radio buttons is functionally the same thing as a <code>&lt;select&gt;</code>, right? It’s messed up to treat them in a completely different manner when the only difference is the UI. Maybe for your app it makes sense to have a single <code>&lt;PickOneFromMany /&gt;</code> component and pass either <code>ui=&quot;radio&quot;</code> or <code>ui=&quot;dropDown&quot;</code>.</p>
 </li>
 <li><p>一堆单选按钮在功能上和一个 <code>&lt;select&gt;</code> 组件是一样的。没有必要把它们完全不一样地来对待，因为它们仅仅是 UI 不一样。其实可能只需要一个 <code>&lt;PickOneFromMany /&gt;</code> 组件就好，通过 <code>ui=&quot;radio&quot;</code> 或者<code>ui=&quot;dropdown&quot;</code> 来区分。</p>
 </li>
 <li><p><strong>React Form 与 HTML 的不同</strong></p>
-</li>
-<li><p><code>value/checked</code> 设置后用户输入无效，相当于设置了 value -&gt; controlled component.</p>
-</li>
-<li><p><code>textarea</code> 的值要设置在 value 属性</p>
-</li>
-<li><p><code>select</code> 的<code>value</code> 属性可以是数组，不建议使用 <code>option</code> 的 <code>selected</code> 属性</p>
-</li>
-<li><p><code>input/textarea</code> 的 <code>onChange</code> 每次输入都会触发，即使不失去焦点</p>
-</li>
-<li><p><code>radio/checkbox</code>  点击后触发 `onChange</p>
+<ul>
+<li><code>value/checked</code> 设置后用户输入无效，相当于设置了 value -&gt; controlled component.</li>
+<li><code>textarea</code> 的值要设置在 value 属性</li>
+<li><code>select</code> 的<code>value</code> 属性可以是数组，不建议使用 <code>option</code> 的 <code>selected</code> 属性</li>
+<li><code>input/textarea</code> 的 <code>onChange</code> 每次输入都会触发，即使不失去焦点</li>
+<li><code>radio/checkbox</code>  点击后触发 `onChange</li>
+</ul>
 </li>
 </ul>
 <h2 id="-3-binding-labels-to-inputs-with-unique-ids">#3 Binding labels to inputs with unique IDs</h2>
@@ -151,110 +152,105 @@ export const resetId = () =&gt; {
 export const getNextId = () =&gt; {
   <span class="hljs-keyword">return</span> <code>element-id-${count++}</code>;
 }</code></pre><ul>
-<li>这里大概是自动给 <code>label</code>/<code>input</code> 加上一对一的 id.</li>
-<li>Creator 中好像没有这样使用。</li>
+<li>这里大概是自动给 <code>label</code>/<code>input</code> 加上一对一的 id. 可能是为了在表单填写的时候给用户更好的体验吧。</li>
 </ul>
 <h2 id="-4-controlling-css-with-props">#4 Controlling CSS with props</h2>
 <p>Three distinct ways to control the CSS applied to a component.</p>
 <ol>
-<li><p>Using themes. (Used in Proj Creator)</p>
+<li>Using themes. (Used in Proj Creator)</li>
+</ol>
 <p><code>&lt;Button theme=&quot;secondary&quot;&gt;Hello&lt;/Button&gt;</code></p>
-<p>Tip: Do your best to only require one theme per component.</p>
-<p>这种可能适合页面主题定制化。</p>
-<p>Creator 中的 <code>&lt;Button /&gt;</code> 本来是用 theme 做区分，但是好像设计那边看起来就是一个主题，豆瓣绿经典款，所以后来改为了使用下面两种方式。</p>
-<p>​</p>
-</li>
-<li><p>Using flags. (Used too.)</p>
+<p>   Tip: Do your best to only require one theme per component.</p>
+<p>   这种可能适合页面主题定制化。</p>
+<p>   Creator 中的 <code>&lt;Button /&gt;</code> 本来是用 theme 做区分，但是好像设计那边看起来就是一个主题，豆瓣绿经典款，所以后来改为了使用下面两种方式。</p>
+<p>   ​</p>
+<ol>
+<li>Using flags. (Used too.)</li>
+</ol>
 <p><code>&lt;Button theme=&quot;secondary&quot; rounded&gt;Hello&lt;/Button&gt;</code></p>
-<p>Creator Project:</p>
-<p>```jsx
-Button.propTypes = {
-  size: PropTypes.oneOf([</p>
-<pre class="hljs"><code><span class="hljs-string">&#39;sm&#39;</span>,
-<span class="hljs-string">&#39;md&#39;</span>,
-<span class="hljs-string">&#39;lg&#39;</span>,
-<span class="hljs-string">&#39;row&#39;</span></code></pre><p>  ]),
-  status: PropTypes.oneOf(Object.values(BUTTON_STATUS)),
-  type: PropTypes.oneOf([</p>
-<pre class="hljs"><code><span class="hljs-string">&#39;submit&#39;</span>,
-<span class="hljs-string">&#39;save&#39;</span>,
-<span class="hljs-string">&#39;cancel&#39;</span>
-])</code></pre><p>}</p>
+<p>   在项目中自己写的一个 <code>Button</code> 组件：</p>
+<p>   ​</p>
+<pre class="hljs"><code> Button.propTypes = {
+   size: PropTypes.oneOf([
+     <span class="hljs-string">&#39;sm&#39;</span>,
+     <span class="hljs-string">&#39;md&#39;</span>,
+     <span class="hljs-string">&#39;lg&#39;</span>,
+     <span class="hljs-string">&#39;row&#39;</span>
+   ]),
+   status: PropTypes.oneOf(<span class="hljs-built_in">Object</span>.values(BUTTON_STATUS)),
+   type: PropTypes.oneOf([
+     <span class="hljs-string">&#39;submit&#39;</span>,
+     <span class="hljs-string">&#39;save&#39;</span>,
+     <span class="hljs-string">&#39;cancel&#39;</span>
+     ])
+ }
+ <span class="hljs-comment">// use className to control styles</span>
+ <span class="hljs-keyword">const</span> cls = classNames(<span class="hljs-string">&#39;btn&#39;</span>, {
+  [<span class="hljs-string"><code>&lt;span class=&quot;hljs-subst&quot;&gt;${prefixCls}&lt;/span&gt;-btn</code></span>]: <span class="hljs-literal">true</span>,
+  [<span class="hljs-string"><code>&lt;span class=&quot;hljs-subst&quot;&gt;${prefixCls}&lt;/span&gt;-btn-&lt;span class=&quot;hljs-subst&quot;&gt;${size}&lt;/span&gt;</code></span>]: !!size,
+  [<span class="hljs-string"><code>&lt;span class=&quot;hljs-subst&quot;&gt;${prefixCls}&lt;/span&gt;-btn-&lt;span class=&quot;hljs-subst&quot;&gt;${status}&lt;/span&gt;</code></span>]: !!status,
+  [<span class="hljs-string"><code>&lt;span class=&quot;hljs-subst&quot;&gt;${prefixCls}&lt;/span&gt;-btn-&lt;span class=&quot;hljs-subst&quot;&gt;${type}&lt;/span&gt;</code></span>]: !!type
+ }, props.className)</code></pre><ol>
+<li><p>Setting values.</p>
+<p>Pass the value of a CSS property directly. (set it as an inline style)</p>
 </li>
 </ol>
-<p>   // use className to control styles</p>
-<pre class="hljs"><code> <span class="hljs-keyword">const</span> cls = classNames(<span class="hljs-string">&#39;btn&#39;</span>, {
-   [<span class="hljs-string"><code>&lt;span class=&quot;hljs-subst&quot;&gt;${prefixCls}&lt;/span&gt;-btn</code></span>]: <span class="hljs-literal">true</span>,
-   [<span class="hljs-string"><code>&lt;span class=&quot;hljs-subst&quot;&gt;${prefixCls}&lt;/span&gt;-btn-&lt;span class=&quot;hljs-subst&quot;&gt;${size}&lt;/span&gt;</code></span>]: !!size,
-   [<span class="hljs-string"><code>&lt;span class=&quot;hljs-subst&quot;&gt;${prefixCls}&lt;/span&gt;-btn-&lt;span class=&quot;hljs-subst&quot;&gt;${status}&lt;/span&gt;</code></span>]: !!status,
-   [<span class="hljs-string"><code>&lt;span class=&quot;hljs-subst&quot;&gt;${prefixCls}&lt;/span&gt;-btn-&lt;span class=&quot;hljs-subst&quot;&gt;${type}&lt;/span&gt;</code></span>]: !!type
- }, props.className)</code></pre><pre class="hljs"><code>
-   ​
+<p><code>&lt;Icon width=&quot;25&quot; height=&quot;25&quot; type=&quot;search&quot; /&gt;</code></p>
+<p><strong>举个栗子</strong></p>
+<p>   <img src="https://cdn-images-1.medium.com/max/800/1*Kx1jOQONhFZPnGe72Fd4tQ.png" alt="creating-a-link-component"></p>
+<pre class="hljs"><code><span class="hljs-comment">// Link.js</span>
+<span class="hljs-keyword">const</span> Link = (props) =&gt; {
+ <span class="hljs-keyword">let</span> className = <code>link link--${props.theme}-theme</code>;
 
-<span class="hljs-number">3.</span> Setting values.
+ <span class="hljs-keyword">if</span> (!props.underline) className += <span class="hljs-string">&#39; link--no-underline&#39;</span>;
 
-   Pass the <span class="hljs-keyword">value</span> of a CSS property directly. (<span class="hljs-keyword">set</span> it <span class="hljs-keyword">as</span> an inline style)
+ <span class="hljs-keyword">return</span> &lt;a href={props.href} className={className}&gt;{props.children}&lt;/a&gt;;
+};
 
-   <code>&amp;lt;Icon width=&lt;span class=&quot;hljs-string&quot;&gt;&quot;25&quot;&lt;/span&gt; height=&lt;span class=&quot;hljs-string&quot;&gt;&quot;25&quot;&lt;/span&gt; type=&lt;span class=&quot;hljs-string&quot;&gt;&quot;search&quot;&lt;/span&gt; /&amp;gt;</code>
+Link.propTypes = {
+ theme: PropTypes.oneOf([
+   <span class="hljs-string">&#39;default&#39;</span>, <span class="hljs-comment">// primary color, no underline</span>
+   <span class="hljs-string">&#39;blend&#39;</span>, <span class="hljs-comment">// inherit surrounding styles</span>
+   <span class="hljs-string">&#39;primary-button&#39;</span>, <span class="hljs-comment">// primary color, solid block</span>
+ ]),
+ underline: PropTypes.<span class="hljs-keyword">bool</span>,
+ href: PropTypes.<span class="hljs-keyword">string</span>.isRequired,
+ children: PropTypes.oneOfType([
+   PropTypes.element,
+   PropTypes.array,
+   PropTypes.<span class="hljs-keyword">string</span>,
+ ]).isRequired,
+};
 
-   <span class="hljs-preprocessor">### An example</span>
+Link.defaultProps = {
+ theme: <span class="hljs-string">&#39;default&#39;</span>,
+ underline: <span class="hljs-keyword">false</span>,
+};</code></pre><pre class="hljs"><code><span class="hljs-comment">// Link.css</span>
+<span class="hljs-class">.link--default-theme</span>,
+<span class="hljs-class">.link--blend-theme</span><span class="hljs-pseudo">:hover</span> {
+ <span class="hljs-attribute">color</span>: <span class="hljs-hexcolor">#D84315</span>;
+}
 
-   <img src="https:&lt;span class=&quot;hljs-comment&quot;&gt;//cdn-images-1.medium.com/max/800/1*Kx1jOQONhFZPnGe72Fd4tQ.png" alt="creating-a-link-component"></span>
+<span class="hljs-class">.link--blend-theme</span> {
+ <span class="hljs-attribute">color</span>: inherit;
+}
 
-   <code>``jsx
-   &lt;span class=&quot;hljs-comment&quot;&gt;// Link.js&lt;/span&gt;
-   &lt;span class=&quot;hljs-keyword&quot;&gt;const&lt;/span&gt; Link = (props) =&amp;gt; {
-     &lt;span class=&quot;hljs-keyword&quot;&gt;let&lt;/span&gt; className =</code>link link--${props.theme}-theme`;
+<span class="hljs-class">.link--default-theme</span><span class="hljs-pseudo">:hover</span>,
+<span class="hljs-class">.link--blend-theme</span><span class="hljs-pseudo">:hover</span> {
+ <span class="hljs-attribute">text-decoration</span>: underline;
+}
 
-     <span class="hljs-keyword">if</span> (!props.underline) className += <span class="hljs-string">&#39; link--no-underline&#39;</span>;
+<span class="hljs-class">.link--primary-button-theme</span> {
+ <span class="hljs-attribute">display</span>: inline-block;
+ <span class="hljs-attribute">padding</span>: <span class="hljs-number">12px</span> <span class="hljs-number">25px</span>;
+ <span class="hljs-attribute">font-size</span>: <span class="hljs-number">18px</span>;
+ <span class="hljs-attribute">background</span>: <span class="hljs-hexcolor">#D84315</span>;
+ <span class="hljs-attribute">color</span>: white;
+}
 
-     <span class="hljs-keyword">return</span> &lt;a href={props.href} className={className}&gt;{props.children}&lt;/a&gt;;
-   };
-
-   Link.propTypes = {
-     theme: PropTypes.oneOf([
-       <span class="hljs-string">&#39;default&#39;</span>, <span class="hljs-comment">// primary color, no underline</span>
-       <span class="hljs-string">&#39;blend&#39;</span>, <span class="hljs-comment">// inherit surrounding styles</span>
-       <span class="hljs-string">&#39;primary-button&#39;</span>, <span class="hljs-comment">// primary color, solid block</span>
-     ]),
-     underline: PropTypes.<span class="hljs-keyword">bool</span>,
-     href: PropTypes.<span class="hljs-keyword">string</span>.isRequired,
-     children: PropTypes.oneOfType([
-       PropTypes.element,
-       PropTypes.array,
-       PropTypes.<span class="hljs-keyword">string</span>,
-     ]).isRequired,
-   };
-
-   Link.defaultProps = {
-     theme: <span class="hljs-string">&#39;default&#39;</span>,
-     underline: <span class="hljs-keyword">false</span>,
-   };</code></pre><pre class="hljs"><code>   <span class="hljs-comment">// Link.css</span>
-   <span class="hljs-class">.link--default-theme</span>,
-   <span class="hljs-class">.link--blend-theme</span><span class="hljs-pseudo">:hover</span> {
-     <span class="hljs-attribute">color</span>: <span class="hljs-hexcolor">#D84315</span>;
-   }
-
-   <span class="hljs-class">.link--blend-theme</span> {
-     <span class="hljs-attribute">color</span>: inherit;
-   }
-
-   <span class="hljs-class">.link--default-theme</span><span class="hljs-pseudo">:hover</span>,
-   <span class="hljs-class">.link--blend-theme</span><span class="hljs-pseudo">:hover</span> {
-     <span class="hljs-attribute">text-decoration</span>: underline;
-   }
-
-   <span class="hljs-class">.link--primary-button-theme</span> {
-     <span class="hljs-attribute">display</span>: inline-block;
-     <span class="hljs-attribute">padding</span>: <span class="hljs-number">12px</span> <span class="hljs-number">25px</span>;
-     <span class="hljs-attribute">font-size</span>: <span class="hljs-number">18px</span>;
-     <span class="hljs-attribute">background</span>: <span class="hljs-hexcolor">#D84315</span>;
-     <span class="hljs-attribute">color</span>: white;
-   }
-
-   <span class="hljs-class">.link--no-underline</span> {
-     <span class="hljs-attribute">text-decoration</span>: none;
-   }</code></pre><p>   ​</p>
+<span class="hljs-class">.link--no-underline</span> {
+ <span class="hljs-attribute">text-decoration</span>: none;
+}</code></pre><p>​</p>
 <blockquote>
 <p>JavaScript is easy, but with CSS you pay for your sins — once you’ve started a mess, it’s not easy to back out of.</p>
 <p>True fact: fighting CSS specificity is the number one cause of death among web developers.</p>
@@ -272,9 +268,11 @@ Button.propTypes = {
 <p>   这 line-height 要是一只猫的话，现在也早死了吧。</p>
 <p>   React 的话，就好办了。</p>
 <ul>
-<li>控制组件的 classes ；</li>
+<li>控制组件的 classes ；<ul>
 <li>移掉所有的全局 resets 然后都把它们扔到 Button.scss 中；</li>
 <li>可以用 <code>all: unset</code> 去掉所有浏览器初始样式。</li>
+</ul>
+</li>
 </ul>
 <h2 id="-5-the-switching-component">#5 The switching component</h2>
 <p>The switching component, rendering one of many components.</p>
@@ -307,6 +305,7 @@ Page.propTypes = {
 <span class="hljs-tag">&lt;<span class="hljs-title">Page</span> <span class="hljs-attribute">page</span>=<span class="hljs-value">&quot;home&quot;</span> /&gt;</span></span></code></pre><p>If you replace the keys <code>home</code>, <code>about</code> and <code>user</code> with <code>/</code>, <code>/about</code>, and <code>/user</code>, you’ve got yourself half a router.</p>
 <p>(Future post idea: removing <code>react-router</code>.)</p>
 <p>这里 Creator 中还是使用了 <code>react-router</code> 作为 SPA 路由。</p>
+<p>个人觉得 <code>React</code>+ <code>react-router</code> + <code>webpack</code> 这样的项目，开发中使用 <code>HashRouter</code>，既能使用 <code>location.hash = xxx</code> 作组件间无刷新跳转，又能保证打包后路径访问正确（除非你实在看不惯 <code>/#/</code>，想把它干掉）。</p>
 <pre class="hljs"><code><span class="hljs-regexp">//</span> Route.jsx
 import React from <span class="hljs-string">&#39;react&#39;</span>
 import IntroPage from <span class="hljs-string">&#39;../Page/IntroPage&#39;</span>
@@ -399,8 +398,9 @@ myAppInstance.<span class="hljs-function"><span class="hljs-title">doSth</span><
 <blockquote>
 <p>Keep in mind, however, that the JSX doesn&#39;t return a component instance! It&#39;s just a <strong>ReactElement</strong>: a lightweight representation that tells React what the mounted component should look like.</p>
 </blockquote>
+<p>所以出现了：</p>
 <h3 id="ref">ref</h3>
-<p>一个神奇的属性。</p>
+<p>一个神奇的属性， 但是很有用。感觉都可以独立写篇文章来好好介绍了。</p>
 <h4 id="the-ref-callback-attribute">The ref Callback Attribute</h4>
 <ul>
 <li>可以给任意 React 组件加上 <code>ref</code> prop. 组件被调用时候会新建一个该组件实例，而 <code>ref</code> 会指向这个实例。</li>
@@ -439,7 +439,7 @@ componentDidMount() {
 <li>为防止内存泄露，当引用组件被卸载或者 <code>ref</code> 改变的时候，<code>ref = null</code>.</li>
 <li>如果用 inline function，因为每次都是一个不同的 function object，所以当组件每次更新的时候，<code>ref</code> 都会被设置为 <code>null</code> 直到组件实例再次调用它。</li>
 </ul>
-<h4 id="the-ref-string-attribute-legacy">The ref String Attribute *legacy</h4>
+<h4 id="the-ref-string-attribute-legacy-">The ref String Attribute (*legacy)</h4>
 <p>要获取一个 React 组件的引用，既可以使用 this 来获取当前 ReactComponent，也可以使用 <code>ref</code> 来获取子组件的引用。</p>
 <pre class="hljs"><code>&lt;input <span class="hljs-keyword">ref</span>=<span class="hljs-string">&quot;myInput&quot;</span> /&gt;
 
@@ -492,9 +492,10 @@ componentDidMount() {
 <p>Don’t prematurely componentize. Components aren’t like teaspoons; you <em>can </em>have too many.</p>
 <p>What I am saying: “take something that you <em>don’t</em> think should be a component, and make it a bit more like its own component (if it can be).”</p>
 </blockquote>
-<p>让那些你认为不应该成为一个组件的东西，长得更像组件一点（如果它可以的话）。</p>
+<p>让那些你并不觉得它们可以是一个组件的东西，长得更像组件一点（如果它可以的话）。</p>
 <h2 id="-8-components-for-formatting-text">#8 Components for formatting text</h2>
 <p>用来格式化的组件，也就是组件也可以工具化。</p>
+<p>一般开发时候会把工具函数都放在 <code>Utils.js</code> 中，这里提供了一个用组件思想来写工具的思路，还真是 <strong>一切皆组件</strong>。</p>
 <pre class="hljs"><code><span class="hljs-comment">// Here’s a &lt;Price&gt; component that takes a number and returns a pretty string, with or without decimals and a ‘$’ sign.</span>
 
 <span class="hljs-keyword">const</span> Price = (props) =&gt; {
@@ -532,7 +533,7 @@ Price.defaultProps = {
       &lt;p&gt;Those gumboots will <span class="hljs-literal">set</span> ya back &lt;Price showDecimals={<span class="hljs-keyword">false</span>} showSymbol={<span class="hljs-keyword">false</span>}&gt;{bootPrice}&lt;/Price&gt; bucks.&lt;/p&gt;
     &lt;/div&gt;
   );
-};</code></pre><p>这里当然可以很简单的用 less code function 来实现</p>
+};</code></pre><p>这里当然可以很简单的用 <code>function</code> 来实现。</p>
 <pre class="hljs"><code><span class="hljs-comment">// could just easily use a function</span>
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">numberToPrice</span><span class="hljs-params">(num, options = {})</span> </span>{
     <span class="hljs-keyword">const</span> showSymbol = options.showSymbol !== <span class="hljs-literal">false</span>;
@@ -568,17 +569,17 @@ Price.defaultProps = {
 <pre class="hljs"><code><span class="hljs-comment">// react/redux way</span>
 
 <span class="hljs-tag">fetch</span>(<span class="hljs-built_in"><code>/api/search?${queryParams}</code></span>)
-<span class="hljs-class">.then</span>(response =&gt; response.<span class="hljs-function">json</span>())
-<span class="hljs-class">.then</span>(normalizeSearchResultsApiData) <span class="hljs-comment">// the do-it-all data massager</span>
-<span class="hljs-class">.then</span>(normalData =&gt; {
-    <span class="hljs-comment">// dispatch normalData to the store here</span>
-});</code></pre><p><strong>这里推荐徐飞在 QCon 上分享的 <a href="https://zhuanlan.zhihu.com/p/26426054">单页引用的数据流方案探索</a></strong></p>
+  <span class="hljs-class">.then</span>(response =&gt; response.<span class="hljs-function">json</span>())
+  <span class="hljs-class">.then</span>(normalizeSearchResultsApiData) <span class="hljs-comment">// the do-it-all data massager</span>
+  <span class="hljs-class">.then</span>(normalData =&gt; {
+      <span class="hljs-comment">// dispatch normalData to the store here</span>
+});</code></pre><p><strong>关于SPA数据流的管理，推荐徐飞在 QCon 上分享的 <a href="https://zhuanlan.zhihu.com/p/26426054">单页引用的数据流方案探索</a></strong></p>
 <h2 id="-10-importing-components-without-relative-paths">#10 Importing components without relative paths</h2>
 <p>Turn</p>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> Button <span class="hljs-keyword">from</span> <span class="hljs-string">&#39;../../../../Button/Button.jsx&#39;</span>;
 <span class="hljs-keyword">import</span> Icon <span class="hljs-keyword">from</span> <span class="hljs-string">&#39;../../../../Icon/Icon.jsx&#39;</span>;
 <span class="hljs-keyword">import</span> Footer <span class="hljs-keyword">from</span> <span class="hljs-string">&#39;../../Footer/Footer.jsx&#39;</span>;</code></pre><p>Into</p>
-<pre class="hljs"><code><span class="hljs-keyword">import</span> {Button, Icon, Footer} <span class="hljs-keyword">from</span> <span class="hljs-string">&#39;Components&#39;</span>;</code></pre><p>更灵活方便使用组件。</p>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> {Button, Icon, Footer} <span class="hljs-keyword">from</span> <span class="hljs-string">&#39;Components&#39;</span>;</code></pre><p>这样就省去了相对路径的烦恼，灵活引用组件。</p>
 <p>使用 <code>Webpack2</code> 可以直接配置</p>
 <pre class="hljs"><code><span class="hljs-regexp">//</span> exports all components wherever they are
 <span class="hljs-regexp">//</span> <span class="hljs-attribute">Ref</span>: Webpack <span class="hljs-built_in">require</span>.context
@@ -591,6 +592,8 @@ req.keys().forEach(<span class="hljs-function"><span class="hljs-params">(key)</
   const componentName = key.replace(<span class="hljs-regexp">/^.+\/([^/</span>]+)\<span class="hljs-regexp">/index.js/</span>, <span class="hljs-string">&#39;$1&#39;</span>)
   <span class="hljs-built_in">module</span>.exports[componentName] = req(key).default
 })</code></pre><p>Creator 中因为用的 <code>create-react-app</code> CLI，无法自己配置 Webpack，所以并没有用到...</p>
+<p>以上就是一些作者认为很有用的 react 开发迷你模式，虽然我接触 react 很久了，但是项目中开发就是开发，也经常 <code>C-c/v</code> 生成组件，却并没有沉下心思考总结一些基本的设计模式，也没有花时间去了解它背后的原理，需要好好反思。</p>
+<p><strong>一切皆组件。Just coding in react-way! </strong>😆</p>
 
         </section>
 
@@ -614,7 +617,7 @@ req.keys().forEach(<span class="hljs-function"><span class="hljs-params">(key)</
 
             <section class="share">
                 <h4>Share this post</h4>
-                <a class="icon-twitter" href="https://twitter.com/intent/tweet?text=%E4%BB%8E%E5%8D%81%E4%B8%AA%20React%20%E8%BF%B7%E4%BD%A0%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E8%B0%88%E5%BC%80%E5%8E%BB&amp;url=http://zhangbinliu.me/2017-06-28-10-react-mini-patterns-note/"
+                <a class="icon-twitter" href="https://twitter.com/intent/tweet?text=%231%20Sending%20data%20down%20and%20up%20%E6%95%B0%E6%8D%AE%E6%B5%81&amp;url=http://zhangbinliu.me/2017-06-28-10-react-mini-patterns-note/"
                     onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
                     <span class="hidden">Twitter</span>
                 </a>
@@ -629,6 +632,24 @@ req.keys().forEach(<span class="hljs-function"><span class="hljs-params">(key)</
             </section>
 
 
+            <section itemprop="comment" class="post-comments">
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_config = function () {
+                  this.page.url = 'http://zhangbinliu.me/2017-06-28-10-react-mini-patterns-note/';
+                  this.page.identifier = '14';
+                };
+                var disqus_shortname = 'zblsdoodle';
+                (function() { // DON'T EDIT BELOW THIS LINE
+                  var d = document, s = d.createElement('script');
+                  s.async = true;
+                  s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                  s.setAttribute('data-timestamp', +new Date());
+                  (d.head || d.body).appendChild(s);
+                })();
+              </script>
+            </section>
+
         </footer>
 
     </article>
@@ -636,26 +657,6 @@ req.keys().forEach(<span class="hljs-function"><span class="hljs-params">(key)</
 
 <aside class="read-next">
 </aside>
-
-<div id="disqus_thread"></div>
-<script>
-  /**
-   *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-   *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
-
-var disqus_config = function () {
-  this.page.url = "http://zhangbinliu.me/2017-06-28-10-react-mini-patterns-note/";  // Replace PAGE_URL with your page's canonical URL variable
-  this.page.identifier = "ghost-"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-};
-
-(function() { // DON'T EDIT BELOW THIS LINE
-  var d = document, s = d.createElement('script');
-  s.src = 'https://EXAMPLE.disqus.com/embed.js';
-  s.setAttribute('data-timestamp', +new Date());
-  (d.head || d.body).appendChild(s);
-})();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 
 
 

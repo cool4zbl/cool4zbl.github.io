@@ -54,8 +54,9 @@
             </section>
         </header>
 
+
         <section class="post-content">
-            <p><strong>Update</strong>
+          <p><strong>Update</strong>
 以下大概写于两年前，亟待更新。</p>
 <hr>
 <p>几天前从Github上看到了这篇<a href="https://github.com/bendc/frontend-guidelines">前端编码最佳实践</a>，Star数已破4K，觉得应该是篇不错的小指南，花了点时间将它稍作翻译，也当是复习复习 <code>HTML&amp;CSS&amp;JS</code>。
@@ -739,6 +740,24 @@ Minimize dependencies. Third-party is code you don&#39;t know. Don&#39;t load an
             </section>
 
 
+            <section itemprop="comment" class="post-comments">
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_config = function () {
+                  this.page.url = 'http://zhangbinliu.me/2015-03-14-frontend-guidelines/';
+                  this.page.identifier = '5';
+                };
+                var disqus_shortname = 'zblsdoodle';
+                (function() { // DON'T EDIT BELOW THIS LINE
+                  var d = document, s = d.createElement('script');
+                  s.async = true;
+                  s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                  s.setAttribute('data-timestamp', +new Date());
+                  (d.head || d.body).appendChild(s);
+                })();
+              </script>
+            </section>
+
         </footer>
 
     </article>
@@ -746,26 +765,6 @@ Minimize dependencies. Third-party is code you don&#39;t know. Don&#39;t load an
 
 <aside class="read-next">
 </aside>
-
-<div id="disqus_thread"></div>
-<script>
-  /**
-   *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-   *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
-
-var disqus_config = function () {
-  this.page.url = "http://zhangbinliu.me/2015-03-14-frontend-guidelines/";  // Replace PAGE_URL with your page's canonical URL variable
-  this.page.identifier = "ghost-"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-};
-
-(function() { // DON'T EDIT BELOW THIS LINE
-  var d = document, s = d.createElement('script');
-  s.src = 'https://EXAMPLE.disqus.com/embed.js';
-  s.setAttribute('data-timestamp', +new Date());
-  (d.head || d.body).appendChild(s);
-})();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 
 
 

@@ -54,8 +54,9 @@
             </section>
         </header>
 
+
         <section class="post-content">
-            <h2 id="tl-dr">TL;DR</h2>
+          <h2 id="tl-dr">TL;DR</h2>
 <ul>
 <li>Facebook 为了解决「大型代码库」迁移，基于 AST 造了个工具 <strong>Codemod</strong></li>
 <li>基于 Codemod 又构建了 JavaScript 代码迁移专用的工具 <strong>jscodeshift</strong> 和 <strong>React-codemod</strong></li>
@@ -381,6 +382,24 @@ a + b
             </section>
 
 
+            <section itemprop="comment" class="post-comments">
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_config = function () {
+                  this.page.url = 'http://zhangbinliu.me/2017-02-15-fun-with-codemod-and-ast/';
+                  this.page.identifier = '11';
+                };
+                var disqus_shortname = 'zblsdoodle';
+                (function() { // DON'T EDIT BELOW THIS LINE
+                  var d = document, s = d.createElement('script');
+                  s.async = true;
+                  s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                  s.setAttribute('data-timestamp', +new Date());
+                  (d.head || d.body).appendChild(s);
+                })();
+              </script>
+            </section>
+
         </footer>
 
     </article>
@@ -388,26 +407,6 @@ a + b
 
 <aside class="read-next">
 </aside>
-
-<div id="disqus_thread"></div>
-<script>
-  /**
-   *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-   *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
-
-var disqus_config = function () {
-  this.page.url = "http://zhangbinliu.me/2017-02-15-fun-with-codemod-and-ast/";  // Replace PAGE_URL with your page's canonical URL variable
-  this.page.identifier = "ghost-"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-};
-
-(function() { // DON'T EDIT BELOW THIS LINE
-  var d = document, s = d.createElement('script');
-  s.src = 'https://EXAMPLE.disqus.com/embed.js';
-  s.setAttribute('data-timestamp', +new Date());
-  (d.head || d.body).appendChild(s);
-})();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 
 
 
