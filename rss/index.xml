@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Mon, 07 Aug 2017 18:18:07 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/rss/index.xml" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[#1 Sending data down and up 数据流]]></title><description><![CDATA[<p>--
-title: 从十个 React 迷你设计模式谈开去
-tags: notes, frontend, tech</p>
-<hr>
-<p>很早之前就一直在读的一篇文章，<a href="https://hackernoon.com/10-react-mini-patterns-c1da92f068c5">10 个React Mini 设计模式</a>，</p>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Tue, 08 Aug 2017 03:06:26 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/rss/index.xml" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[从十个 React 迷你设计模式谈开去]]></title><description><![CDATA[<p>很早之前就一直在读的一篇文章，<a href="https://hackernoon.com/10-react-mini-patterns-c1da92f068c5">10 个React Mini 设计模式</a>，</p>
 <p>一边做 <code>Creator</code> 项目，也一边终于把它精读完。</p>
 <p>结合自己的开发时候的项目经验，做了点笔记。</p>
 <p><code>Creator</code> 项目是一个多端（Web + Mobile）React SPA，且有一些表单填写和复杂的交互组件，自己单独封装了一个很简单的基于事件的 <code>Store</code>，开发过程中收获很大，这些细节之后可以细说。</p>
@@ -537,7 +533,7 @@ req.keys().forEach(<span class="hljs-function"><span class="hljs-params">(key)</
 })</code></pre><p>Creator 中因为用的 <code>create-react-app</code> CLI，无法自己配置 Webpack，所以并没有用到...</p>
 <p>以上就是一些作者认为很有用的 react 开发迷你模式，虽然我接触 react 很久了，但是项目中开发就是开发，也经常 <code>C-c/v</code> 生成组件，却并没有沉下心思考总结一些基本的设计模式，也没有花时间去了解它背后的原理，需要好好反思。</p>
 <p><strong>一切皆组件。Just coding in react-way! </strong>😆</p>
-]]></description><link>/2017-06-28-10-react-mini-patterns-note/index.html</link><guid isPermaLink="true">/2017-06-28-10-react-mini-patterns-note/index.html</guid><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Tue, 27 Jun 2017 16:00:00 GMT</pubDate></item><item><title><![CDATA[Bug makers or bug fixers]]></title><description><![CDATA[<blockquote>
+]]></description><link>/2017-06-28-10-react-mini-patterns-note/index.html</link><guid isPermaLink="true">/2017-06-28-10-react-mini-patterns-note/index.html</guid><category><![CDATA[notes]]></category><category><![CDATA[frontend]]></category><category><![CDATA[tech]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Tue, 27 Jun 2017 16:00:00 GMT</pubDate></item><item><title><![CDATA[Bug makers or bug fixers]]></title><description><![CDATA[<blockquote>
 <p>世界上只有两种人： Bug makers or bug fixers.</p>
 <p>​    —— 郫县豆瓣</p>
 </blockquote>
