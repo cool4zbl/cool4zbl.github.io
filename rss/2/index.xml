@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas, codes, all by myself]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Wed, 06 Sep 2017 10:35:44 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/rss/index.xml" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Oh My Ghostium]]></title><description><![CDATA[<p>之前装了Wordpress扔在大洋彼岸一个Arizona搬瓦工的VPS后就再没去理过它，想想也有半年了。<br>后来分析觉得，首先肯定是自己懒惰浮躁，静不下来写东西。其次是博客页面没有漂亮到让我有一种打开就想写的冲动。<br>但是他们说<strong><a href="http://mindhacks.cn/2009/02/15/why-you-should-start-blogging-now/">为什么你应该（从现在开始就）写博客</a></strong>，于是紧跟大牛的步伐，虽然没有什么牛逼技术可以跟别人分享，但是看看大牛写的技术文章谢谢心得也是一种进步。于是就开始了<em>万劫不复的折腾深渊</em>...<br>在谷歌搜寻平台的时候看到了一个同是F2E的一个博客<a href="http://luolei.org">罗磊的独立博客</a>，瞬间被大Banner的设计吸引到，看了很久后拖到了网页末尾，扫到了一行字<em>本博客基于拽酷炫的 GHOST</em>。<br>比较了<em>Ghost/Jekyll/Octo/Hexo</em> 等等之后，认为<strong><a href="https://ghost.org">Ghost</a></strong>还是最适合我： </p>
+<ol>
+<li>是基于 <strong>Node.js</strong> 的博客平台。</li>
+<li><strong>Just a blogging platform.</strong>简单简洁，响应式设计。</li>
+<li>免费，<strong>支持完全的自定义</strong>。</li>
+</ol>
+<p>DigitalOcean很贴心的有Ghost的APP安装镜像包，安装后直接打开<code>http://your.domain/2368</code>就会看到第一次登陆的窗口，设置好Blog Title，用户名，密码就可以愉快的开始体验Ghost了。<br>又过了几天，手贱点开了很多Ghost类的博客，发现大家怎么都这样啊，使用默认的Casper主题已到审美疲劳。<br>在连博文都没写几篇的情况下，那么就继续<em>万劫不复的折腾深渊</em> 咯。  </p>
+<p>很喜欢<strong><a href="https://medium.com/">Medium</a></strong>那个网站的设计风格，漂亮的排版和字体，恰当的行高，带有震撼般视觉冲击的大Banner图片...<a href="知乎[怎样评价Medium的设计](http://zhi.hu/1Ed2)">^1</a></p>
+<p>感觉一切的设计都如此恰到好处（一股浓浓的高逼格气息扑面而来）。
+谷歌搜索类Medium的Ghost主题，
+<b> <strong><a href="http://ghostium.oswaldoacauan.com/">Ghostium</a></strong>, a medium-like theme.
+</b>
+先给作者<a href="https://twitter.com/oswaldoacauan">@oswaldoacauan</a>各种点赞，想要的样式全都有。
+但是在网站上跑了一会后，发现有些细节地方还是不尽入我意。<br>那么，还是自己动手丰衣足食，开始<em>万劫不复的折腾深渊</em> 第四弹。
+一边看<a href="http://themes.ghost.org/v0.5.3/docs/about">Ghost Developer Documentation</a>、<a href="http://handlebarsjs.com/">Handelbars.js Guide</a>，一边用自学的一点点 HTML&amp;CSS&amp;JS 来调试和修改原主题。</p>
+<hr>
+<p><strong>- HTML</strong></p>
+<ol>
+<li>修改Drawer侧栏的导航（Navigation.hbs），增加Links如下:</li>
+</ol>
+<pre class="hljs"><code><span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-item&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;/&quot;</span> <span class="hljs-attribute">data-pjax</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">i</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;fa fa-home&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">i</span>&gt;</span>Home
+  <span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-item&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;</span></span></span><span class="hljs-expression">{{@<span class="hljs-variable">blog.url</span>}}</span><span class="xml"><span class="hljs-tag"><span class="hljs-value">/timeline/&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">i</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;fa fa-clock-o&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">i</span>&gt;</span>Timeline
+  <span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-item&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;</span></span></span><span class="hljs-expression">{{@<span class="hljs-variable">blog.url</span>}}</span><span class="xml"><span class="hljs-tag"><span class="hljs-value">/wiki/&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">i</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;fa fa-coffee&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">i</span>&gt;</span>Wiki
+  <span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-item&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;</span></span></span><span class="hljs-expression">{{@<span class="hljs-variable">blog.url</span>}}</span><span class="xml"><span class="hljs-tag"><span class="hljs-value">/book/&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">i</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;fa fa-camera-retro&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">i</span>&gt;</span>Portfolio
+  <span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-item&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;</span></span></span><span class="hljs-expression">{{@<span class="hljs-variable">blog.url</span>}}</span><span class="xml"><span class="hljs-tag"><span class="hljs-value">/about/&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">i</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;fa fa-comment-o&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">i</span>&gt;</span>About Me
+  <span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-item&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;</span></span></span><span class="hljs-expression">{{@<span class="hljs-variable">blog.url</span>}}</span><span class="xml"><span class="hljs-tag"><span class="hljs-value">/rss/&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">i</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;fa fa-rss&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">i</span>&gt;</span>Subscribe to Feed
+  <span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-divider&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-item drawer-list-title&quot;</span>&gt;</span>
+  Follow me
+<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-item&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;<a href="http://twitter.com/cool4zbl">http://twitter.com/cool4zbl</a>&quot;</span> <span class="hljs-attribute">target</span>=<span class="hljs-value">&quot;_blank&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">i</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;fa fa-twitter&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">i</span>&gt;</span>Twitter
+  <span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-item&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;<a href="http://github.com/githubzbl">http://github.com/githubzbl</a>&quot;</span> <span class="hljs-attribute">target</span>=<span class="hljs-value">&quot;_blank&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">i</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;fa fa-github&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">i</span>&gt;</span>Github
+  <span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span></span></code></pre><ol>
+<li>在博客文章内容页（post.hbs）删除了分享到G+图标，增加了分享到微博图标：  <pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;#&quot;</span> <span class="hljs-attribute">data-action</span>=<span class="hljs-value">&quot;share-weibo&quot;</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">i</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;fa fa-fw fa-lg fa-weibo&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">i</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span></code></pre></li>
+</ol>
+<p>CSS(main.css)  </p>
+<ol>
+<li>字体类型及大小。<br>原来的字体太小，而且因为主题原作者不说汉语，所以默认在主题内显示的汉字为宋体，且行高较小，不方便阅读。发现这么几篇文章：<a href="https://ruby-china.org/topics/14005">web中文字体应用指南</a>//<a href="http://lepture.com/zh/2014/chinese-fonts-and-yue-css">適合閱讀的中文字體</a>//<a href="http://informationarchitects.net/blog/the-web-is-all-about-typography-period/">網頁上95%的內容其實都是&quot;typography“</a> 
+特别是第二篇。于是根据自己的喜好，同时照顾到广大Mac、Windows用户，字体样式如下：  <pre class="hljs"><code><span class="hljs-comment">/<em> 文章内容 衬线字体 </em>/</span>
+<span class="hljs-tag">body</span> {
+ <span class="hljs-attribute">font</span>: <span class="hljs-number">400</span> <span class="hljs-number">20px</span>/<span class="hljs-number">1.62</span> <span class="hljs-string">&quot;Lora&quot;</span>, Georgia, <span class="hljs-string">&quot;Xin Gothic&quot;</span>, <span class="hljs-string">&quot;STXihei&quot;</span>, Cambria, <span class="hljs-string">&quot;Droid Sans Fallback&quot;</span>, <span class="hljs-string">&quot;Microsoft YaHei&quot;</span>, sans-serif;
+ <span class="hljs-attribute">background</span>: <span class="hljs-hexcolor">#fff</span>;
+ <span class="hljs-attribute">color</span>: <span class="hljs-hexcolor">#333</span>
+}
+<span class="hljs-comment">/<em> 文章标题、按钮等 非衬线 </em>/</span><br><span class="hljs-attribute">font-family</span>: <span class="hljs-string">&quot;Lato&quot;</span>,<span class="hljs-string">&quot;Myriad Pro&quot;</span>,<span class="hljs-string">&quot;Lucida Grande&quot;</span>,<span class="hljs-string">&quot;Lucida Sans Unicode&quot;</span>,<span class="hljs-string">&quot;Lucida Sans&quot;</span>,Geneva,Verdana,sans-serif;
+<span class="hljs-comment">/<em> Footer底部字体 Optima更为优雅低调 </em>/</span>
+<span class="hljs-attribute">font-family</span>: Optima, sans-serif;</code></pre></li>
+</ol>
+<p>注：&quot;Xin Gothic&quot; 信黑体；&quot;STXihei&quot; 华文细黑；&quot;Hiragino Sans GB&quot; 冬青黑体<br><strong>Lato &amp; Lora</strong> 同为 Transitional Fonts。<a href="https://www.codeschool.com/courses/fundamentals-of-design">Foundamentals of Design by code school</a></p>
+<ol>
+<li><p>主页（index.hbs）的封面/边距/文章摘要  </p>
+<ul>
+<li>原来的<code>cover</code>大概占据了页面的30%，看起来图片有点喧宾夺主，经过反复折腾后，觉得25%的比例最不错。  <pre class="hljs"><code><span class="hljs-class">.cover</span> <span class="hljs-rules">{
+<span class="hljs-rule"><span class="hljs-attribute">position</span>:<span class="hljs-value"> relative</span></span>;
+<span class="hljs-rule"><span class="hljs-attribute">top</span>:<span class="hljs-value"> <span class="hljs-number">0</span></span></span>;
+<span class="hljs-rule"><span class="hljs-attribute">left</span>:<span class="hljs-value"> <span class="hljs-number">0</span></span></span>;
+<span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">25%</span></span></span>;
+<span class="hljs-rule"><span class="hljs-attribute">height</span>:<span class="hljs-value"> <span class="hljs-number">100%</span></span></span>;
+<span class="hljs-rule"><span class="hljs-attribute">z-index</span>:<span class="hljs-value"> <span class="hljs-number">100</span>
+</span></span></span>}</code></pre></li>
+<li><p>主页右侧文章内容偏上，如果是英文内容还好，但是中文的话感觉一块块的，特别突兀，调整<code>padding</code>，使内边距更大。反复比较后，6%看起来最自然。</p>
+<pre class="hljs"><code><span class="hljs-class">.wrapper-container</span> <span class="hljs-rules">{
+<span class="hljs-rule"><span class="hljs-attribute">position</span>:<span class="hljs-value"> relative</span></span>;
+<span class="hljs-rule"><span class="hljs-attribute">padding</span>:<span class="hljs-value"> <span class="hljs-number">6%</span> <span class="hljs-number">10%</span> <span class="hljs-number">40px</span> <span class="hljs-number">185px</span></span></span>;
+<span class="hljs-rule"><span class="hljs-attribute">max-width</span>:<span class="hljs-value"> <span class="hljs-number">910px</span>
+</span></span></span>}</code></pre><ul>
+<li>主页右侧的文章摘要(post/list.hbs)原来为<br><code>&lt;section itemprop=&quot;description&quot; class=&quot;post-item-excerpt&quot;&gt;
+&lt;p&gt;{{excerpt words=&quot;35&quot;}}&amp;hellip;&lt;/p&gt;
+&lt;/section&gt;</code></li>
+</ul>
+<p>如果是英文内容还好，但是对于中文内容，Ghost貌似对这个支持不太好（因为是按空格来计算word数量），所以显示的摘要往往会过多，查看文档后发现有另一种<code>character</code>字符数计数方式。很高兴地修改如下：<br><code>&lt;section itemprop=&quot;description&quot; class=&quot;post-item-excerpt&quot;&gt;
+&lt;p&gt;{{excerpt characters=&quot;140&quot;}}&amp;hellip;&lt;/p&gt;
+&lt;/section&gt;</code></p>
+</li>
+</ul>
+</li>
+<li><p>全局导航栏(drawer.hbs)<br> 每个导航栏(.drawer-list-item)字体过小，且挨得太近。参考了一下我最喜欢的<strong>Medium</strong>设计后，修改如下：  </p>
+<pre class="hljs"><code>  <span class="hljs-class">.drawer-list-item</span> <span class="hljs-rules">{
+ <span class="hljs-rule"><span class="hljs-attribute">font-family</span>:<span class="hljs-value"> <span class="hljs-string">&quot;Lato&quot;</span>,<span class="hljs-string">&quot;Myriad Pro&quot;</span>,<span class="hljs-string">&quot;Lucida Grande&quot;</span>,<span class="hljs-string">&quot;Lucida Sans Unicode&quot;</span>,<span class="hljs-string">&quot;Lucida Sans&quot;</span>,Geneva,Verdana,sans-serif</span></span>;
+ <span class="hljs-rule"><span class="hljs-attribute">font-weight</span>:<span class="hljs-value"> <span class="hljs-number">600</span></span></span>;
+ <span class="hljs-rule"><span class="hljs-attribute">font-size</span>:<span class="hljs-value"> .<span class="hljs-number">9em</span></span></span>;
+ <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#9c9c9c</span></span></span>;
+ <span class="hljs-rule"><span class="hljs-attribute">line-height</span>:<span class="hljs-value"> <span class="hljs-number">2.2</span></span></span>;
+ }</span></code></pre></li>
+<li><p>博客内容分页(post.hbs)<br> 对于作者的头像<code>.post-author-avatar</code>，原作者可能了为了保证质量，头像不被随意拉伸，<code>language-css .post-author-avatar { width: 100%; height: 100%; border-radius: 100% }</code>，采取了长宽度100%，但是四个角自然圆角，所以如果传的头像是矩形就会出现椭圆形的效果，但是个人觉得还是圆形头像更精致。所以为了保证无论上传何种比例的图片，得到的都是圆形的头像，那么就采用固定长宽度（此处在看Ghost后台时候，发现默认的作者头像就是圆形，查看源代码发现使用的是<code>js-model-image</code>，涉及到JS还未深入研究）。   </p>
+<pre class="hljs"><code> <span class="hljs-class">.post-author-avatar</span> <span class="hljs-rules">{
+ <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">80px</span></span></span>;
+ <span class="hljs-rule"><span class="hljs-attribute">height</span>:<span class="hljs-value"> <span class="hljs-number">80px</span></span></span>;
+ <span class="hljs-rule"><span class="hljs-attribute">display</span>:<span class="hljs-value"> block</span></span>;
+ <span class="hljs-rule"><span class="hljs-attribute">margin-bottom</span>:<span class="hljs-value"> <span class="hljs-number">10px</span>
+ </span></span></span>}</code></pre></li>
+</ol>
+<hr>
+<p>大体地方修改完毕，把修改后主题上传到VPS，重启Ghost服务（Ghost无法实时探测到<code>content/theme/</code>内容改变）。<br>Well done.</p>
+<p>优化：<br>对于谷歌字体在国内<del>访问速度不佳</del>无法访问，使用了<a href="http://libs.useso.com/">360网站卫士加速库</a> <code>language-html &lt;link href=&quot;//fonts.useso.com/css?family=***&quot;&gt;</code></p>
+<p>待解决问题：</p>
+<ul>
+<li>微博官方的分享按钮太花哨，想使用FontAwesome的图标但还未解决如何触发微博分享；  </li>
+<li>把博客内容页面<code>post</code>样式从<code>main.css</code>中分离出来，方便以后Ghost升级做<em>所见即所得</em> (but we highly recommend keeping your post styles in a separate file (post.css) from other styles for your theme (style.css) so that you will quickly be able to take advantage of this feature in the future.)；  </li>
+<li>在<code>post</code>页面加入一个返回顶部的小箭头；  </li>
+<li>在<code>post</code>页面应用类似于Medium文章打开后顶部为震撼图片的大Banner。 </li>
+<li>学习使用JS-model-image 自动切割Avatar及Logo  </li>
+<li>Navigation各种链接网页的相关建设及完善  </li>
+<li>博文搜索  </li>
+<li>画个网站结构图 site-map</li>
+</ul>
+]]></description><link>/2014-11-03-oh-my-ghostium/index.html</link><guid isPermaLink="true">/2014-11-03-oh-my-ghostium/index.html</guid><category><![CDATA[tech]]></category><category><![CDATA[frontend]]></category><category><![CDATA[thoughts]]></category><dc:creator><![CDATA[cool4ZBL]]></dc:creator><pubDate>Sun, 02 Nov 2014 16:00:00 GMT</pubDate></item></channel></rss>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[undefined - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas, codes, all by myself]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Wed, 06 Sep 2017 10:35:44 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/tag/undefined/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[前后端数据交互 - 表单提交]]></title><description><![CDATA[<p>最近想总结下前后端数据交互方式，顺便继续学习下网络相关，以下是第一篇，最简单、最常见且应用最广泛的「表单提交」。</p>
+<p>按交互方式分为两种，提交后有刷新的普通表单提交和无刷新的 Ajax 表单提交。</p>
+<h2 id="1-">1. 普通表单提交</h2>
+<p>下面是一个很普通的用户登录表单：</p>
+<pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-title">form</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;form login-form&quot;</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;loginForm&quot;</span>
+      <span class="hljs-attribute">method</span>=<span class="hljs-value">&quot;POST&quot;</span> <span class="hljs-attribute">action</span>=<span class="hljs-value">&quot;api.test.com/login&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">for</span>=<span class="hljs-value">&quot;name&quot;</span>&gt;</span>Username<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;email&quot;</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;name&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">for</span>=<span class="hljs-value">&quot;password&quot;</span>&gt;</span>Password<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;password&quot;</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;password&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">for</span>=<span class="hljs-value">&quot;captcha&quot;</span>&gt;</span>Captcha<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;text&quot;</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;captcha&quot;</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">for</span>=<span class="hljs-value">&quot;selLoc&quot;</span>&gt;</span>Location<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">select</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;location&quot;</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;selLoc&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;cn&quot;</span>&gt;</span>China Mainland<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;hk&quot;</span>&gt;</span>Hong Kong<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;tw&quot;</span>&gt;</span>Tai Wan<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;us&quot;</span>&gt;</span>America<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;jp&quot;</span>&gt;</span>Japan<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;&quot;</span>&gt;</span>Somewhere<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> &gt;</span>Anywhere<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">select</span>&gt;</span>
+
+  <span class="hljs-comment">&lt;!--  General submit button  --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;submit&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;Submit Form&quot;</span>&gt;</span>
+  <span class="hljs-comment">&lt;!--  Customize  --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;submit&quot;</span>&gt;</span>Submit Form<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+  <span class="hljs-comment">&lt;!--  Image button   --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;image&quot;</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">&quot;graphic.gif&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">form</span>&gt;</span></code></pre><ul>
+<li><p>当用户单击提交按钮或者图像按钮的时候，就会提交表单；</p>
+</li>
+<li><p><code>&lt;input type=&quot;submit&quot;&gt;</code> / <code>&lt;button type=&quot;submit&quot;&gt;</code> / <code>&lt;input type=&quot;image&quot; src=&#39;img.gif&#39;&gt;</code> 都可以作为表单提交按钮。且只要存在任何一种按钮，在相应表单控件有焦点的情况下，按回车键就可以提交该表单，这里应该是浏览器对表单元素回车键的默认行为，所以在提交表单前，会触发 <code>submit Event</code>，可以用来做表单验证；</p>
+</li>
+<li><p>如果直接使用 JS <code>submit()</code> 提交表单，这里则不会触发表单的 <code>submit Event</code>，所以需要在调用方法前做表单验证；</p>
+<pre class="hljs"><code>let <span class="hljs-tag">form</span> = document.<span class="hljs-function"><span class="hljs-title">getElementById</span><span class="hljs-params">(<span class="hljs-string">&#39;loginForm&#39;</span>)</span></span>
+<span class="hljs-tag">form</span>.<span class="hljs-function"><span class="hljs-title">submit</span><span class="hljs-params">()</span></span></code></pre></li>
+<li><p>以上的方法提交表单，就是一个普通的表单提交，会触发浏览器提交表单的默认行为：刷新页面！用户体验也将大打折扣。所以出现了优化版的 Ajax 表单提交。</p>
+</li>
+</ul>
+<h2 id="2-ajax-">2. Ajax 表单提交</h2>
+<p>仍然是上面的表单元素，因为 ajax 时候可以指定 URL，所以这里的表单元素可以省略 <code>action</code> 属性。</p>
+<pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-title">form</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;form login-form&quot;</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;loginForm&quot;</span> <span class="hljs-attribute">method</span>=<span class="hljs-value">&quot;POST&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">for</span>=<span class="hljs-value">&quot;name&quot;</span>&gt;</span>Username<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;email&quot;</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;name&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">for</span>=<span class="hljs-value">&quot;password&quot;</span>&gt;</span>Password<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;password&quot;</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;password&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">for</span>=<span class="hljs-value">&quot;captcha&quot;</span>&gt;</span>Captcha<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;text&quot;</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;captcha&quot;</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">for</span>=<span class="hljs-value">&quot;selLoc&quot;</span>&gt;</span>Location<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">select</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;location&quot;</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;selLoc&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;cn&quot;</span>&gt;</span>China Mainland<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;hk&quot;</span>&gt;</span>Hong Kong<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;tw&quot;</span>&gt;</span>Tai Wan<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;us&quot;</span>&gt;</span>America<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;jp&quot;</span>&gt;</span>Japan<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;&quot;</span>&gt;</span>Somewhere<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> &gt;</span>Anywhere<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">select</span>&gt;</span>
+
+  <span class="hljs-comment">&lt;!--  General submit button  --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;submit&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;Submit Form&quot;</span>&gt;</span>
+  <span class="hljs-comment">&lt;!--  Customize  --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;submit&quot;</span>&gt;</span>Submit Form<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+  <span class="hljs-comment">&lt;!--  Image button   --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;image&quot;</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">&quot;graphic.gif&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">form</span>&gt;</span></code></pre><p>我们可以利用每个表单字段的 <code>type</code> 属性，连同 <code>name</code> 和 <code>value</code> 属性一起实现对表单的序列化。先了解下浏览器将数据发送给服务器的过程如下：</p>
+<blockquote>
+<ul>
+<li><p>对表单字段的名称和值进行 URL 编码，使用和号(&amp;) 分隔。</p>
+</li>
+<li><p>不发送禁用的表单字段。</p>
+</li>
+<li><p>只发送勾选的复选框和单选按钮。</p>
+</li>
+<li><p>不发送 type 为 &quot;reset&quot; 和 &quot;button&quot; 的按钮 。</p>
+</li>
+<li><p>多选选择框中的每个选中的值单独一个条目。</p>
+</li>
+<li><p>在单击提交按钮提交表单的情况下，也会发送提交按钮；否则，不发送提交按钮。也包括 type</p>
+<p>为 &quot;image&quot; 的<code>&lt;input&gt;</code>  。</p>
+</li>
+<li><p><code>&lt;select&gt;</code> 的值，就是选中的 <code>&lt;option&gt;</code>  元素的 value 特性的值。如果 <code>&lt;option&gt;</code>  没有</p>
+<p>value 特性，则是 <code>&lt;option&gt;</code> 元素的文本值。</p>
+</li>
+</ul>
+<p>— — 《JavaScript 高级程序设计》</p>
+</blockquote>
+<p>在表单序列化的过程中，一般不包含任何按钮字段，因为结果字符串很可能是通过其他方式提交的，除此之外其他规则都应该遵循。以下就是实现表单序列化的代码。</p>
+<pre class="hljs"><code><span class="hljs-comment">// ref: Professional JavaScript Ch14.4</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">serialize</span>(<span class="hljs-params">form</span>) </span>{
+  <span class="hljs-keyword">let</span> parts = [],
+      field = <span class="hljs-literal">null</span>,
+      option, optValue
+
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, len = form.elements.length; i &lt; len; i++) {
+    field = form.elements[i]
+
+    <span class="hljs-keyword">switch</span>(field.type) {
+      <span class="hljs-comment">// select elements</span>
+      <span class="hljs-keyword">case</span> <span class="hljs-string">&#39;select-one&#39;</span>:
+      <span class="hljs-keyword">case</span> <span class="hljs-string">&#39;select-multiple&#39;</span>:
+        <span class="hljs-keyword">if</span> (field.name.length) {
+          <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = <span class="hljs-number">0</span>, optLen = field.options.length; j &lt; optLen; j++) {
+            option = field.options[j]
+            <span class="hljs-keyword">if</span> (option.selected) {
+              <span class="hljs-comment">// DOM</span>
+              optValue = <span class="hljs-string">&#39;&#39;</span>
+              <span class="hljs-keyword">if</span> (option.hasAttribute) {
+                optValue = option.hasAttibute(<span class="hljs-string">&#39;value&#39;</span>)
+                  ? option.value : option.text
+              } <span class="hljs-keyword">else</span> {
+                <span class="hljs-comment">// IE</span>
+                optValue = option.attributes[<span class="hljs-string">&#39;value&#39;</span>].specified
+                  ? option.value : option.text
+              }
+              parts.push(<span class="hljs-built_in">encodeURIComponent</span>(filed.name) + <span class="hljs-string">&quot;=&quot;</span> + <span class="hljs-built_in">encodeURIComponent</span>(optValue))
+            }
+          }
+        }
+        <span class="hljs-keyword">break</span>
+      <span class="hljs-keyword">case</span> <span class="hljs-literal">undefined</span>:
+      <span class="hljs-keyword">case</span> <span class="hljs-string">&#39;file&#39;</span>:  <span class="hljs-comment">// files input</span>
+      <span class="hljs-keyword">case</span> <span class="hljs-string">&#39;submit&#39;</span>: <span class="hljs-comment">// submit buttons</span>
+      <span class="hljs-keyword">case</span> <span class="hljs-string">&#39;reset&#39;</span>: <span class="hljs-comment">// reset buttons</span>
+      <span class="hljs-keyword">case</span> <span class="hljs-string">&#39;button&#39;</span>: <span class="hljs-comment">// customize buttons</span>
+        <span class="hljs-keyword">break</span>
+
+      <span class="hljs-keyword">case</span> <span class="hljs-string">&#39;radio&#39;</span>:  <span class="hljs-comment">// radio buttons</span>
+      <span class="hljs-keyword">case</span> <span class="hljs-string">&#39;checkbox&#39;</span>:  <span class="hljs-comment">// checkbox</span>
+        <span class="hljs-keyword">if</span> (!field.checked) {
+          <span class="hljs-keyword">break</span>
+        }
+      <span class="hljs-keyword">default</span>:
+        <span class="hljs-comment">// excluding no name field</span>
+        <span class="hljs-keyword">if</span> (field.name.length) {
+          parts.push(<span class="hljs-built_in">encodeURIComponent</span>(filed.name) + <span class="hljs-string">&quot;=&quot;</span> + <span class="hljs-built_in">encodeURIComponent</span>(optValue))
+        }
+    }
+  }
+  <span class="hljs-keyword">return</span> parts.join(<span class="hljs-string">&#39;&amp;&#39;</span>)
+}</code></pre><p>回到用户登录场景，当用户填写了表单字段，<code>name</code> 为 <code>cool4zbl</code>，<code>password</code> 为 <code>secret@Pass</code> ，选择 <code>location</code> 为<code>America</code>，然后点击 <code>submit</code> 按钮提交表单。我们可以监听到 <code>submit Event</code>，拦截默认的表单提交事件，然后在提交表单前执行 <code>serialize(document.getElementById(&#39;loginForm&#39;))</code> ，将会返回</p>
+<p><code>name=cool4zbl&amp;password=sercret%40Pass&amp;location=America</code>，然后就可以使用 Ajax Post 序列化后的数据到服务器，根据服务器端返回的信息（一般为<code>json</code>格式）来显示是否登录成功或者是出现了错误。</p>
+<pre class="hljs"><code><span class="hljs-keyword">let</span> form = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&#39;loginForm&#39;</span>)
+form.onsubmit = (e) =&gt; {
+  e.preventDefault()
+  <span class="hljs-keyword">const</span> data = serialize(form)
+  $.ajax({
+    data,
+    url: <span class="hljs-string">&#39;api.test.com&#39;</span>,
+    type: form.getAttribute(<span class="hljs-string">&#39;method&#39;</span>),
+    contentType: <span class="hljs-string">&#39;application/json; charset=UTF-8&#39;</span>,
+    dataType: <span class="hljs-string">&#39;json&#39;</span>,
+    success: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">resData</span>) </span>{
+      <span class="hljs-comment">// do something with success resData</span>
+      <span class="hljs-comment">// blah</span>
+    },
+    error: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">xhr, type</span>) </span>{
+      <span class="hljs-comment">// Oops, something wrong occurs...</span>
+    }
+  })
+}</code></pre><p>这里为了专注于解释提交表单前后浏览器的行为，使用 jQuery ajax API 简化了具体前后端 Ajax 通信时候发生了什么。</p>
+<p><strong>表单提交</strong>这应该是前端应该掌握的最基本，也是应用得最广泛的前后端数据交互方式了。</p>
+<p>当然还有浏览器通信时的一些坑会被踩到，需要去填，所以更详细的 Ajax 通信总结请参考下一篇「前后端数据交互 - Ajax」。</p>
+<p>以上。</p>
+]]></description><link>/2017-08-10-summary-data-transmission-submit-form/index.html</link><guid isPermaLink="true">/2017-08-10-summary-data-transmission-submit-form/index.html</guid><category><![CDATA[tech]]></category><category><![CDATA[frontend]]></category><category><![CDATA[ajax]]></category><dc:creator><![CDATA[cool4ZBL]]></dc:creator><pubDate>Wed, 09 Aug 2017 16:00:00 GMT</pubDate></item></channel></rss>

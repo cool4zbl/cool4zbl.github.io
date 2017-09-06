@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[undefined - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas, codes, all by myself]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Wed, 06 Sep 2017 10:35:44 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/tag/undefined/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Ali校招笔试题思考]]></title><description><![CDATA[<h1 id="ali-">Ali校招笔试题思考</h1>
+<p>昨晚搭着末班车，参加了阿里今年的实习生在线笔试。
+回忆之前惨不忍睹的内推面试，玩了整整一个寒假后接到了不期而至的面试电话，连之前一些基础的还算熟悉的题都答得不流畅自然一气呵成，我就知道我悲剧了。
+痛定思痛，作为一个即将毕业的大四老鸟（只是说年龄...)，在被各种鄙视，各种蜚语，各种不确定存在的黑暗时期，依旧不屈不挠地学习思考着，我都要被自己感动了。
+笔试题只有一个小时，13道题，一开始是单项选择和不定项选择，考了AMD编码规范、闭包、setTimeout的异步、前端安全及一些我认为蛮有意思的小题，挺考基础的，不是太难，但要细心，我居然也慢悠悠做，时间就那么过去了一半。后来看到了六大道问答题，基本是编程，涉及CSS3、原生JS、事件处理、Ajax等，就渐渐慌了，写代码的手居然有了渐冻症的感觉，心理素质有待提高。
+于是在有差不多一半大题没完成的情况下，被迫交了卷。交卷后才灵感突现，猛然想起了那些题的解法，还是代码经验不够啊。为了防止再出现这样的情况，在这里贴下题目思路和解答。</p>
+<hr>
+<p>关于CSS，有题是用<code>HTML&amp;CSS</code>实现一个九宫格，外边框为1px，内部无边框。之前没有做过九宫格布局，当时又很捉急居然被卡住了。交完卷后突然在想，这不就是考<code>float</code>的嘛。
+遂编码如下：</p>
+<pre class="hljs"><code><span class="hljs-doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">html</span> <span class="hljs-attribute">lang</span>=<span class="hljs-value">&quot;en&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">charset</span>=<span class="hljs-value">&quot;UTF-8&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>九宫格<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">style</span>&gt;</span><span class="css">
+      <span class="hljs-tag">ul</span> <span class="hljs-rules">{
+          <span class="hljs-rule"><span class="hljs-attribute">list-style</span>:<span class="hljs-value"> none</span></span>;
+          <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">158px</span></span></span>;
+          <span class="hljs-rule"><span class="hljs-attribute">height</span>:<span class="hljs-value"> <span class="hljs-number">158px</span></span></span>;
+      }</span>
+      <span class="hljs-tag">li</span> <span class="hljs-rules">{
+          <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">50px</span></span></span>; <span class="hljs-rule"><span class="hljs-attribute">height</span>:<span class="hljs-value"> <span class="hljs-number">50px</span></span></span>;
+          <span class="hljs-comment">/<em>box-sizing: border-box;</em>/</span>
+          <span class="hljs-rule"><span class="hljs-attribute">background-color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#888</span></span></span>;
+          <span class="hljs-rule"><span class="hljs-attribute">float</span>:<span class="hljs-value"> left</span></span>;
+      }</span>
+      <span class="hljs-class">.one</span>,<span class="hljs-class">.four</span>, <span class="hljs-class">.seven</span><span class="hljs-rules">{
+      <span class="hljs-rule"><span class="hljs-attribute">border-left</span>:<span class="hljs-value"> <span class="hljs-number">3px</span> solid red</span></span>;
+          <span class="hljs-comment">/<em>z-index: 2;</em>/</span>
+      }</span>
+      <span class="hljs-class">.one</span>, <span class="hljs-class">.two</span>, <span class="hljs-class">.three</span> <span class="hljs-rules">{
+          <span class="hljs-rule"><span class="hljs-attribute">border-top</span>:<span class="hljs-value"> <span class="hljs-number">3px</span> solid red</span></span>;
+      }</span>
+      <span class="hljs-class">.three</span>, <span class="hljs-class">.six</span>, <span class="hljs-class">.nine</span> <span class="hljs-rules">{
+          <span class="hljs-rule"><span class="hljs-attribute">border-right</span>:<span class="hljs-value"> <span class="hljs-number">3px</span> solid red</span></span>;
+      }</span>
+      <span class="hljs-class">.seven</span>, <span class="hljs-class">.eight</span>, <span class="hljs-class">.nine</span> <span class="hljs-rules">{
+          <span class="hljs-rule"><span class="hljs-attribute">border-bottom</span>:<span class="hljs-value"> <span class="hljs-number">3px</span> solid red</span></span>;
+      }</span>
+
+    </span><span class="hljs-tag">&lt;/<span class="hljs-title">style</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>
+    HTML CSS 九宫格 外边框1px 内部无边框
+    <span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ul</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;list&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;one&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;two&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;three&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;four&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;five&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;six&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;seven&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;eight&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;nine&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">ul</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span></code></pre><p>其实就是每个盒子固定宽高，父元素也固定宽高，分别为盒子宽高的3倍+左右（或上下）两边的边框宽度，然后都浮动起来。内部无边框外部有边框也容易实现，只要把最外圈的盒子按顺序设定 <code>border-top</code>、<code>border-bottom</code>、<code>border-left</code>、<code>border-right</code>即可。
+思考：</p>
+<ul>
+<li>一开始把父元素刚好设为盒子宽高的3倍，盒子设定为<code>box-sizing: border-box</code>后，发现边框自动隐藏了，所以要体现有边框还是不能这样；</li>
+<li>该题不难，其实还可以拓展成N宫格，<code>父元素的宽高 = N*盒子宽高 + 2*border-width</code>，相当于做个图片墙。</li>
+</ul>
+<p>JS跨浏览器事件处理：给你个超链接按钮，用户点击后不进行链接跳转，而是提示“用户名不能为空”，要尽可能兼容更多的浏览器。
+这题考的也就是跨浏览器的事件处理啦，之前看过《JavaScript高级程序设计》时候，专门有一小节讲跨浏览器事件处理，给出了完整的解决方案，自己也用心写了<code>Code Snippet</code>笔记，但是实践少，考试时做的不太顺利，这里重新整理下贴下代码。
+（Ghost Gist 托管，若无显示请戳 <a href="https://gist.github.com/githubzbl/8170f1e96e7bf3c66ca5">跨浏览器事件处理Gist</a>）</p>
+<script src="https://gist.github.com/githubzbl/8170f1e96e7bf3c66ca5.js"></script>
+
+<p>思考：</p>
+<ul>
+<li>事件处理很简单，关键就在兼容浏览器，这里就得照顾到IE；</li>
+<li>当时考试时居然把<code>&lt;script&gt;</code>标签及其里面的代码写到了<code>&lt;head&gt;</code>里面，导致<code>document.getElementById(&#39;btn&#39;)</code>返回的一直是<code>undefined</code>，现在想想给自己跪了，<code>DOM</code>都没准备好哪来的<code>getElementById()</code>。</li>
+</ul>
+<p>JS统计字符串中出现次数最多的字符并打印统计信息。
+这题当时看的时候居然看成<em>找出现最多的字符串</em>，心想天哪噜大阿里真厉害前端还考字符子串问题，这算法……，时间紧迫，遂想都没想直接跳过了。交卷后仔细回想才发现是<em>找字符</em>啊！再给自己跪下*2。
+在老道那本《Good Parts》里有个gist是去计算一段文本中每个单词的出现次数，因为每个单词是用空格符隔开，所以思路也可以迁移到单个字符。思考后编码如下：
+（Ghost Gist 托管，若无显示请戳 <a href="https://gist.github.com/githubzbl/a0ab1b7dd4f0128e9d6d">字符计数</a>）</p>
+<p><script src="https://gist.github.com/githubzbl/a0ab1b7dd4f0128e9d6d.js"></script>
+思考：</p>
+<ul>
+<li>将字符串分成单个字符很简单，甚至不用<code>RegExp</code>；</li>
+<li>分成单个字符后存入一个对象，巧妙的是对象的属性即为该字符，属性值为该字符在字符串中出现的次数；</li>
+<li>最后简单的用<code>for in</code>遍历属性排序，当然老道说<code>for in</code>不好，不知道这个地方需不需要改善。</li>
+</ul>
+<p>JS 给定一个http接口，传入一个员工id，返回员工的详细信息，接口形式为：<code>http://localhost/query?id=</code>，要求在前端实现一个根据一批员工id，通过ajax查询员工信息的功能。
+Ajax show time, finally.
+之前只写过几个Ajax，并不是太熟练，所以这题拿不准。
+既然给了URL，一般就是要考<code>RegExp</code>啦，但是这个只要根据<code>id</code>查询就好，是不是只用<code>url.split(&#39;=&#39;)</code>，然后就知道ID了呢？
+HTTP接口应该也就是写个函数模块吧。暂时给思路如下，待完善。</p>
+<pre class="hljs"><code> $(<span class="hljs-built_in">document</span>).ready(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">url</span>) </span>{
+   <span class="hljs-keyword">var</span> id = url.split(<span class="hljs-string">&#39;=&#39;</span>)[<span class="hljs-number">1</span>];
+   $(<span class="hljs-string">&#39;.btn&#39;</span>).click(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">id</span>) </span>{
+        $.ajax({
+            url: <span class="hljs-string">&#39;<a href="http://localhost/query?id=">http://localhost/query?id=</a>&#39;</span>,
+            type: <span class="hljs-string">&#39;GET&#39;</span>,
+            dataType: <span class="hljs-string">&#39;html&#39;</span>,
+            data: {param1: id},
+        })
+        .done(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;success&quot;</span>);
+        })
+        .fail(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;error&quot;</span>);
+        })
+        .always(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;complete&quot;</span>);
+        });
+    });
+  });</code></pre><hr>
+<p>差不多就这些了，想到新思路再来更新吧。前端坑是很多，但也很有趣，感觉自己终于入门了呢。
+还是那句，希望自己在成为大牛的道路上越走越远。</p>
+<hr>
+<p>续：觉得做的一般也收到了面试通知。但阿里又说“针对2015届招聘已结束，无论面试结果如何我们都不能承诺您能加入”。伤心归伤心，毕竟迟了那么点。
+但再怎么着也要执着走下去。
+<strong>“It&#39;s never too late to start.”</strong></p>
+]]></description><link>/2014-12-01-alibaba-interview/index.html</link><guid isPermaLink="true">/2014-12-01-alibaba-interview/index.html</guid><category><![CDATA[interview]]></category><category><![CDATA[tech]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[cool4ZBL]]></dc:creator><pubDate>Mon, 01 Dec 2014 12:13:00 GMT</pubDate></item><item><title><![CDATA[写在百度电面后]]></title><description><![CDATA[<h1 id="-">写在百度电面后</h1>
+<p>Desperado.</p>
+<figure>
+<img src="http://zbl-ghost-backup.qiniudn.com/blogcover_roadtothesky_2880x900.jpg" alt="road to the sky">
+<figcaption>Road to the sky.</figcaption>
+</figure>
+
+
+<p>睡得昏昏沉沉的早上，突然接到了电话，在从惊呆到真呆中，就这么面完了百度。</p>
+<hr>
+<p>“先作下自我介绍吧！”
+自我介绍？天，简历里面不是写了吗？噢，我写了什么？
+“呃，我叫XXX，是电子科大电子信息工程的大四学生...呃，我喜欢互联网及互联网开发…最近一直在自学…嗯。”
+“完了吗？”
+“说完了。” 当时我就在想，完了。脑袋空白。</p>
+<p>“电子信息工程的是吗？那你先解释下傅里叶变换吧。”
+简直惊呆，我这是面的前端吗？第一个问题就这么脑子转不过来了，都好久没有看专业书。
+“嗯，有个复杂信号…呃经过傅里叶变换...分解...单频率信号...嗯...”
+七零八落我也不知道我说了什么。</p>
+<p>“CSS的优先级知道吗？解释一下。”
+“呃，是特指度？先是ID，然后是class，然后是标签名....”
+“确定最后是标签名吗？”
+“呃嗯...确定。”
+虽然最后是对了，但是答得很是不自然。</p>
+<p>“嗯，如果这有一个数组，我想删除数组中的重复元素应该怎么做？”
+啊，WTF，居然问了算法。曾经想过这个思路的，但是已经好久没有写过C，而且这还是用JS实现。可是我JS的书都还没有看完。
+“呃，数组嘛，那就从第一个开始依次遍历咯…有重复的话就标记。”
+“每个都遍历一遍？如何标记？时间复杂度如何？”
+哎，为了看前端的东西，算法好久没有碰过，我要说什么……
+(<strong>更新</strong>：
+面试的时候对JS不是很熟悉，还是按着原来写C的思路来处理数组，加上心里有点紧张，思路一时打不开。最近几天又继续啃了《JavaScript高级程序设计》，发现 JavaScript 在数组方面处理真心很强大，贴去除数组中重复元素的函数如下：</p>
+<pre class="hljs"><code>function uniqueArray (<span class="hljs-type">array</span>) {
+    <span class="hljs-keyword">var</span> <span class="hljs-literal">result</span> = [];
+    <span class="hljs-type">array</span>.sort(compare);  // 此处不知道如果数组中元素很多的话，先给数组排序效率会不会高点？
+    <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">var</span> i <span class="hljs-keyword">in</span> <span class="hljs-type">array</span> ) {
+        <span class="hljs-keyword">if</span> ( <span class="hljs-literal">result</span>.indexOf(<span class="hljs-type">array</span>[i]) == -<span class="hljs-number">1</span>) {
+            <span class="hljs-literal">result</span>.push(<span class="hljs-type">array</span>[i]);
+        };
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">result</span>;
+}
+function compare (value1, value2) {
+     <span class="hljs-keyword">return</span> value2 - value1;
+}</code></pre><p>)</p>
+<p>“学过排序吗？介绍下二分法？快速排序？冒泡排序？”
+“只学过冒泡…冒泡就是这样的……”</p>
+<p>(<strong>更新</strong>：一个非常好玩的各种排序算法的<a href="http://jsdo.it/norahiko/oxIy/fullscreen">动画演示</a>，当初学算法的时候要是有这么直观的动画就好了。
+快排的思想如下：</p>
+<blockquote>
+<p>（1）在数据集之中，选择一个元素作为&quot;基准&quot;（pivot）。
+（2）所有小于&quot;基准&quot;的元素，都移到&quot;基准&quot;的左边；所有大于&quot;基准&quot;的元素，都移到&quot;基准&quot;的右边。
+（3）对&quot;基准&quot;左边和右边的两个子集，不断重复第一步和第二步，直到所有子集只剩下一个元素为止。
+```language-javascript
+var quickSort = function(arr) {
+　　if (arr.length &lt;= 1) { return arr; }
+　　var pivotIndex = Math.floor(arr.length / 2);
+　　var pivot = arr.splice(pivotIndex, 1)[0]; //取得基准元素的值
+　　var left = [];
+　　var right = [];
+　　for (var i = 0; i &lt; arr.length; i++){
+　　　　if (arr[i] &lt; pivot) {
+　　　　　　left.push(arr[i]);
+　　　　} else {
+　　　　　　right.push(arr[i]);
+　　　　}
+　　}
+　　return quickSort(left).concat([pivot], quickSort(right));   //递归调用
+};</p>
+</blockquote>
+<p>```
+快速排序最差的情况时间复杂度是O(n^2)。</p>
+<p>“我看你笔试试卷上JS异步编程那题写了点代码，那么解释下Ajax?&quot;
+噢，真是哪壶不开提哪壶。真是惭愧，笔试试卷上的代码是我考试时候翻手机里那本《JavaScript权威指南》，在里面随便抄了一点。我写了什么？我也不知道。
+昨晚才真正在图书馆接触到了Ajax，书还没来得及认真看。只能凭靠记忆力一点点说。
+“Ajax嘛，异步JS和XML…可以在不重新加载整个页面情况下更新页面的某个部分……”
+“那么如何用JS实现Ajax？”
+噢。昨天看书才看到这点，还没有实现过。
+“呃…新命名一个变量（其实是对象）XMLhttprequest……然后接收服务器返回的数据……”
+靠，我到底在说什么。
+“不好意思，我不会写。”</p>
+<p>“好吧，咱们的面试到此结束。你有什么问题吗？”
+嗯，我知道我这样肯定没戏了，索性就随便说点吧。
+“不好意思，笔试完后我没想过我能进面试，就没有做面试准备，所以这次表现得很糟糕。我是不是基础很不扎实？跨行是不是不容易？”
+后来知道，那位面试官也是通信工程转过去的，而且他还开玩笑的说是因为考研没考上。</p>
+<hr>
+<blockquote>
+<p>Desperado, ah, you ain&#39;t gettin&#39; no younger.
+亡命之徒啊，你已经不年轻了
+Your pain and your hunger, they&#39;re drivin&#39; you home.
+你的痛苦和饥饿，它们在把你赶回原点
+Freedom, oh, freedom. That&#39;s just some people talkin&#39;
+自由，噢自由。那只是有些人说的
+You&#39;re a prisioner walking through this world all alone.
+你是孤独闯世界的囚犯</p>
+</blockquote>
+<p>面完百度后，一直循环在听“亡命之徒”，而心情沮丧得就和上次考完雅思口语一样。
+是的，因为我压根没想到我能进面试。
+是的，我一定是太不自信。
+这个面试官也一定和上次口语考官一样想吧，这个人啥都没准备啥都不会还敢来面试（考试）？</p>
+<p>跟妈妈打了电话，想想还是不用太沮丧，虽然是百度，但这是你的第一次面试，所以经验缺乏，应答不自然是正常的。
+内功不深厚，肚子里没货，怎么倒腾也是倒不出东西的吧。</p>
+<p>对于面试：</p>
+<ol>
+<li>一定一定要准备好一个<strong>精彩的自我介绍</strong>。</li>
+<li>一定一定得<strong>有自信</strong>，不要认为自学非科班项目经验少就会低人一等，要对自己的能力有信心（自己接电话时就是太不自信了，心里貌似就是有一个暗示，觉得BAT那么高大上的公司怎么进得去），不要过分仰视那些大公司，否则自己永远也进不去。</li>
+<li>试着写个好简历，然后多投递下简历，增加宝贵笔试、面试经验，以后面试时能更加从容面对。</li>
+</ol>
+<p>对于能力提升：</p>
+<ol>
+<li>夯实<code>HTML&amp;CSS</code>的基础知识。
+多写读书笔记，多总结经验，这样才能在真正需要它们的时候运用自如。</li>
+<li>必须立刻继续<code>JavaScript</code>的学习。
+之前断断续续看过一点JS的知识，但是最近倒腾网站就转移了很多注意力到服务器端，导致什么都不精，自己也找不到了方向。一本「JavaScript高级程序设计」啃来啃去。</li>
+<li>开始<code>Ajax</code>、<code>jQuery</code>的认真学习。
+你看看，连写个异步编程都不会。接下来还有Node.js呢。</li>
+<li><strong>不要好高骛远，不要赶潮流耍花招。</strong>
+之前真是过于浮躁，看了很多新技术的书，但连最基础的东西都没学好。</li>
+</ol>
+<p><blockquote>
+    让你自己成为一个持续学习和思考的人，并只写你真正思考和总结之后的产物，其他一切就会随之而来。
+</blockquote>
+加油吧，希望能在通往大牛的道路上越走越远。</p>
+]]></description><link>/2014-11-04-baidu-interview-thought/index.html</link><guid isPermaLink="true">/2014-11-04-baidu-interview-thought/index.html</guid><category><![CDATA[interview]]></category><category><![CDATA[tech]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[cool4ZBL]]></dc:creator><pubDate>Tue, 04 Nov 2014 08:13:00 GMT</pubDate></item></channel></rss>

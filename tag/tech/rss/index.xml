@@ -1,5 +1,166 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[undefined - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Sat, 02 Sep 2017 03:42:05 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/tag/undefined/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Uber 高性能 Web App 优化实践]]></title><description><![CDATA[<p>原文 <a href="https://eng.uber.com/m-uber/">Building m.uber: ENGINEERING A HIGH-PERFORMANCE WEB APP FOR THE GLOBAL MARKET</a></p>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[undefined - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas, codes, all by myself]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Wed, 06 Sep 2017 10:35:44 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/tag/undefined/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[前后端数据交互 - 表单提交]]></title><description><![CDATA[<p>最近想总结下前后端数据交互方式，顺便继续学习下网络相关，以下是第一篇，最简单、最常见且应用最广泛的「表单提交」。</p>
+<p>按交互方式分为两种，提交后有刷新的普通表单提交和无刷新的 Ajax 表单提交。</p>
+<h2 id="1-">1. 普通表单提交</h2>
+<p>下面是一个很普通的用户登录表单：</p>
+<pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-title">form</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;form login-form&quot;</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;loginForm&quot;</span>
+      <span class="hljs-attribute">method</span>=<span class="hljs-value">&quot;POST&quot;</span> <span class="hljs-attribute">action</span>=<span class="hljs-value">&quot;api.test.com/login&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">for</span>=<span class="hljs-value">&quot;name&quot;</span>&gt;</span>Username<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;email&quot;</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;name&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">for</span>=<span class="hljs-value">&quot;password&quot;</span>&gt;</span>Password<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;password&quot;</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;password&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">for</span>=<span class="hljs-value">&quot;captcha&quot;</span>&gt;</span>Captcha<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;text&quot;</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;captcha&quot;</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">for</span>=<span class="hljs-value">&quot;selLoc&quot;</span>&gt;</span>Location<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">select</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;location&quot;</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;selLoc&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;cn&quot;</span>&gt;</span>China Mainland<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;hk&quot;</span>&gt;</span>Hong Kong<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;tw&quot;</span>&gt;</span>Tai Wan<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;us&quot;</span>&gt;</span>America<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;jp&quot;</span>&gt;</span>Japan<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;&quot;</span>&gt;</span>Somewhere<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> &gt;</span>Anywhere<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">select</span>&gt;</span>
+
+  <span class="hljs-comment">&lt;!--  General submit button  --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;submit&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;Submit Form&quot;</span>&gt;</span>
+  <span class="hljs-comment">&lt;!--  Customize  --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;submit&quot;</span>&gt;</span>Submit Form<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+  <span class="hljs-comment">&lt;!--  Image button   --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;image&quot;</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">&quot;graphic.gif&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">form</span>&gt;</span></code></pre><ul>
+<li><p>当用户单击提交按钮或者图像按钮的时候，就会提交表单；</p>
+</li>
+<li><p><code>&lt;input type=&quot;submit&quot;&gt;</code> / <code>&lt;button type=&quot;submit&quot;&gt;</code> / <code>&lt;input type=&quot;image&quot; src=&#39;img.gif&#39;&gt;</code> 都可以作为表单提交按钮。且只要存在任何一种按钮，在相应表单控件有焦点的情况下，按回车键就可以提交该表单，这里应该是浏览器对表单元素回车键的默认行为，所以在提交表单前，会触发 <code>submit Event</code>，可以用来做表单验证；</p>
+</li>
+<li><p>如果直接使用 JS <code>submit()</code> 提交表单，这里则不会触发表单的 <code>submit Event</code>，所以需要在调用方法前做表单验证；</p>
+<pre class="hljs"><code>let <span class="hljs-tag">form</span> = document.<span class="hljs-function"><span class="hljs-title">getElementById</span><span class="hljs-params">(<span class="hljs-string">&#39;loginForm&#39;</span>)</span></span>
+<span class="hljs-tag">form</span>.<span class="hljs-function"><span class="hljs-title">submit</span><span class="hljs-params">()</span></span></code></pre></li>
+<li><p>以上的方法提交表单，就是一个普通的表单提交，会触发浏览器提交表单的默认行为：刷新页面！用户体验也将大打折扣。所以出现了优化版的 Ajax 表单提交。</p>
+</li>
+</ul>
+<h2 id="2-ajax-">2. Ajax 表单提交</h2>
+<p>仍然是上面的表单元素，因为 ajax 时候可以指定 URL，所以这里的表单元素可以省略 <code>action</code> 属性。</p>
+<pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-title">form</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;form login-form&quot;</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;loginForm&quot;</span> <span class="hljs-attribute">method</span>=<span class="hljs-value">&quot;POST&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">for</span>=<span class="hljs-value">&quot;name&quot;</span>&gt;</span>Username<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;email&quot;</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;name&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">for</span>=<span class="hljs-value">&quot;password&quot;</span>&gt;</span>Password<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;password&quot;</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;password&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">for</span>=<span class="hljs-value">&quot;captcha&quot;</span>&gt;</span>Captcha<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;text&quot;</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;captcha&quot;</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">for</span>=<span class="hljs-value">&quot;selLoc&quot;</span>&gt;</span>Location<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">select</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;location&quot;</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;selLoc&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;cn&quot;</span>&gt;</span>China Mainland<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;hk&quot;</span>&gt;</span>Hong Kong<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;tw&quot;</span>&gt;</span>Tai Wan<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;us&quot;</span>&gt;</span>America<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;jp&quot;</span>&gt;</span>Japan<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;&quot;</span>&gt;</span>Somewhere<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">option</span> &gt;</span>Anywhere<span class="hljs-tag">&lt;/<span class="hljs-title">option</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">select</span>&gt;</span>
+
+  <span class="hljs-comment">&lt;!--  General submit button  --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;submit&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;Submit Form&quot;</span>&gt;</span>
+  <span class="hljs-comment">&lt;!--  Customize  --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;submit&quot;</span>&gt;</span>Submit Form<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+  <span class="hljs-comment">&lt;!--  Image button   --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;image&quot;</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">&quot;graphic.gif&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">form</span>&gt;</span></code></pre><p>我们可以利用每个表单字段的 <code>type</code> 属性，连同 <code>name</code> 和 <code>value</code> 属性一起实现对表单的序列化。先了解下浏览器将数据发送给服务器的过程如下：</p>
+<blockquote>
+<ul>
+<li><p>对表单字段的名称和值进行 URL 编码，使用和号(&amp;) 分隔。</p>
+</li>
+<li><p>不发送禁用的表单字段。</p>
+</li>
+<li><p>只发送勾选的复选框和单选按钮。</p>
+</li>
+<li><p>不发送 type 为 &quot;reset&quot; 和 &quot;button&quot; 的按钮 。</p>
+</li>
+<li><p>多选选择框中的每个选中的值单独一个条目。</p>
+</li>
+<li><p>在单击提交按钮提交表单的情况下，也会发送提交按钮；否则，不发送提交按钮。也包括 type</p>
+<p>为 &quot;image&quot; 的<code>&lt;input&gt;</code>  。</p>
+</li>
+<li><p><code>&lt;select&gt;</code> 的值，就是选中的 <code>&lt;option&gt;</code>  元素的 value 特性的值。如果 <code>&lt;option&gt;</code>  没有</p>
+<p>value 特性，则是 <code>&lt;option&gt;</code> 元素的文本值。</p>
+</li>
+</ul>
+<p>— — 《JavaScript 高级程序设计》</p>
+</blockquote>
+<p>在表单序列化的过程中，一般不包含任何按钮字段，因为结果字符串很可能是通过其他方式提交的，除此之外其他规则都应该遵循。以下就是实现表单序列化的代码。</p>
+<pre class="hljs"><code><span class="hljs-comment">// ref: Professional JavaScript Ch14.4</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">serialize</span>(<span class="hljs-params">form</span>) </span>{
+  <span class="hljs-keyword">let</span> parts = [],
+      field = <span class="hljs-literal">null</span>,
+      option, optValue
+
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, len = form.elements.length; i &lt; len; i++) {
+    field = form.elements[i]
+
+    <span class="hljs-keyword">switch</span>(field.type) {
+      <span class="hljs-comment">// select elements</span>
+      <span class="hljs-keyword">case</span> <span class="hljs-string">&#39;select-one&#39;</span>:
+      <span class="hljs-keyword">case</span> <span class="hljs-string">&#39;select-multiple&#39;</span>:
+        <span class="hljs-keyword">if</span> (field.name.length) {
+          <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = <span class="hljs-number">0</span>, optLen = field.options.length; j &lt; optLen; j++) {
+            option = field.options[j]
+            <span class="hljs-keyword">if</span> (option.selected) {
+              <span class="hljs-comment">// DOM</span>
+              optValue = <span class="hljs-string">&#39;&#39;</span>
+              <span class="hljs-keyword">if</span> (option.hasAttribute) {
+                optValue = option.hasAttibute(<span class="hljs-string">&#39;value&#39;</span>)
+                  ? option.value : option.text
+              } <span class="hljs-keyword">else</span> {
+                <span class="hljs-comment">// IE</span>
+                optValue = option.attributes[<span class="hljs-string">&#39;value&#39;</span>].specified
+                  ? option.value : option.text
+              }
+              parts.push(<span class="hljs-built_in">encodeURIComponent</span>(filed.name) + <span class="hljs-string">&quot;=&quot;</span> + <span class="hljs-built_in">encodeURIComponent</span>(optValue))
+            }
+          }
+        }
+        <span class="hljs-keyword">break</span>
+      <span class="hljs-keyword">case</span> <span class="hljs-literal">undefined</span>:
+      <span class="hljs-keyword">case</span> <span class="hljs-string">&#39;file&#39;</span>:  <span class="hljs-comment">// files input</span>
+      <span class="hljs-keyword">case</span> <span class="hljs-string">&#39;submit&#39;</span>: <span class="hljs-comment">// submit buttons</span>
+      <span class="hljs-keyword">case</span> <span class="hljs-string">&#39;reset&#39;</span>: <span class="hljs-comment">// reset buttons</span>
+      <span class="hljs-keyword">case</span> <span class="hljs-string">&#39;button&#39;</span>: <span class="hljs-comment">// customize buttons</span>
+        <span class="hljs-keyword">break</span>
+
+      <span class="hljs-keyword">case</span> <span class="hljs-string">&#39;radio&#39;</span>:  <span class="hljs-comment">// radio buttons</span>
+      <span class="hljs-keyword">case</span> <span class="hljs-string">&#39;checkbox&#39;</span>:  <span class="hljs-comment">// checkbox</span>
+        <span class="hljs-keyword">if</span> (!field.checked) {
+          <span class="hljs-keyword">break</span>
+        }
+      <span class="hljs-keyword">default</span>:
+        <span class="hljs-comment">// excluding no name field</span>
+        <span class="hljs-keyword">if</span> (field.name.length) {
+          parts.push(<span class="hljs-built_in">encodeURIComponent</span>(filed.name) + <span class="hljs-string">&quot;=&quot;</span> + <span class="hljs-built_in">encodeURIComponent</span>(optValue))
+        }
+    }
+  }
+  <span class="hljs-keyword">return</span> parts.join(<span class="hljs-string">&#39;&amp;&#39;</span>)
+}</code></pre><p>回到用户登录场景，当用户填写了表单字段，<code>name</code> 为 <code>cool4zbl</code>，<code>password</code> 为 <code>secret@Pass</code> ，选择 <code>location</code> 为<code>America</code>，然后点击 <code>submit</code> 按钮提交表单。我们可以监听到 <code>submit Event</code>，拦截默认的表单提交事件，然后在提交表单前执行 <code>serialize(document.getElementById(&#39;loginForm&#39;))</code> ，将会返回</p>
+<p><code>name=cool4zbl&amp;password=sercret%40Pass&amp;location=America</code>，然后就可以使用 Ajax Post 序列化后的数据到服务器，根据服务器端返回的信息（一般为<code>json</code>格式）来显示是否登录成功或者是出现了错误。</p>
+<pre class="hljs"><code><span class="hljs-keyword">let</span> form = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&#39;loginForm&#39;</span>)
+form.onsubmit = (e) =&gt; {
+  e.preventDefault()
+  <span class="hljs-keyword">const</span> data = serialize(form)
+  $.ajax({
+    data,
+    url: <span class="hljs-string">&#39;api.test.com&#39;</span>,
+    type: form.getAttribute(<span class="hljs-string">&#39;method&#39;</span>),
+    contentType: <span class="hljs-string">&#39;application/json; charset=UTF-8&#39;</span>,
+    dataType: <span class="hljs-string">&#39;json&#39;</span>,
+    success: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">resData</span>) </span>{
+      <span class="hljs-comment">// do something with success resData</span>
+      <span class="hljs-comment">// blah</span>
+    },
+    error: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">xhr, type</span>) </span>{
+      <span class="hljs-comment">// Oops, something wrong occurs...</span>
+    }
+  })
+}</code></pre><p>这里为了专注于解释提交表单前后浏览器的行为，使用 jQuery ajax API 简化了具体前后端 Ajax 通信时候发生了什么。</p>
+<p><strong>表单提交</strong>这应该是前端应该掌握的最基本，也是应用得最广泛的前后端数据交互方式了。</p>
+<p>当然还有浏览器通信时的一些坑会被踩到，需要去填，所以更详细的 Ajax 通信总结请参考下一篇「前后端数据交互 - Ajax」。</p>
+<p>以上。</p>
+]]></description><link>/2017-08-10-summary-data-transmission-submit-form/index.html</link><guid isPermaLink="true">/2017-08-10-summary-data-transmission-submit-form/index.html</guid><category><![CDATA[tech]]></category><category><![CDATA[frontend]]></category><category><![CDATA[ajax]]></category><dc:creator><![CDATA[cool4ZBL]]></dc:creator><pubDate>Wed, 09 Aug 2017 16:00:00 GMT</pubDate></item><item><title><![CDATA[Uber 高性能 Web App 优化实践]]></title><description><![CDATA[<p>原文 <a href="https://eng.uber.com/m-uber/">Building m.uber: ENGINEERING A HIGH-PERFORMANCE WEB APP FOR THE GLOBAL MARKET</a></p>
 <p><strong>Performance matters on mobile.</strong></p>
 <p>又是一篇关于性能优化的实践。</p>
 <p>m.uber 团队对 m.uber，他们的超级轻量 web app 做了一些性能优化的工作。</p>
@@ -102,7 +263,7 @@
 </ul>
 <p>纵观这些方案，可以说把 Google 一直在推的 <strong><a href="https://developers.google.com/web/fundamentals/performance/prpl-pattern/">PRPL Patterns</a></strong> 做到了极致。</p>
 <p>以上。</p>
-]]></description><link>/2017-07-10-m-uber-performance-optimazation/index.html</link><guid isPermaLink="true">/2017-07-10-m-uber-performance-optimazation/index.html</guid><category><![CDATA[tech]]></category><category><![CDATA[frontend]]></category><category><![CDATA[optimization]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Sun, 09 Jul 2017 16:00:00 GMT</pubDate></item><item><title><![CDATA[从十个 React 迷你设计模式谈开去]]></title><description><![CDATA[<p>很早之前就一直在读的一篇文章，<a href="https://hackernoon.com/10-react-mini-patterns-c1da92f068c5">10 个React Mini 设计模式</a>，一边做 <code>Creator</code> 项目，也一边终于把它精读完。</p>
+]]></description><link>/2017-07-10-m-uber-performance-optimazation/index.html</link><guid isPermaLink="true">/2017-07-10-m-uber-performance-optimazation/index.html</guid><category><![CDATA[tech]]></category><category><![CDATA[frontend]]></category><category><![CDATA[optimization]]></category><dc:creator><![CDATA[cool4ZBL]]></dc:creator><pubDate>Sun, 09 Jul 2017 16:00:00 GMT</pubDate></item><item><title><![CDATA[从十个 React 迷你设计模式谈开去]]></title><description><![CDATA[<p>很早之前就一直在读的一篇文章，<a href="https://hackernoon.com/10-react-mini-patterns-c1da92f068c5">10 个React Mini 设计模式</a>，一边做 <code>Creator</code> 项目，也一边终于把它精读完。</p>
 <p>结合自己的开发时候的项目经验，做了点笔记。</p>
 <p><code>Creator</code> 项目是一个多端（Web + Mobile）React SPA，且有一些表单填写和复杂的交互组件。</p>
 <p><del>自己单独封装了一个很简单的基于 Node <code>EventEmitter</code> 的 <code>Store</code>，开发过程中收获很大，这些细节之后可以细说。</del> 产品那边后来又加了「置顶」功能，类似双向数据通信的 <code>EventEmitter</code> 逻辑有点太乱了，所以还是狠心花时间升级成了 <code>Redux</code> + <code>Immutable.js</code> + <code>Normalizr</code> 技术栈，果然省心很多。</p>
@@ -632,7 +793,7 @@ req.keys().forEach(<span class="hljs-function"><span class="hljs-params">(key)</
 })</code></pre><p>Creator 中因为用的 <code>create-react-app</code> CLI，无法自己配置 Webpack，所以并没有用到...</p>
 <p>以上就是一些含金量很高迷你设计模式，最好是开发的时候参照这些要点，能用上就用上，熟能生巧。</p>
 <p>END</p>
-]]></description><link>/2017-06-28-10-react-mini-patterns-note/index.html</link><guid isPermaLink="true">/2017-06-28-10-react-mini-patterns-note/index.html</guid><category><![CDATA[tech]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Tue, 27 Jun 2017 16:00:00 GMT</pubDate></item><item><title><![CDATA[Fun with Codemod & AST]]></title><description><![CDATA[<h2 id="tl-dr">TL;DR</h2>
+]]></description><link>/2017-06-28-10-react-mini-patterns-note/index.html</link><guid isPermaLink="true">/2017-06-28-10-react-mini-patterns-note/index.html</guid><category><![CDATA[tech]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[cool4ZBL]]></dc:creator><pubDate>Tue, 27 Jun 2017 16:00:00 GMT</pubDate></item><item><title><![CDATA[Fun with Codemod & AST]]></title><description><![CDATA[<h2 id="tl-dr">TL;DR</h2>
 <ul>
 <li>Facebook 为了解决「大型代码库」迁移，基于 AST 造了个工具 <strong>Codemod</strong></li>
 <li>基于 Codemod 又构建了 JavaScript 代码迁移专用的工具 <strong>jscodeshift</strong> 和 <strong>React-codemod</strong></li>
@@ -926,7 +1087,7 @@ a + b
 <li><a href="http://tech.meituan.com/abstract-syntax-tree.html">AST 在美团的应用</a></li>
 <li><a href="http://imweb.io/topic/57b13b4f93d9938132cc8dfd">imweb</a></li>
 </ul>
-]]></description><link>/2017-02-15-fun-with-codemod-and-ast/index.html</link><guid isPermaLink="true">/2017-02-15-fun-with-codemod-and-ast/index.html</guid><category><![CDATA[tech]]></category><category><![CDATA[programming]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Tue, 14 Feb 2017 17:21:00 GMT</pubDate></item><item><title><![CDATA[移动环境下的 SEO]]></title><description><![CDATA[<p>真的有很久很久没来理这个博客，距离上一篇文章的发布日期是两年前。
+]]></description><link>/2017-02-15-fun-with-codemod-and-ast/index.html</link><guid isPermaLink="true">/2017-02-15-fun-with-codemod-and-ast/index.html</guid><category><![CDATA[tech]]></category><category><![CDATA[programming]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[cool4ZBL]]></dc:creator><pubDate>Tue, 14 Feb 2017 17:21:00 GMT</pubDate></item><item><title><![CDATA[移动环境下的 SEO]]></title><description><![CDATA[<p>真的有很久很久没来理这个博客，距离上一篇文章的发布日期是两年前。
 毕业工作后来了豆瓣，最近对移动环境（主要是浏览器及微信）的 SEO 相关进行了下研究，正好在这里分享一下。</p>
 <p>以下，Enjoy。</p>
 <hr>
@@ -1145,4 +1306,381 @@ wx.onMenuShareAppMessage($.extend({}, shareData,{
 </ul>
 </li>
 </ol>
-]]></description><link>/2016-05-20-seo-in-mobile/index.html</link><guid isPermaLink="true">/2016-05-20-seo-in-mobile/index.html</guid><category><![CDATA[SEO]]></category><category><![CDATA[shares]]></category><category><![CDATA[tech]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Thu, 19 May 2016 18:21:00 GMT</pubDate></item></channel></rss>
+]]></description><link>/2016-05-20-seo-in-mobile/index.html</link><guid isPermaLink="true">/2016-05-20-seo-in-mobile/index.html</guid><category><![CDATA[SEO]]></category><category><![CDATA[shares]]></category><category><![CDATA[tech]]></category><dc:creator><![CDATA[cool4ZBL]]></dc:creator><pubDate>Thu, 19 May 2016 18:21:00 GMT</pubDate></item><item><title><![CDATA[Ali校招笔试题思考]]></title><description><![CDATA[<h1 id="ali-">Ali校招笔试题思考</h1>
+<p>昨晚搭着末班车，参加了阿里今年的实习生在线笔试。
+回忆之前惨不忍睹的内推面试，玩了整整一个寒假后接到了不期而至的面试电话，连之前一些基础的还算熟悉的题都答得不流畅自然一气呵成，我就知道我悲剧了。
+痛定思痛，作为一个即将毕业的大四老鸟（只是说年龄...)，在被各种鄙视，各种蜚语，各种不确定存在的黑暗时期，依旧不屈不挠地学习思考着，我都要被自己感动了。
+笔试题只有一个小时，13道题，一开始是单项选择和不定项选择，考了AMD编码规范、闭包、setTimeout的异步、前端安全及一些我认为蛮有意思的小题，挺考基础的，不是太难，但要细心，我居然也慢悠悠做，时间就那么过去了一半。后来看到了六大道问答题，基本是编程，涉及CSS3、原生JS、事件处理、Ajax等，就渐渐慌了，写代码的手居然有了渐冻症的感觉，心理素质有待提高。
+于是在有差不多一半大题没完成的情况下，被迫交了卷。交卷后才灵感突现，猛然想起了那些题的解法，还是代码经验不够啊。为了防止再出现这样的情况，在这里贴下题目思路和解答。</p>
+<hr>
+<p>关于CSS，有题是用<code>HTML&amp;CSS</code>实现一个九宫格，外边框为1px，内部无边框。之前没有做过九宫格布局，当时又很捉急居然被卡住了。交完卷后突然在想，这不就是考<code>float</code>的嘛。
+遂编码如下：</p>
+<pre class="hljs"><code><span class="hljs-doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">html</span> <span class="hljs-attribute">lang</span>=<span class="hljs-value">&quot;en&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">charset</span>=<span class="hljs-value">&quot;UTF-8&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>九宫格<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">style</span>&gt;</span><span class="css">
+      <span class="hljs-tag">ul</span> <span class="hljs-rules">{
+          <span class="hljs-rule"><span class="hljs-attribute">list-style</span>:<span class="hljs-value"> none</span></span>;
+          <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">158px</span></span></span>;
+          <span class="hljs-rule"><span class="hljs-attribute">height</span>:<span class="hljs-value"> <span class="hljs-number">158px</span></span></span>;
+      }</span>
+      <span class="hljs-tag">li</span> <span class="hljs-rules">{
+          <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">50px</span></span></span>; <span class="hljs-rule"><span class="hljs-attribute">height</span>:<span class="hljs-value"> <span class="hljs-number">50px</span></span></span>;
+          <span class="hljs-comment">/<em>box-sizing: border-box;</em>/</span>
+          <span class="hljs-rule"><span class="hljs-attribute">background-color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#888</span></span></span>;
+          <span class="hljs-rule"><span class="hljs-attribute">float</span>:<span class="hljs-value"> left</span></span>;
+      }</span>
+      <span class="hljs-class">.one</span>,<span class="hljs-class">.four</span>, <span class="hljs-class">.seven</span><span class="hljs-rules">{
+      <span class="hljs-rule"><span class="hljs-attribute">border-left</span>:<span class="hljs-value"> <span class="hljs-number">3px</span> solid red</span></span>;
+          <span class="hljs-comment">/<em>z-index: 2;</em>/</span>
+      }</span>
+      <span class="hljs-class">.one</span>, <span class="hljs-class">.two</span>, <span class="hljs-class">.three</span> <span class="hljs-rules">{
+          <span class="hljs-rule"><span class="hljs-attribute">border-top</span>:<span class="hljs-value"> <span class="hljs-number">3px</span> solid red</span></span>;
+      }</span>
+      <span class="hljs-class">.three</span>, <span class="hljs-class">.six</span>, <span class="hljs-class">.nine</span> <span class="hljs-rules">{
+          <span class="hljs-rule"><span class="hljs-attribute">border-right</span>:<span class="hljs-value"> <span class="hljs-number">3px</span> solid red</span></span>;
+      }</span>
+      <span class="hljs-class">.seven</span>, <span class="hljs-class">.eight</span>, <span class="hljs-class">.nine</span> <span class="hljs-rules">{
+          <span class="hljs-rule"><span class="hljs-attribute">border-bottom</span>:<span class="hljs-value"> <span class="hljs-number">3px</span> solid red</span></span>;
+      }</span>
+
+    </span><span class="hljs-tag">&lt;/<span class="hljs-title">style</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>
+    HTML CSS 九宫格 外边框1px 内部无边框
+    <span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ul</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;list&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;one&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;two&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;three&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;four&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;five&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;six&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;seven&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;eight&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;nine&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">ul</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span></code></pre><p>其实就是每个盒子固定宽高，父元素也固定宽高，分别为盒子宽高的3倍+左右（或上下）两边的边框宽度，然后都浮动起来。内部无边框外部有边框也容易实现，只要把最外圈的盒子按顺序设定 <code>border-top</code>、<code>border-bottom</code>、<code>border-left</code>、<code>border-right</code>即可。
+思考：</p>
+<ul>
+<li>一开始把父元素刚好设为盒子宽高的3倍，盒子设定为<code>box-sizing: border-box</code>后，发现边框自动隐藏了，所以要体现有边框还是不能这样；</li>
+<li>该题不难，其实还可以拓展成N宫格，<code>父元素的宽高 = N*盒子宽高 + 2*border-width</code>，相当于做个图片墙。</li>
+</ul>
+<p>JS跨浏览器事件处理：给你个超链接按钮，用户点击后不进行链接跳转，而是提示“用户名不能为空”，要尽可能兼容更多的浏览器。
+这题考的也就是跨浏览器的事件处理啦，之前看过《JavaScript高级程序设计》时候，专门有一小节讲跨浏览器事件处理，给出了完整的解决方案，自己也用心写了<code>Code Snippet</code>笔记，但是实践少，考试时做的不太顺利，这里重新整理下贴下代码。
+（Ghost Gist 托管，若无显示请戳 <a href="https://gist.github.com/githubzbl/8170f1e96e7bf3c66ca5">跨浏览器事件处理Gist</a>）</p>
+<script src="https://gist.github.com/githubzbl/8170f1e96e7bf3c66ca5.js"></script>
+
+<p>思考：</p>
+<ul>
+<li>事件处理很简单，关键就在兼容浏览器，这里就得照顾到IE；</li>
+<li>当时考试时居然把<code>&lt;script&gt;</code>标签及其里面的代码写到了<code>&lt;head&gt;</code>里面，导致<code>document.getElementById(&#39;btn&#39;)</code>返回的一直是<code>undefined</code>，现在想想给自己跪了，<code>DOM</code>都没准备好哪来的<code>getElementById()</code>。</li>
+</ul>
+<p>JS统计字符串中出现次数最多的字符并打印统计信息。
+这题当时看的时候居然看成<em>找出现最多的字符串</em>，心想天哪噜大阿里真厉害前端还考字符子串问题，这算法……，时间紧迫，遂想都没想直接跳过了。交卷后仔细回想才发现是<em>找字符</em>啊！再给自己跪下*2。
+在老道那本《Good Parts》里有个gist是去计算一段文本中每个单词的出现次数，因为每个单词是用空格符隔开，所以思路也可以迁移到单个字符。思考后编码如下：
+（Ghost Gist 托管，若无显示请戳 <a href="https://gist.github.com/githubzbl/a0ab1b7dd4f0128e9d6d">字符计数</a>）</p>
+<p><script src="https://gist.github.com/githubzbl/a0ab1b7dd4f0128e9d6d.js"></script>
+思考：</p>
+<ul>
+<li>将字符串分成单个字符很简单，甚至不用<code>RegExp</code>；</li>
+<li>分成单个字符后存入一个对象，巧妙的是对象的属性即为该字符，属性值为该字符在字符串中出现的次数；</li>
+<li>最后简单的用<code>for in</code>遍历属性排序，当然老道说<code>for in</code>不好，不知道这个地方需不需要改善。</li>
+</ul>
+<p>JS 给定一个http接口，传入一个员工id，返回员工的详细信息，接口形式为：<code>http://localhost/query?id=</code>，要求在前端实现一个根据一批员工id，通过ajax查询员工信息的功能。
+Ajax show time, finally.
+之前只写过几个Ajax，并不是太熟练，所以这题拿不准。
+既然给了URL，一般就是要考<code>RegExp</code>啦，但是这个只要根据<code>id</code>查询就好，是不是只用<code>url.split(&#39;=&#39;)</code>，然后就知道ID了呢？
+HTTP接口应该也就是写个函数模块吧。暂时给思路如下，待完善。</p>
+<pre class="hljs"><code> $(<span class="hljs-built_in">document</span>).ready(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">url</span>) </span>{
+   <span class="hljs-keyword">var</span> id = url.split(<span class="hljs-string">&#39;=&#39;</span>)[<span class="hljs-number">1</span>];
+   $(<span class="hljs-string">&#39;.btn&#39;</span>).click(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">id</span>) </span>{
+        $.ajax({
+            url: <span class="hljs-string">&#39;<a href="http://localhost/query?id=">http://localhost/query?id=</a>&#39;</span>,
+            type: <span class="hljs-string">&#39;GET&#39;</span>,
+            dataType: <span class="hljs-string">&#39;html&#39;</span>,
+            data: {param1: id},
+        })
+        .done(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;success&quot;</span>);
+        })
+        .fail(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;error&quot;</span>);
+        })
+        .always(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;complete&quot;</span>);
+        });
+    });
+  });</code></pre><hr>
+<p>差不多就这些了，想到新思路再来更新吧。前端坑是很多，但也很有趣，感觉自己终于入门了呢。
+还是那句，希望自己在成为大牛的道路上越走越远。</p>
+<hr>
+<p>续：觉得做的一般也收到了面试通知。但阿里又说“针对2015届招聘已结束，无论面试结果如何我们都不能承诺您能加入”。伤心归伤心，毕竟迟了那么点。
+但再怎么着也要执着走下去。
+<strong>“It&#39;s never too late to start.”</strong></p>
+]]></description><link>/2014-12-01-alibaba-interview/index.html</link><guid isPermaLink="true">/2014-12-01-alibaba-interview/index.html</guid><category><![CDATA[interview]]></category><category><![CDATA[tech]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[cool4ZBL]]></dc:creator><pubDate>Mon, 01 Dec 2014 12:13:00 GMT</pubDate></item><item><title><![CDATA[写在百度电面后]]></title><description><![CDATA[<h1 id="-">写在百度电面后</h1>
+<p>Desperado.</p>
+<figure>
+<img src="http://zbl-ghost-backup.qiniudn.com/blogcover_roadtothesky_2880x900.jpg" alt="road to the sky">
+<figcaption>Road to the sky.</figcaption>
+</figure>
+
+
+<p>睡得昏昏沉沉的早上，突然接到了电话，在从惊呆到真呆中，就这么面完了百度。</p>
+<hr>
+<p>“先作下自我介绍吧！”
+自我介绍？天，简历里面不是写了吗？噢，我写了什么？
+“呃，我叫XXX，是电子科大电子信息工程的大四学生...呃，我喜欢互联网及互联网开发…最近一直在自学…嗯。”
+“完了吗？”
+“说完了。” 当时我就在想，完了。脑袋空白。</p>
+<p>“电子信息工程的是吗？那你先解释下傅里叶变换吧。”
+简直惊呆，我这是面的前端吗？第一个问题就这么脑子转不过来了，都好久没有看专业书。
+“嗯，有个复杂信号…呃经过傅里叶变换...分解...单频率信号...嗯...”
+七零八落我也不知道我说了什么。</p>
+<p>“CSS的优先级知道吗？解释一下。”
+“呃，是特指度？先是ID，然后是class，然后是标签名....”
+“确定最后是标签名吗？”
+“呃嗯...确定。”
+虽然最后是对了，但是答得很是不自然。</p>
+<p>“嗯，如果这有一个数组，我想删除数组中的重复元素应该怎么做？”
+啊，WTF，居然问了算法。曾经想过这个思路的，但是已经好久没有写过C，而且这还是用JS实现。可是我JS的书都还没有看完。
+“呃，数组嘛，那就从第一个开始依次遍历咯…有重复的话就标记。”
+“每个都遍历一遍？如何标记？时间复杂度如何？”
+哎，为了看前端的东西，算法好久没有碰过，我要说什么……
+(<strong>更新</strong>：
+面试的时候对JS不是很熟悉，还是按着原来写C的思路来处理数组，加上心里有点紧张，思路一时打不开。最近几天又继续啃了《JavaScript高级程序设计》，发现 JavaScript 在数组方面处理真心很强大，贴去除数组中重复元素的函数如下：</p>
+<pre class="hljs"><code>function uniqueArray (<span class="hljs-type">array</span>) {
+    <span class="hljs-keyword">var</span> <span class="hljs-literal">result</span> = [];
+    <span class="hljs-type">array</span>.sort(compare);  // 此处不知道如果数组中元素很多的话，先给数组排序效率会不会高点？
+    <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">var</span> i <span class="hljs-keyword">in</span> <span class="hljs-type">array</span> ) {
+        <span class="hljs-keyword">if</span> ( <span class="hljs-literal">result</span>.indexOf(<span class="hljs-type">array</span>[i]) == -<span class="hljs-number">1</span>) {
+            <span class="hljs-literal">result</span>.push(<span class="hljs-type">array</span>[i]);
+        };
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">result</span>;
+}
+function compare (value1, value2) {
+     <span class="hljs-keyword">return</span> value2 - value1;
+}</code></pre><p>)</p>
+<p>“学过排序吗？介绍下二分法？快速排序？冒泡排序？”
+“只学过冒泡…冒泡就是这样的……”</p>
+<p>(<strong>更新</strong>：一个非常好玩的各种排序算法的<a href="http://jsdo.it/norahiko/oxIy/fullscreen">动画演示</a>，当初学算法的时候要是有这么直观的动画就好了。
+快排的思想如下：</p>
+<blockquote>
+<p>（1）在数据集之中，选择一个元素作为&quot;基准&quot;（pivot）。
+（2）所有小于&quot;基准&quot;的元素，都移到&quot;基准&quot;的左边；所有大于&quot;基准&quot;的元素，都移到&quot;基准&quot;的右边。
+（3）对&quot;基准&quot;左边和右边的两个子集，不断重复第一步和第二步，直到所有子集只剩下一个元素为止。
+```language-javascript
+var quickSort = function(arr) {
+　　if (arr.length &lt;= 1) { return arr; }
+　　var pivotIndex = Math.floor(arr.length / 2);
+　　var pivot = arr.splice(pivotIndex, 1)[0]; //取得基准元素的值
+　　var left = [];
+　　var right = [];
+　　for (var i = 0; i &lt; arr.length; i++){
+　　　　if (arr[i] &lt; pivot) {
+　　　　　　left.push(arr[i]);
+　　　　} else {
+　　　　　　right.push(arr[i]);
+　　　　}
+　　}
+　　return quickSort(left).concat([pivot], quickSort(right));   //递归调用
+};</p>
+</blockquote>
+<p>```
+快速排序最差的情况时间复杂度是O(n^2)。</p>
+<p>“我看你笔试试卷上JS异步编程那题写了点代码，那么解释下Ajax?&quot;
+噢，真是哪壶不开提哪壶。真是惭愧，笔试试卷上的代码是我考试时候翻手机里那本《JavaScript权威指南》，在里面随便抄了一点。我写了什么？我也不知道。
+昨晚才真正在图书馆接触到了Ajax，书还没来得及认真看。只能凭靠记忆力一点点说。
+“Ajax嘛，异步JS和XML…可以在不重新加载整个页面情况下更新页面的某个部分……”
+“那么如何用JS实现Ajax？”
+噢。昨天看书才看到这点，还没有实现过。
+“呃…新命名一个变量（其实是对象）XMLhttprequest……然后接收服务器返回的数据……”
+靠，我到底在说什么。
+“不好意思，我不会写。”</p>
+<p>“好吧，咱们的面试到此结束。你有什么问题吗？”
+嗯，我知道我这样肯定没戏了，索性就随便说点吧。
+“不好意思，笔试完后我没想过我能进面试，就没有做面试准备，所以这次表现得很糟糕。我是不是基础很不扎实？跨行是不是不容易？”
+后来知道，那位面试官也是通信工程转过去的，而且他还开玩笑的说是因为考研没考上。</p>
+<hr>
+<blockquote>
+<p>Desperado, ah, you ain&#39;t gettin&#39; no younger.
+亡命之徒啊，你已经不年轻了
+Your pain and your hunger, they&#39;re drivin&#39; you home.
+你的痛苦和饥饿，它们在把你赶回原点
+Freedom, oh, freedom. That&#39;s just some people talkin&#39;
+自由，噢自由。那只是有些人说的
+You&#39;re a prisioner walking through this world all alone.
+你是孤独闯世界的囚犯</p>
+</blockquote>
+<p>面完百度后，一直循环在听“亡命之徒”，而心情沮丧得就和上次考完雅思口语一样。
+是的，因为我压根没想到我能进面试。
+是的，我一定是太不自信。
+这个面试官也一定和上次口语考官一样想吧，这个人啥都没准备啥都不会还敢来面试（考试）？</p>
+<p>跟妈妈打了电话，想想还是不用太沮丧，虽然是百度，但这是你的第一次面试，所以经验缺乏，应答不自然是正常的。
+内功不深厚，肚子里没货，怎么倒腾也是倒不出东西的吧。</p>
+<p>对于面试：</p>
+<ol>
+<li>一定一定要准备好一个<strong>精彩的自我介绍</strong>。</li>
+<li>一定一定得<strong>有自信</strong>，不要认为自学非科班项目经验少就会低人一等，要对自己的能力有信心（自己接电话时就是太不自信了，心里貌似就是有一个暗示，觉得BAT那么高大上的公司怎么进得去），不要过分仰视那些大公司，否则自己永远也进不去。</li>
+<li>试着写个好简历，然后多投递下简历，增加宝贵笔试、面试经验，以后面试时能更加从容面对。</li>
+</ol>
+<p>对于能力提升：</p>
+<ol>
+<li>夯实<code>HTML&amp;CSS</code>的基础知识。
+多写读书笔记，多总结经验，这样才能在真正需要它们的时候运用自如。</li>
+<li>必须立刻继续<code>JavaScript</code>的学习。
+之前断断续续看过一点JS的知识，但是最近倒腾网站就转移了很多注意力到服务器端，导致什么都不精，自己也找不到了方向。一本「JavaScript高级程序设计」啃来啃去。</li>
+<li>开始<code>Ajax</code>、<code>jQuery</code>的认真学习。
+你看看，连写个异步编程都不会。接下来还有Node.js呢。</li>
+<li><strong>不要好高骛远，不要赶潮流耍花招。</strong>
+之前真是过于浮躁，看了很多新技术的书，但连最基础的东西都没学好。</li>
+</ol>
+<p><blockquote>
+    让你自己成为一个持续学习和思考的人，并只写你真正思考和总结之后的产物，其他一切就会随之而来。
+</blockquote>
+加油吧，希望能在通往大牛的道路上越走越远。</p>
+]]></description><link>/2014-11-04-baidu-interview-thought/index.html</link><guid isPermaLink="true">/2014-11-04-baidu-interview-thought/index.html</guid><category><![CDATA[interview]]></category><category><![CDATA[tech]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[cool4ZBL]]></dc:creator><pubDate>Tue, 04 Nov 2014 08:13:00 GMT</pubDate></item><item><title><![CDATA[Oh My Ghostium]]></title><description><![CDATA[<p>之前装了Wordpress扔在大洋彼岸一个Arizona搬瓦工的VPS后就再没去理过它，想想也有半年了。<br>后来分析觉得，首先肯定是自己懒惰浮躁，静不下来写东西。其次是博客页面没有漂亮到让我有一种打开就想写的冲动。<br>但是他们说<strong><a href="http://mindhacks.cn/2009/02/15/why-you-should-start-blogging-now/">为什么你应该（从现在开始就）写博客</a></strong>，于是紧跟大牛的步伐，虽然没有什么牛逼技术可以跟别人分享，但是看看大牛写的技术文章谢谢心得也是一种进步。于是就开始了<em>万劫不复的折腾深渊</em>...<br>在谷歌搜寻平台的时候看到了一个同是F2E的一个博客<a href="http://luolei.org">罗磊的独立博客</a>，瞬间被大Banner的设计吸引到，看了很久后拖到了网页末尾，扫到了一行字<em>本博客基于拽酷炫的 GHOST</em>。<br>比较了<em>Ghost/Jekyll/Octo/Hexo</em> 等等之后，认为<strong><a href="https://ghost.org">Ghost</a></strong>还是最适合我： </p>
+<ol>
+<li>是基于 <strong>Node.js</strong> 的博客平台。</li>
+<li><strong>Just a blogging platform.</strong>简单简洁，响应式设计。</li>
+<li>免费，<strong>支持完全的自定义</strong>。</li>
+</ol>
+<p>DigitalOcean很贴心的有Ghost的APP安装镜像包，安装后直接打开<code>http://your.domain/2368</code>就会看到第一次登陆的窗口，设置好Blog Title，用户名，密码就可以愉快的开始体验Ghost了。<br>又过了几天，手贱点开了很多Ghost类的博客，发现大家怎么都这样啊，使用默认的Casper主题已到审美疲劳。<br>在连博文都没写几篇的情况下，那么就继续<em>万劫不复的折腾深渊</em> 咯。  </p>
+<p>很喜欢<strong><a href="https://medium.com/">Medium</a></strong>那个网站的设计风格，漂亮的排版和字体，恰当的行高，带有震撼般视觉冲击的大Banner图片...<a href="知乎[怎样评价Medium的设计](http://zhi.hu/1Ed2)">^1</a></p>
+<p>感觉一切的设计都如此恰到好处（一股浓浓的高逼格气息扑面而来）。
+谷歌搜索类Medium的Ghost主题，
+<b> <strong><a href="http://ghostium.oswaldoacauan.com/">Ghostium</a></strong>, a medium-like theme.
+</b>
+先给作者<a href="https://twitter.com/oswaldoacauan">@oswaldoacauan</a>各种点赞，想要的样式全都有。
+但是在网站上跑了一会后，发现有些细节地方还是不尽入我意。<br>那么，还是自己动手丰衣足食，开始<em>万劫不复的折腾深渊</em> 第四弹。
+一边看<a href="http://themes.ghost.org/v0.5.3/docs/about">Ghost Developer Documentation</a>、<a href="http://handlebarsjs.com/">Handelbars.js Guide</a>，一边用自学的一点点 HTML&amp;CSS&amp;JS 来调试和修改原主题。</p>
+<hr>
+<p><strong>- HTML</strong></p>
+<ol>
+<li>修改Drawer侧栏的导航（Navigation.hbs），增加Links如下:</li>
+</ol>
+<pre class="hljs"><code><span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-item&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;/&quot;</span> <span class="hljs-attribute">data-pjax</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">i</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;fa fa-home&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">i</span>&gt;</span>Home
+  <span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-item&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;</span></span></span><span class="hljs-expression">{{@<span class="hljs-variable">blog.url</span>}}</span><span class="xml"><span class="hljs-tag"><span class="hljs-value">/timeline/&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">i</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;fa fa-clock-o&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">i</span>&gt;</span>Timeline
+  <span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-item&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;</span></span></span><span class="hljs-expression">{{@<span class="hljs-variable">blog.url</span>}}</span><span class="xml"><span class="hljs-tag"><span class="hljs-value">/wiki/&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">i</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;fa fa-coffee&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">i</span>&gt;</span>Wiki
+  <span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-item&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;</span></span></span><span class="hljs-expression">{{@<span class="hljs-variable">blog.url</span>}}</span><span class="xml"><span class="hljs-tag"><span class="hljs-value">/book/&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">i</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;fa fa-camera-retro&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">i</span>&gt;</span>Portfolio
+  <span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-item&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;</span></span></span><span class="hljs-expression">{{@<span class="hljs-variable">blog.url</span>}}</span><span class="xml"><span class="hljs-tag"><span class="hljs-value">/about/&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">i</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;fa fa-comment-o&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">i</span>&gt;</span>About Me
+  <span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-item&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;</span></span></span><span class="hljs-expression">{{@<span class="hljs-variable">blog.url</span>}}</span><span class="xml"><span class="hljs-tag"><span class="hljs-value">/rss/&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">i</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;fa fa-rss&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">i</span>&gt;</span>Subscribe to Feed
+  <span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-divider&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-item drawer-list-title&quot;</span>&gt;</span>
+  Follow me
+<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-item&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;<a href="http://twitter.com/cool4zbl">http://twitter.com/cool4zbl</a>&quot;</span> <span class="hljs-attribute">target</span>=<span class="hljs-value">&quot;_blank&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">i</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;fa fa-twitter&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">i</span>&gt;</span>Twitter
+  <span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">li</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;drawer-list-item&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;<a href="http://github.com/githubzbl">http://github.com/githubzbl</a>&quot;</span> <span class="hljs-attribute">target</span>=<span class="hljs-value">&quot;_blank&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">i</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;fa fa-github&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">i</span>&gt;</span>Github
+  <span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span></span></code></pre><ol>
+<li>在博客文章内容页（post.hbs）删除了分享到G+图标，增加了分享到微博图标：  <pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;#&quot;</span> <span class="hljs-attribute">data-action</span>=<span class="hljs-value">&quot;share-weibo&quot;</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">i</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;fa fa-fw fa-lg fa-weibo&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">i</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span></code></pre></li>
+</ol>
+<p>CSS(main.css)  </p>
+<ol>
+<li>字体类型及大小。<br>原来的字体太小，而且因为主题原作者不说汉语，所以默认在主题内显示的汉字为宋体，且行高较小，不方便阅读。发现这么几篇文章：<a href="https://ruby-china.org/topics/14005">web中文字体应用指南</a>//<a href="http://lepture.com/zh/2014/chinese-fonts-and-yue-css">適合閱讀的中文字體</a>//<a href="http://informationarchitects.net/blog/the-web-is-all-about-typography-period/">網頁上95%的內容其實都是&quot;typography“</a> 
+特别是第二篇。于是根据自己的喜好，同时照顾到广大Mac、Windows用户，字体样式如下：  <pre class="hljs"><code><span class="hljs-comment">/<em> 文章内容 衬线字体 </em>/</span>
+<span class="hljs-tag">body</span> {
+ <span class="hljs-attribute">font</span>: <span class="hljs-number">400</span> <span class="hljs-number">20px</span>/<span class="hljs-number">1.62</span> <span class="hljs-string">&quot;Lora&quot;</span>, Georgia, <span class="hljs-string">&quot;Xin Gothic&quot;</span>, <span class="hljs-string">&quot;STXihei&quot;</span>, Cambria, <span class="hljs-string">&quot;Droid Sans Fallback&quot;</span>, <span class="hljs-string">&quot;Microsoft YaHei&quot;</span>, sans-serif;
+ <span class="hljs-attribute">background</span>: <span class="hljs-hexcolor">#fff</span>;
+ <span class="hljs-attribute">color</span>: <span class="hljs-hexcolor">#333</span>
+}
+<span class="hljs-comment">/<em> 文章标题、按钮等 非衬线 </em>/</span><br><span class="hljs-attribute">font-family</span>: <span class="hljs-string">&quot;Lato&quot;</span>,<span class="hljs-string">&quot;Myriad Pro&quot;</span>,<span class="hljs-string">&quot;Lucida Grande&quot;</span>,<span class="hljs-string">&quot;Lucida Sans Unicode&quot;</span>,<span class="hljs-string">&quot;Lucida Sans&quot;</span>,Geneva,Verdana,sans-serif;
+<span class="hljs-comment">/<em> Footer底部字体 Optima更为优雅低调 </em>/</span>
+<span class="hljs-attribute">font-family</span>: Optima, sans-serif;</code></pre></li>
+</ol>
+<p>注：&quot;Xin Gothic&quot; 信黑体；&quot;STXihei&quot; 华文细黑；&quot;Hiragino Sans GB&quot; 冬青黑体<br><strong>Lato &amp; Lora</strong> 同为 Transitional Fonts。<a href="https://www.codeschool.com/courses/fundamentals-of-design">Foundamentals of Design by code school</a></p>
+<ol>
+<li><p>主页（index.hbs）的封面/边距/文章摘要  </p>
+<ul>
+<li>原来的<code>cover</code>大概占据了页面的30%，看起来图片有点喧宾夺主，经过反复折腾后，觉得25%的比例最不错。  <pre class="hljs"><code><span class="hljs-class">.cover</span> <span class="hljs-rules">{
+<span class="hljs-rule"><span class="hljs-attribute">position</span>:<span class="hljs-value"> relative</span></span>;
+<span class="hljs-rule"><span class="hljs-attribute">top</span>:<span class="hljs-value"> <span class="hljs-number">0</span></span></span>;
+<span class="hljs-rule"><span class="hljs-attribute">left</span>:<span class="hljs-value"> <span class="hljs-number">0</span></span></span>;
+<span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">25%</span></span></span>;
+<span class="hljs-rule"><span class="hljs-attribute">height</span>:<span class="hljs-value"> <span class="hljs-number">100%</span></span></span>;
+<span class="hljs-rule"><span class="hljs-attribute">z-index</span>:<span class="hljs-value"> <span class="hljs-number">100</span>
+</span></span></span>}</code></pre></li>
+<li><p>主页右侧文章内容偏上，如果是英文内容还好，但是中文的话感觉一块块的，特别突兀，调整<code>padding</code>，使内边距更大。反复比较后，6%看起来最自然。</p>
+<pre class="hljs"><code><span class="hljs-class">.wrapper-container</span> <span class="hljs-rules">{
+<span class="hljs-rule"><span class="hljs-attribute">position</span>:<span class="hljs-value"> relative</span></span>;
+<span class="hljs-rule"><span class="hljs-attribute">padding</span>:<span class="hljs-value"> <span class="hljs-number">6%</span> <span class="hljs-number">10%</span> <span class="hljs-number">40px</span> <span class="hljs-number">185px</span></span></span>;
+<span class="hljs-rule"><span class="hljs-attribute">max-width</span>:<span class="hljs-value"> <span class="hljs-number">910px</span>
+</span></span></span>}</code></pre><ul>
+<li>主页右侧的文章摘要(post/list.hbs)原来为<br><code>&lt;section itemprop=&quot;description&quot; class=&quot;post-item-excerpt&quot;&gt;
+&lt;p&gt;{{excerpt words=&quot;35&quot;}}&amp;hellip;&lt;/p&gt;
+&lt;/section&gt;</code></li>
+</ul>
+<p>如果是英文内容还好，但是对于中文内容，Ghost貌似对这个支持不太好（因为是按空格来计算word数量），所以显示的摘要往往会过多，查看文档后发现有另一种<code>character</code>字符数计数方式。很高兴地修改如下：<br><code>&lt;section itemprop=&quot;description&quot; class=&quot;post-item-excerpt&quot;&gt;
+&lt;p&gt;{{excerpt characters=&quot;140&quot;}}&amp;hellip;&lt;/p&gt;
+&lt;/section&gt;</code></p>
+</li>
+</ul>
+</li>
+<li><p>全局导航栏(drawer.hbs)<br> 每个导航栏(.drawer-list-item)字体过小，且挨得太近。参考了一下我最喜欢的<strong>Medium</strong>设计后，修改如下：  </p>
+<pre class="hljs"><code>  <span class="hljs-class">.drawer-list-item</span> <span class="hljs-rules">{
+ <span class="hljs-rule"><span class="hljs-attribute">font-family</span>:<span class="hljs-value"> <span class="hljs-string">&quot;Lato&quot;</span>,<span class="hljs-string">&quot;Myriad Pro&quot;</span>,<span class="hljs-string">&quot;Lucida Grande&quot;</span>,<span class="hljs-string">&quot;Lucida Sans Unicode&quot;</span>,<span class="hljs-string">&quot;Lucida Sans&quot;</span>,Geneva,Verdana,sans-serif</span></span>;
+ <span class="hljs-rule"><span class="hljs-attribute">font-weight</span>:<span class="hljs-value"> <span class="hljs-number">600</span></span></span>;
+ <span class="hljs-rule"><span class="hljs-attribute">font-size</span>:<span class="hljs-value"> .<span class="hljs-number">9em</span></span></span>;
+ <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#9c9c9c</span></span></span>;
+ <span class="hljs-rule"><span class="hljs-attribute">line-height</span>:<span class="hljs-value"> <span class="hljs-number">2.2</span></span></span>;
+ }</span></code></pre></li>
+<li><p>博客内容分页(post.hbs)<br> 对于作者的头像<code>.post-author-avatar</code>，原作者可能了为了保证质量，头像不被随意拉伸，<code>language-css .post-author-avatar { width: 100%; height: 100%; border-radius: 100% }</code>，采取了长宽度100%，但是四个角自然圆角，所以如果传的头像是矩形就会出现椭圆形的效果，但是个人觉得还是圆形头像更精致。所以为了保证无论上传何种比例的图片，得到的都是圆形的头像，那么就采用固定长宽度（此处在看Ghost后台时候，发现默认的作者头像就是圆形，查看源代码发现使用的是<code>js-model-image</code>，涉及到JS还未深入研究）。   </p>
+<pre class="hljs"><code> <span class="hljs-class">.post-author-avatar</span> <span class="hljs-rules">{
+ <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">80px</span></span></span>;
+ <span class="hljs-rule"><span class="hljs-attribute">height</span>:<span class="hljs-value"> <span class="hljs-number">80px</span></span></span>;
+ <span class="hljs-rule"><span class="hljs-attribute">display</span>:<span class="hljs-value"> block</span></span>;
+ <span class="hljs-rule"><span class="hljs-attribute">margin-bottom</span>:<span class="hljs-value"> <span class="hljs-number">10px</span>
+ </span></span></span>}</code></pre></li>
+</ol>
+<hr>
+<p>大体地方修改完毕，把修改后主题上传到VPS，重启Ghost服务（Ghost无法实时探测到<code>content/theme/</code>内容改变）。<br>Well done.</p>
+<p>优化：<br>对于谷歌字体在国内<del>访问速度不佳</del>无法访问，使用了<a href="http://libs.useso.com/">360网站卫士加速库</a> <code>language-html &lt;link href=&quot;//fonts.useso.com/css?family=***&quot;&gt;</code></p>
+<p>待解决问题：</p>
+<ul>
+<li>微博官方的分享按钮太花哨，想使用FontAwesome的图标但还未解决如何触发微博分享；  </li>
+<li>把博客内容页面<code>post</code>样式从<code>main.css</code>中分离出来，方便以后Ghost升级做<em>所见即所得</em> (but we highly recommend keeping your post styles in a separate file (post.css) from other styles for your theme (style.css) so that you will quickly be able to take advantage of this feature in the future.)；  </li>
+<li>在<code>post</code>页面加入一个返回顶部的小箭头；  </li>
+<li>在<code>post</code>页面应用类似于Medium文章打开后顶部为震撼图片的大Banner。 </li>
+<li>学习使用JS-model-image 自动切割Avatar及Logo  </li>
+<li>Navigation各种链接网页的相关建设及完善  </li>
+<li>博文搜索  </li>
+<li>画个网站结构图 site-map</li>
+</ul>
+]]></description><link>/2014-11-03-oh-my-ghostium/index.html</link><guid isPermaLink="true">/2014-11-03-oh-my-ghostium/index.html</guid><category><![CDATA[tech]]></category><category><![CDATA[frontend]]></category><category><![CDATA[thoughts]]></category><dc:creator><![CDATA[cool4ZBL]]></dc:creator><pubDate>Sun, 02 Nov 2014 16:00:00 GMT</pubDate></item></channel></rss>

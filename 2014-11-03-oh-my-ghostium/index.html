@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <title>ZBL - ZBL&#x27;s Doodle</title>
+    <title>cool4ZBL - ZBL&#x27;s Doodle</title>
     <meta name="description" content="Lifelong Learner / Vimer / Don&#x27;t be a dabbler" />
 
     <meta name="HandheldFriendly" content="True" />
@@ -29,7 +29,7 @@
 <link rel="alternate" type="application/rss+xml" title="ZBL&#39;s Doodle" href="/rss/index.xml">
 <link rel="canonical" href="http://zhangbinliu.me/2014-11-03-oh-my-ghostium/" />
 </head>
-<body class="author-template author-ZBL post-template nav-closed">
+<body class="author-template author-ZBL post-template tag-tech tag-frontend tag-thoughts nav-closed">
 
     
 
@@ -45,18 +45,34 @@
 </header>
 
 <main class="content" role="main">
-    <article class="post">
+    <article class="post tag-tech tag-frontend tag-thoughts">
 
         <header class="post-header">
-            <h1 class="post-title">index</h1>
+            <h1 class="post-title">Oh My Ghostium</h1>
             <section class="post-meta">
-                <time class="post-date" datetime="2014-11-03">03 November 2014</time> 
+                <time class="post-date" datetime="2014-11-03">03 November 2014</time>  on <a href="/tag/tech/">tech</a>, <a href="/tag/frontend/">frontend</a>, <a href="/tag/thoughts/">thoughts</a>
             </section>
         </header>
 
 
         <section class="post-content">
-          <p><strong>- HTML</strong></p>
+          <p>之前装了Wordpress扔在大洋彼岸一个Arizona搬瓦工的VPS后就再没去理过它，想想也有半年了。<br>后来分析觉得，首先肯定是自己懒惰浮躁，静不下来写东西。其次是博客页面没有漂亮到让我有一种打开就想写的冲动。<br>但是他们说<strong><a href="http://mindhacks.cn/2009/02/15/why-you-should-start-blogging-now/">为什么你应该（从现在开始就）写博客</a></strong>，于是紧跟大牛的步伐，虽然没有什么牛逼技术可以跟别人分享，但是看看大牛写的技术文章谢谢心得也是一种进步。于是就开始了<em>万劫不复的折腾深渊</em>...<br>在谷歌搜寻平台的时候看到了一个同是F2E的一个博客<a href="http://luolei.org">罗磊的独立博客</a>，瞬间被大Banner的设计吸引到，看了很久后拖到了网页末尾，扫到了一行字<em>本博客基于拽酷炫的 GHOST</em>。<br>比较了<em>Ghost/Jekyll/Octo/Hexo</em> 等等之后，认为<strong><a href="https://ghost.org">Ghost</a></strong>还是最适合我： </p>
+<ol>
+<li>是基于 <strong>Node.js</strong> 的博客平台。</li>
+<li><strong>Just a blogging platform.</strong>简单简洁，响应式设计。</li>
+<li>免费，<strong>支持完全的自定义</strong>。</li>
+</ol>
+<p>DigitalOcean很贴心的有Ghost的APP安装镜像包，安装后直接打开<code>http://your.domain/2368</code>就会看到第一次登陆的窗口，设置好Blog Title，用户名，密码就可以愉快的开始体验Ghost了。<br>又过了几天，手贱点开了很多Ghost类的博客，发现大家怎么都这样啊，使用默认的Casper主题已到审美疲劳。<br>在连博文都没写几篇的情况下，那么就继续<em>万劫不复的折腾深渊</em> 咯。  </p>
+<p>很喜欢<strong><a href="https://medium.com/">Medium</a></strong>那个网站的设计风格，漂亮的排版和字体，恰当的行高，带有震撼般视觉冲击的大Banner图片...<a href="知乎[怎样评价Medium的设计](http://zhi.hu/1Ed2)">^1</a></p>
+<p>感觉一切的设计都如此恰到好处（一股浓浓的高逼格气息扑面而来）。
+谷歌搜索类Medium的Ghost主题，
+<b> <strong><a href="http://ghostium.oswaldoacauan.com/">Ghostium</a></strong>, a medium-like theme.
+</b>
+先给作者<a href="https://twitter.com/oswaldoacauan">@oswaldoacauan</a>各种点赞，想要的样式全都有。
+但是在网站上跑了一会后，发现有些细节地方还是不尽入我意。<br>那么，还是自己动手丰衣足食，开始<em>万劫不复的折腾深渊</em> 第四弹。
+一边看<a href="http://themes.ghost.org/v0.5.3/docs/about">Ghost Developer Documentation</a>、<a href="http://handlebarsjs.com/">Handelbars.js Guide</a>，一边用自学的一点点 HTML&amp;CSS&amp;JS 来调试和修改原主题。</p>
+<hr>
+<p><strong>- HTML</strong></p>
 <ol>
 <li>修改Drawer侧栏的导航（Navigation.hbs），增加Links如下:</li>
 </ol>
@@ -185,11 +201,11 @@
 
 
             <figure class="author-image">
-                <a class="img" href="/author/ZBL/" style="background-image: url(/content/images/avatar_zbl.jpg)"><span class="hidden">ZBL's Picture</span></a>
+                <a class="img" href="/author/ZBL/" style="background-image: url(/content/images/avatar_zbl.jpg)"><span class="hidden">cool4ZBL's Picture</span></a>
             </figure>
 
             <section class="author">
-                <h4><a href="/author/ZBL/">ZBL</a></h4>
+                <h4><a href="/author/ZBL/">cool4ZBL</a></h4>
 
                     <p>Lifelong Learner / Vimer / Don&#x27;t be a dabbler</p>
                 <div class="author-meta">
@@ -201,7 +217,7 @@
 
             <section class="share">
                 <h4>Share this post</h4>
-                <a class="icon-twitter" href="https://twitter.com/intent/tweet?text=index&amp;url=http://zhangbinliu.me/2014-11-03-oh-my-ghostium/"
+                <a class="icon-twitter" href="https://twitter.com/intent/tweet?text=Oh%20My%20Ghostium&amp;url=http://zhangbinliu.me/2014-11-03-oh-my-ghostium/"
                     onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
                     <span class="hidden">Twitter</span>
                 </a>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[undefined - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Sat, 02 Sep 2017 03:42:05 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/tag/undefined/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Bug makers or bug fixers]]></title><description><![CDATA[<blockquote>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[undefined - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas, codes, all by myself]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Wed, 06 Sep 2017 10:35:44 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/tag/undefined/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Bug makers or bug fixers]]></title><description><![CDATA[<blockquote>
 <p>世界上只有两种人： Bug makers or bug fixers.</p>
 <p>​    —— 郫县豆瓣</p>
 </blockquote>
@@ -61,4 +61,4 @@
 </li>
 </ol>
 <p><img src="/content/images/bug-fixers.png" alt="Become a bugFixer in JavaScript way"></p>
-]]></description><link>/2017-03-27-Bugmakers-or-bugfixers/index.html</link><guid isPermaLink="true">/2017-03-27-Bugmakers-or-bugfixers/index.html</guid><category><![CDATA[thoughts]]></category><category><![CDATA[work]]></category><dc:creator><![CDATA[ZBL]]></dc:creator><pubDate>Sun, 26 Mar 2017 16:00:00 GMT</pubDate></item></channel></rss>
+]]></description><link>/2017-03-27-Bugmakers-or-bugfixers/index.html</link><guid isPermaLink="true">/2017-03-27-Bugmakers-or-bugfixers/index.html</guid><category><![CDATA[thoughts]]></category><category><![CDATA[work]]></category><dc:creator><![CDATA[cool4ZBL]]></dc:creator><pubDate>Sun, 26 Mar 2017 16:00:00 GMT</pubDate></item></channel></rss>
