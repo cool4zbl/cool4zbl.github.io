@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas, codes, all by myself]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Wed, 06 Sep 2017 10:47:54 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/rss/index.xml" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[前后端数据交互 - 表单提交]]></title><description><![CDATA[<p>最近想总结下前后端数据交互方式，顺便继续学习下网络相关，以下是第一篇，最简单、最常见且应用最广泛的「表单提交」。</p>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas, codes, all by myself]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Fri, 08 Sep 2017 11:08:04 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/rss/index.xml" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[前后端数据交互 - 表单提交]]></title><description><![CDATA[<p>最近想总结下前后端数据交互方式，顺便继续学习下网络相关，以下是第一篇，最简单、最常见且应用最广泛的「表单提交」。</p>
 <p>按交互方式分为两种，提交后有刷新的普通表单提交和无刷新的 Ajax 表单提交。</p>
 <h2 id="1-">1. 普通表单提交</h2>
 <p>下面是一个很普通的用户登录表单：</p>
@@ -1433,11 +1433,11 @@ Web 标准专家。除了 Web 领域牛逼以外，还涉足 Unicode &amp; Bash�
 很好玩的 Emojineer。 Work @Google Polymer。</li>
 <li><a href="http://simurai.com">Simurai</a>
 什么都懂的 UI designer...</li>
-<li><a href="marijnhaverbeke.nl">Marყ̈n Haverbeke</a>
+<li><a href="http://marijnhaverbeke.nl">Marყ̈n Haverbeke</a>
 著有「Eloquent JavaScript (1st, 2nd)」，好像长得也很帅。</li>
 <li><a href="https://css-tricks.com/">Chris Coyier</a>
 CSS Tricks 的创始人和维护者。介绍很多很棒的你肯定会用到的前端技巧。（其实他的个人网站<a href="http://chriscoyier.net/">在这</a>）</li>
-<li><a href="kennethreitz.org">Kenneth Reitz</a>
+<li><a href="http://kennethreitz.org">Kenneth Reitz</a>
 Python Request 库维护者。唔，喜欢拿徕卡拍照且减肥成功的人生赢家。</li>
 <li><a href="https://feross.org/">Feross Aboukhadijeh</a>
 WebTorrent 作者之一。JS Standard Style 作者。斯坦福毕业的一小哥，兴趣爱好广泛。</li>
