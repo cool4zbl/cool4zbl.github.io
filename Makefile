@@ -10,5 +10,3 @@ gen-inspiring:
 	rm -r inspiring-me
 	cp -r ~/my_web_dev/inspiring-me/dist ./inspiring-me
 
-
-
