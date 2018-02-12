@@ -4,7 +4,7 @@ gen-myhz:
 
 gen-resume:
 	rm -r resume
-	cp -r ~/my_web_dev/zbl_resume/dist ./resume
+	cp -r ~/my_web_dev/re-Resume/dist ./resume
 
 gen-inspiring:
 	rm -r inspiring-me
