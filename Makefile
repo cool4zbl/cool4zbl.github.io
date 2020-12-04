@@ -4,7 +4,8 @@ gen-myhz:
 
 gen-resume:
 	rm -r resume
-	cp -r ~/my_web_dev/re-Resume/dist ./resume
+	cp -r ../re-Resume/dist ./resume
+	cp -r ../re-Resume/download ./resume/download
 
 gen-resume2020:
 	rm -rf resume-2020
