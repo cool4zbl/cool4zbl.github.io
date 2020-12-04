@@ -6,6 +6,10 @@ gen-resume:
 	rm -r resume
 	cp -r ~/my_web_dev/re-Resume/dist ./resume
 
+gen-resume2020:
+	rm -r resume-2020
+	cp -r ../re-Resume/dist ./resume-2020
+
 gen-inspiring:
 	rm -r inspiring-me
 	cp -r ~/my_web_dev/inspiring-me/dist ./inspiring-me
