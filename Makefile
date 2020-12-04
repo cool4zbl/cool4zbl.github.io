@@ -7,7 +7,7 @@ gen-resume:
 	cp -r ~/my_web_dev/re-Resume/dist ./resume
 
 gen-resume2020:
-	rm -r resume-2020
+	rm -rf resume-2020
 	cp -r ../re-Resume/dist ./resume-2020
 
 gen-inspiring:
