@@ -6,6 +6,9 @@ gen-resume:
 	rm -r resume
 	cp -r ../re-Resume/dist ./resume
 	cp -r ../re-Resume/download ./resume/download
+	git add .
+	git commit -m 'Update resume'
+	git push
 
 gen-resume2020:
 	rm -rf resume-2020
