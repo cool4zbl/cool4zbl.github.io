@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[undefined - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas, codes, all by myself]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Sun, 04 Nov 2018 15:29:42 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/tag/undefined/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Uber 高性能 Web App 优化实践]]></title><description><![CDATA[<p>原文 <a href="https://eng.uber.com/m-uber/">Building m.uber: ENGINEERING A HIGH-PERFORMANCE WEB APP FOR THE GLOBAL MARKET</a></p>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[undefined - Doodles]]></title><description><![CDATA[Thoughts, ideas, codes, all by myself]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Thu, 17 Dec 2020 03:46:41 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/tag/undefined/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Uber 高性能 Web App 优化实践]]></title><description><![CDATA[<p>原文 <a href="https://eng.uber.com/m-uber/">Building m.uber: ENGINEERING A HIGH-PERFORMANCE WEB APP FOR THE GLOBAL MARKET</a></p>
 <p><strong>Performance matters on mobile.</strong></p>
 <p>又是一篇关于性能优化的实践。</p>
 <p>m.uber 团队对 m.uber，他们的超级轻量 web app 做了一些性能优化的工作。</p>
@@ -102,7 +102,7 @@
 </ul>
 <p>纵观这些方案，可以说把 Google 一直在推的 <strong><a href="https://developers.google.com/web/fundamentals/performance/prpl-pattern/">PRPL Patterns</a></strong> 做到了极致。</p>
 <p>以上。</p>
-]]></description><link>/2017-07-10-m-uber-performance-optimazation/index.html</link><guid isPermaLink="true">/2017-07-10-m-uber-performance-optimazation/index.html</guid><category><![CDATA[tech]]></category><category><![CDATA[frontend]]></category><category><![CDATA[optimization]]></category><dc:creator><![CDATA[cool4ZBL]]></dc:creator><pubDate>Sun, 09 Jul 2017 16:00:00 GMT</pubDate></item><item><title><![CDATA[从十个 React 迷你设计模式谈开去]]></title><description><![CDATA[<p>很早之前就一直在读的一篇文章，<a href="https://hackernoon.com/10-react-mini-patterns-c1da92f068c5">10 个React Mini 设计模式</a>，一边做 <code>Creator</code> 项目，也一边终于把它精读完。</p>
+]]></description><link>/2017-07-10-m-uber-performance-optimazation/index.html</link><guid isPermaLink="true">/2017-07-10-m-uber-performance-optimazation/index.html</guid><category><![CDATA[tech]]></category><category><![CDATA[frontend]]></category><category><![CDATA[optimization]]></category><dc:creator><![CDATA[cool4zbl]]></dc:creator><pubDate>Sun, 09 Jul 2017 16:00:00 GMT</pubDate></item><item><title><![CDATA[从十个 React 迷你设计模式谈开去]]></title><description><![CDATA[<p>很早之前就一直在读的一篇文章，<a href="https://hackernoon.com/10-react-mini-patterns-c1da92f068c5">10 个React Mini 设计模式</a>，一边做 <code>Creator</code> 项目，也一边终于把它精读完。</p>
 <p>结合自己的开发时候的项目经验，做了点笔记。</p>
 <p><code>Creator</code> 项目是一个多端（Web + Mobile）React SPA，且有一些表单填写和复杂的交互组件。</p>
 <p><del>自己单独封装了一个很简单的基于 Node <code>EventEmitter</code> 的 <code>Store</code>，开发过程中收获很大，这些细节之后可以细说。</del> 产品那边后来又加了「置顶」功能，类似双向数据通信的 <code>EventEmitter</code> 逻辑有点太乱了，所以还是狠心花时间升级成了 <code>Redux</code> + <code>Immutable.js</code> + <code>Normalizr</code> 技术栈，果然省心很多。</p>
@@ -632,7 +632,7 @@ req.keys().forEach(<span class="hljs-function"><span class="hljs-params">(key)</
 })</code></pre><p>Creator 中因为用的 <code>create-react-app</code> CLI，无法自己配置 Webpack，所以并没有用到...</p>
 <p>以上就是一些含金量很高迷你设计模式，最好是开发的时候参照这些要点，能用上就用上，熟能生巧。</p>
 <p>END</p>
-]]></description><link>/2017-06-28-10-react-mini-patterns-note/index.html</link><guid isPermaLink="true">/2017-06-28-10-react-mini-patterns-note/index.html</guid><category><![CDATA[tech]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[cool4ZBL]]></dc:creator><pubDate>Tue, 27 Jun 2017 16:00:00 GMT</pubDate></item><item><title><![CDATA[Fun with Codemod & AST]]></title><description><![CDATA[<h2 id="tl-dr">TL;DR</h2>
+]]></description><link>/2017-06-28-10-react-mini-patterns-note/index.html</link><guid isPermaLink="true">/2017-06-28-10-react-mini-patterns-note/index.html</guid><category><![CDATA[tech]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[cool4zbl]]></dc:creator><pubDate>Tue, 27 Jun 2017 16:00:00 GMT</pubDate></item><item><title><![CDATA[Fun with Codemod & AST]]></title><description><![CDATA[<h2 id="tl-dr">TL;DR</h2>
 <ul>
 <li>Facebook 为了解决「大型代码库」迁移，基于 AST 造了个工具 <strong>Codemod</strong></li>
 <li>基于 Codemod 又构建了 JavaScript 代码迁移专用的工具 <strong>jscodeshift</strong> 和 <strong>React-codemod</strong></li>
@@ -926,7 +926,7 @@ a + b
 <li><a href="http://tech.meituan.com/abstract-syntax-tree.html">AST 在美团的应用</a></li>
 <li><a href="http://imweb.io/topic/57b13b4f93d9938132cc8dfd">imweb</a></li>
 </ul>
-]]></description><link>/2017-02-15-fun-with-codemod-and-ast/index.html</link><guid isPermaLink="true">/2017-02-15-fun-with-codemod-and-ast/index.html</guid><category><![CDATA[tech]]></category><category><![CDATA[programming]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[cool4ZBL]]></dc:creator><pubDate>Tue, 14 Feb 2017 17:21:00 GMT</pubDate></item><item><title><![CDATA[[译]前端指南]]></title><description><![CDATA[<p><strong>Update</strong>
+]]></description><link>/2017-02-15-fun-with-codemod-and-ast/index.html</link><guid isPermaLink="true">/2017-02-15-fun-with-codemod-and-ast/index.html</guid><category><![CDATA[tech]]></category><category><![CDATA[programming]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[cool4zbl]]></dc:creator><pubDate>Tue, 14 Feb 2017 17:21:00 GMT</pubDate></item><item><title><![CDATA[[译]前端指南]]></title><description><![CDATA[<p><strong>Update</strong>
 以下大概写于两年前，亟待更新。</p>
 <hr>
 <p>几天前从Github上看到了这篇<a href="https://github.com/bendc/frontend-guidelines">前端编码最佳实践</a>，Star数已破4K，觉得应该是篇不错的小指南，花了点时间将它稍作翻译，也当是复习复习 <code>HTML&amp;CSS&amp;JS</code>。
@@ -1572,7 +1572,7 @@ Minimize dependencies. Third-party is code you don&#39;t know. Don&#39;t load an
 
 <span class="hljs-atom">compact</span>([<span class="hljs-string">&quot;foo&quot;</span>, <span class="hljs-number">0</span>]);
 <span class="hljs-atom">unique</span>([<span class="hljs-string">&quot;foo&quot;</span>, <span class="hljs-string">&quot;foo&quot;</span>]);
-<span class="hljs-atom">union</span>([<span class="hljs-string">&quot;foo&quot;</span>], [<span class="hljs-string">&quot;bar&quot;</span>], [<span class="hljs-string">&quot;foo&quot;</span>]);</code></pre>]]></description><link>/2015-03-14-frontend-guidelines/index.html</link><guid isPermaLink="true">/2015-03-14-frontend-guidelines/index.html</guid><category><![CDATA[translate]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[cool4ZBL]]></dc:creator><pubDate>Sat, 14 Mar 2015 15:51:00 GMT</pubDate></item><item><title><![CDATA[Ali校招笔试题思考]]></title><description><![CDATA[<h1 id="ali-">Ali校招笔试题思考</h1>
+<span class="hljs-atom">union</span>([<span class="hljs-string">&quot;foo&quot;</span>], [<span class="hljs-string">&quot;bar&quot;</span>], [<span class="hljs-string">&quot;foo&quot;</span>]);</code></pre>]]></description><link>/2015-03-14-frontend-guidelines/index.html</link><guid isPermaLink="true">/2015-03-14-frontend-guidelines/index.html</guid><category><![CDATA[translate]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[cool4zbl]]></dc:creator><pubDate>Sat, 14 Mar 2015 15:51:00 GMT</pubDate></item><item><title><![CDATA[Ali校招笔试题思考]]></title><description><![CDATA[<h1 id="ali-">Ali校招笔试题思考</h1>
 <p>昨晚搭着末班车，参加了阿里今年的实习生在线笔试。
 回忆之前惨不忍睹的内推面试，玩了整整一个寒假后接到了不期而至的面试电话，连之前一些基础的还算熟悉的题都答得不流畅自然一气呵成，我就知道我悲剧了。
 痛定思痛，作为一个即将毕业的大四老鸟（只是说年龄...)，在被各种鄙视，各种蜚语，各种不确定存在的黑暗时期，依旧不屈不挠地学习思考着，我都要被自己感动了。
@@ -1689,7 +1689,7 @@ HTTP接口应该也就是写个函数模块吧。暂时给思路如下，待完�
 <p>续：觉得做的一般也收到了面试通知。但阿里又说“针对2015届招聘已结束，无论面试结果如何我们都不能承诺您能加入”。伤心归伤心，毕竟迟了那么点。
 但再怎么着也要执着走下去。
 <strong>“It&#39;s never too late to start.”</strong></p>
-]]></description><link>/2014-12-01-alibaba-interview/index.html</link><guid isPermaLink="true">/2014-12-01-alibaba-interview/index.html</guid><category><![CDATA[interview]]></category><category><![CDATA[tech]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[cool4ZBL]]></dc:creator><pubDate>Mon, 01 Dec 2014 12:13:00 GMT</pubDate></item><item><title><![CDATA[CSS 中那些大大小小的坑]]></title><description><![CDATA[<h1 id="css-">CSS 中那些大大小小的坑</h1>
+]]></description><link>/2014-12-01-alibaba-interview/index.html</link><guid isPermaLink="true">/2014-12-01-alibaba-interview/index.html</guid><category><![CDATA[interview]]></category><category><![CDATA[tech]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[cool4zbl]]></dc:creator><pubDate>Mon, 01 Dec 2014 12:13:00 GMT</pubDate></item><item><title><![CDATA[CSS 中那些大大小小的坑]]></title><description><![CDATA[<h1 id="css-">CSS 中那些大大小小的坑</h1>
 <blockquote>
 <p>中国读者不是不善于交流，而是对基础知识掌握不够牢固，不敢交流。就如同有人提到用英文写作时所说的，最难的不是怎么写，而是写什么。英文语法错误其实是别人最容易纠正的，但你到底想要表达什么则是别人无法知道的。具体到CSS，虽然不难学，但真正彻底把原理和基本概念全搞通也不是一件容易的事。 —— 李松峰</p>
 </blockquote>
@@ -1957,7 +1957,7 @@ CSS为字体和文本分别定义了属性。字体属性主要用于描述一�
 <strong>注意</strong>如果字体名像 Trebuchet MS 一样多于一个单词（有空格），应该加上引号：&quot;Trebuchet MS &quot;。</p>
 <p>####字体大小
 浏览器样式表默认为每个HTML元素都设定了font-size，所以你在设定 font-size 的时候，其实就是在修改默认值。</p>
-]]></description><link>/2014-11-10-css-design-guide-notes/index.html</link><guid isPermaLink="true">/2014-11-10-css-design-guide-notes/index.html</guid><category><![CDATA[frontend]]></category><category><![CDATA[notes]]></category><dc:creator><![CDATA[cool4ZBL]]></dc:creator><pubDate>Mon, 10 Nov 2014 09:08:00 GMT</pubDate></item><item><title><![CDATA[写在百度电面后]]></title><description><![CDATA[<h1 id="-">写在百度电面后</h1>
+]]></description><link>/2014-11-10-css-design-guide-notes/index.html</link><guid isPermaLink="true">/2014-11-10-css-design-guide-notes/index.html</guid><category><![CDATA[frontend]]></category><category><![CDATA[notes]]></category><dc:creator><![CDATA[cool4zbl]]></dc:creator><pubDate>Mon, 10 Nov 2014 09:08:00 GMT</pubDate></item><item><title><![CDATA[写在百度电面后]]></title><description><![CDATA[<h1 id="-">写在百度电面后</h1>
 <p>Desperado.</p>
 <figure>
 <img src="http://zbl-ghost-backup.qiniudn.com/blogcover_roadtothesky_2880x900.jpg" alt="road to the sky">
@@ -2079,7 +2079,7 @@ You&#39;re a prisioner walking through this world all alone.
     让你自己成为一个持续学习和思考的人，并只写你真正思考和总结之后的产物，其他一切就会随之而来。
 </blockquote>
 加油吧，希望能在通往大牛的道路上越走越远。</p>
-]]></description><link>/2014-11-04-baidu-interview-thought/index.html</link><guid isPermaLink="true">/2014-11-04-baidu-interview-thought/index.html</guid><category><![CDATA[interview]]></category><category><![CDATA[tech]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[cool4ZBL]]></dc:creator><pubDate>Tue, 04 Nov 2014 08:13:00 GMT</pubDate></item><item><title><![CDATA[Oh My Ghostium]]></title><description><![CDATA[<p>之前装了Wordpress扔在大洋彼岸一个Arizona搬瓦工的VPS后就再没去理过它，想想也有半年了。<br>后来分析觉得，首先肯定是自己懒惰浮躁，静不下来写东西。其次是博客页面没有漂亮到让我有一种打开就想写的冲动。<br>但是他们说<strong><a href="http://mindhacks.cn/2009/02/15/why-you-should-start-blogging-now/">为什么你应该（从现在开始就）写博客</a></strong>，于是紧跟大牛的步伐，虽然没有什么牛逼技术可以跟别人分享，但是看看大牛写的技术文章谢谢心得也是一种进步。于是就开始了<em>万劫不复的折腾深渊</em>...<br>在谷歌搜寻平台的时候看到了一个同是F2E的一个博客<a href="http://luolei.org">罗磊的独立博客</a>，瞬间被大Banner的设计吸引到，看了很久后拖到了网页末尾，扫到了一行字<em>本博客基于拽酷炫的 GHOST</em>。<br>比较了<em>Ghost/Jekyll/Octo/Hexo</em> 等等之后，认为<strong><a href="https://ghost.org">Ghost</a></strong>还是最适合我： </p>
+]]></description><link>/2014-11-04-baidu-interview-thought/index.html</link><guid isPermaLink="true">/2014-11-04-baidu-interview-thought/index.html</guid><category><![CDATA[interview]]></category><category><![CDATA[tech]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[cool4zbl]]></dc:creator><pubDate>Tue, 04 Nov 2014 08:13:00 GMT</pubDate></item><item><title><![CDATA[Oh My Ghostium]]></title><description><![CDATA[<p>之前装了Wordpress扔在大洋彼岸一个Arizona搬瓦工的VPS后就再没去理过它，想想也有半年了。<br>后来分析觉得，首先肯定是自己懒惰浮躁，静不下来写东西。其次是博客页面没有漂亮到让我有一种打开就想写的冲动。<br>但是他们说<strong><a href="http://mindhacks.cn/2009/02/15/why-you-should-start-blogging-now/">为什么你应该（从现在开始就）写博客</a></strong>，于是紧跟大牛的步伐，虽然没有什么牛逼技术可以跟别人分享，但是看看大牛写的技术文章谢谢心得也是一种进步。于是就开始了<em>万劫不复的折腾深渊</em>...<br>在谷歌搜寻平台的时候看到了一个同是F2E的一个博客<a href="http://luolei.org">罗磊的独立博客</a>，瞬间被大Banner的设计吸引到，看了很久后拖到了网页末尾，扫到了一行字<em>本博客基于拽酷炫的 GHOST</em>。<br>比较了<em>Ghost/Jekyll/Octo/Hexo</em> 等等之后，认为<strong><a href="https://ghost.org">Ghost</a></strong>还是最适合我： </p>
 <ol>
 <li>是基于 <strong>Node.js</strong> 的博客平台。</li>
 <li><strong>Just a blogging platform.</strong>简单简洁，响应式设计。</li>
@@ -2217,4 +2217,4 @@ You&#39;re a prisioner walking through this world all alone.
 <li>博文搜索  </li>
 <li>画个网站结构图 site-map</li>
 </ul>
-]]></description><link>/2014-11-03-oh-my-ghostium/index.html</link><guid isPermaLink="true">/2014-11-03-oh-my-ghostium/index.html</guid><category><![CDATA[tech]]></category><category><![CDATA[frontend]]></category><category><![CDATA[thoughts]]></category><dc:creator><![CDATA[cool4ZBL]]></dc:creator><pubDate>Sun, 02 Nov 2014 16:00:00 GMT</pubDate></item></channel></rss>
+]]></description><link>/2014-11-03-oh-my-ghostium/index.html</link><guid isPermaLink="true">/2014-11-03-oh-my-ghostium/index.html</guid><category><![CDATA[tech]]></category><category><![CDATA[frontend]]></category><category><![CDATA[thoughts]]></category><dc:creator><![CDATA[cool4zbl]]></dc:creator><pubDate>Sun, 02 Nov 2014 16:00:00 GMT</pubDate></item></channel></rss>

@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <title>cool4ZBL - ZBL&#x27;s Doodle</title>
-    <meta name="description" content="👻 Web Developer. 👾 Front End. 🤖 DevOps. 🤓 Tool Enthusiast." />
+    <title>CSS 中那些大大小小的坑- cool4zbl</title>
+    <meta name="description" content="CSS 中那些大大小小的坑 中国读者不是不善于交流，而是对基础知识掌握不够牢固，不敢交流。就如同有人提到用英文写作时所说的，最难的不是怎么写，而是写什么。英文语法错误其实是别人最容易纠正的，但你到底想要表达什么则是别人无法知道的。具体到CSS，虽然不难学，但真正彻底把原理和基本概念全搞通也不是一件容易的事。 —— 李松峰 最近读完了Charles Wyke-Smith的《CSS设计指南》，上面那段话是节选的译者李松峰的序（在这多说一句，觉得李松峰翻译的书质量都很高，现在的我基本在遍历）。越来越觉得只读书不思考是毫无用处的，于是把笔记整理出来，并加上了自己思考过的感悟。 ###CHAPTER 1 HTML标记与文档结构 用HTML标记内容的目的是为了赋予网页语义（semantic）。换句话说，就是要给你的网页内容赋予某些用户代理（user agent）能够理解的含义。 浏览器、屏幕阅读器，以及搜索引擎放出的web爬虫都是用户代理，它们需要显示、朗读和分析网页。 文本用闭合标签，引用内容用自闭合标签。 闭合标签与自闭合标签的区别在于，闭合标签包含的是会显示的实际内容，而自闭合标签只是给浏览器提供一个对要显示内容的引用。浏览器会在HTML页面加载时候，额外向服务器发送请求，以取得自闭合标签引用的内容。 属性alt(alternative)，定义的是在图片因故未能加载成功时候在屏幕上显示的文本。视障用户的屏幕阅读器会大声读出alt属性的内容，因此一定要给&amp;lt;img&amp;gt;标签的alt属性添加让人一听（或一看）就能明白的内容。 &amp;lt;h1&amp;gt;被搜索引擎视为仅次于&amp;lt;tittle&amp;gt;标签的另一个搜索关键词重要来源。 只要有不适合放在其他文本标签中的文本，都可以把它放在一个段落里。 某些标签，如&amp;lt;ol&amp;gt;要求其他标签，如&amp;lt;li&amp;gt;与之共同出现。 &amp;lt;!DOCTYPE html&amp;gt;是DTD（文档类型定义），声明：“以下是一个HTML文档。” &amp;lt;html&amp;gt;只有两个直接的子标签：&amp;lt;head&amp;gt;和&amp;lt;body&amp;gt;。帮助浏览器理解页面的信息都包含在&amp;lt;frontend,notes" />
 
     <meta name="HandheldFriendly" content="True" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,17 +20,19 @@
     <meta name="theme-color" content="#ffffff">
 
 
-    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+    <link rel="stylesheet" type="text/css"
+        href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
     <link rel="stylesheet" type="text/css" href="/assets/built/screen.css" />
 
     <link rel="stylesheet" type="text/css" href="/assets/built/hl-styles/atom-one-dark.css" />
 
 
     <meta name="generator" content="Ghost ?" />
-<link rel="alternate" type="application/rss+xml" title="ZBL&#39;s Doodle" href="/rss/index.xml">
+<link rel="alternate" type="application/rss+xml" title="Doodles" href="/rss/index.xml">
 <link rel="canonical" href="http://zhangbinliu.me/2014-11-10-css-design-guide-notes/" />
 </head>
-<body class="author-template author-ZBL post-template tag-frontend tag-notes nav-closed">
+
+<body class="author-template author- post-template tag-frontend tag-notes nav-closed">
 
     
 
@@ -331,16 +334,16 @@ CSS为字体和文本分别定义了属性。字体属性主要用于描述一�
 
 
             <figure class="author-image">
-                <a class="img" href="/author/ZBL/" style="background-image: url(/content/images/avatar_zbl.jpg)"><span class="hidden">cool4ZBL's Picture</span></a>
+                <a class="img" href="/author//" style="background-image: url(/content/images/avatar_zbl.jpg)"><span class="hidden">cool4zbl's Picture</span></a>
             </figure>
 
             <section class="author">
-                <h4><a href="/author/ZBL/">cool4ZBL</a></h4>
+                <h4><a href="/author//">cool4zbl</a></h4>
 
-                    <p>👻 Web Developer. 👾 Front End. 🤖 DevOps. 🤓 Tool Enthusiast.</p>
+                    <p>👾 Front End =&gt; Back End =&gt; ∞</p>
                 <div class="author-meta">
-                    <span class="author-location icon-location"> </span>
-                    <span class="author-link icon-link"><a href="http://zhangbinliu.me/">http://zhangbinliu.me/</a></span>
+                    <span class="author-location icon-location">Beijing</span>
+                    <span class="author-link icon-link"><a href="http://localhost:5000/author/ZBL">http://localhost:5000/author/ZBL</a></span>
                 </div>
             </section>
 
@@ -391,8 +394,11 @@ CSS为字体和文本分别定义了属性。字体属性主要用于描述一�
 
 
         <footer class="site-footer clearfix">
-            <section class="copyright"><a href="http://zhangbinliu.me">ZBL&#x27;s Doodle</a> &copy; 2014</section>
-            <section class="poweredby">Proudly published with <a href="https://ghost.org">Ghost</a></section>
+            <section class="copyright"><a href="http://zhangbinliu.me">Doodles</a> &copy; 2014
+            </section>
+            <section class="poweredby">Proudly published with <a href="https://ghost.org">Ghost</a>
+                &nbsp;&amp;&nbsp;
+                <a href="https://github.com/cool4zbl/ghost-render">Ghost-render</a></section>
         </footer>
 
     </div>
@@ -405,16 +411,27 @@ CSS为字体和文本分别定义了属性。字体属性主要用于描述一�
     <script type="text/javascript" src="/assets/js/highlight.pack.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
 
-    <!-- Tencent Analysis -->
-    <script type="text/javascript" src="http://tajs.qq.com/stats?sId=63324671" charset="UTF-8"></script>
+    <!-- Baidu Statics -->
     <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-      ga('create', 'UA-56185102-1', 'auto');
-      ga('send', 'pageview');
-  </script>   
+        var _hmt = _hmt || []
+            ; (function () {
+                var hm = document.createElement('script')
+                hm.src = 'https://hm.baidu.com/hm.js?0903b73655adcfdcf265110a12741a3c'
+                var s = document.getElementsByTagName('script')[0]
+                s.parentNode.insertBefore(hm, s)
+            })()
+    </script>
+    <script>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+        ga('create', 'UA-56185102-1', 'auto');
+        ga('send', 'pageview');
+    </script>
 
 </body>
+
 </html>

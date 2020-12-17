@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[undefined - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas, codes, all by myself]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Sun, 04 Nov 2018 15:29:42 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/tag/undefined/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[跟随前进者的步伐]]></title><description><![CDATA[<p>每个人，在人生不同阶段，或多或少是需要一些鸡血的。</p>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[undefined - Doodles]]></title><description><![CDATA[Thoughts, ideas, codes, all by myself]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Thu, 17 Dec 2020 03:46:41 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/tag/undefined/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[跟随前进者的步伐]]></title><description><![CDATA[<p>每个人，在人生不同阶段，或多或少是需要一些鸡血的。</p>
 <p>自从工作以来，也确实觉得自己懒癌，且很多事情缺乏自控力和自律。</p>
 <p>只记得乔老爷子说过，</p>
 <blockquote>
@@ -59,4 +59,4 @@ WebTorrent 作者之一。JS Standard Style 作者。斯坦福毕业的一小哥
 <li><a href="http://zhangwenli.com/">羡辙 Zhang Wenli</a> 一个挺厉害的前端妹子，上交毕业现在在阿里。写过一本 <code>Three.js</code> 小书。知道她是因为豆瓣上跟她共同标记过的书很多。很有思想，不仅技术厉害，一些文章也很对我胃口。这里再贴一下她的<a href="https://www.douban.com/people/ovilia1024/">豆瓣</a></li>
 </ul>
 <p>待补充。</p>
-]]></description><link>/2016-10-22-follow-the-progressive/index.html</link><guid isPermaLink="true">/2016-10-22-follow-the-progressive/index.html</guid><category><![CDATA[learning]]></category><dc:creator><![CDATA[cool4ZBL]]></dc:creator><pubDate>Sat, 22 Oct 2016 08:34:00 GMT</pubDate></item></channel></rss>
+]]></description><link>/2016-10-22-follow-the-progressive/index.html</link><guid isPermaLink="true">/2016-10-22-follow-the-progressive/index.html</guid><category><![CDATA[learning]]></category><dc:creator><![CDATA[cool4zbl]]></dc:creator><pubDate>Sat, 22 Oct 2016 08:34:00 GMT</pubDate></item></channel></rss>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[undefined - ZBL's Doodle]]></title><description><![CDATA[Thoughts, ideas, codes, all by myself]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Sun, 04 Nov 2018 15:29:42 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/tag/undefined/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Ali校招笔试题思考]]></title><description><![CDATA[<h1 id="ali-">Ali校招笔试题思考</h1>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[undefined - Doodles]]></title><description><![CDATA[Thoughts, ideas, codes, all by myself]]></description><link>http://zhangbinliu.me/</link><generator>Ghost</generator><lastBuildDate>Thu, 17 Dec 2020 03:46:41 GMT</lastBuildDate><atom:link href="http://zhangbinliu.me/tag/undefined/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Ali校招笔试题思考]]></title><description><![CDATA[<h1 id="ali-">Ali校招笔试题思考</h1>
 <p>昨晚搭着末班车，参加了阿里今年的实习生在线笔试。
 回忆之前惨不忍睹的内推面试，玩了整整一个寒假后接到了不期而至的面试电话，连之前一些基础的还算熟悉的题都答得不流畅自然一气呵成，我就知道我悲剧了。
 痛定思痛，作为一个即将毕业的大四老鸟（只是说年龄...)，在被各种鄙视，各种蜚语，各种不确定存在的黑暗时期，依旧不屈不挠地学习思考着，我都要被自己感动了。
@@ -116,7 +116,7 @@ HTTP接口应该也就是写个函数模块吧。暂时给思路如下，待完�
 <p>续：觉得做的一般也收到了面试通知。但阿里又说“针对2015届招聘已结束，无论面试结果如何我们都不能承诺您能加入”。伤心归伤心，毕竟迟了那么点。
 但再怎么着也要执着走下去。
 <strong>“It&#39;s never too late to start.”</strong></p>
-]]></description><link>/2014-12-01-alibaba-interview/index.html</link><guid isPermaLink="true">/2014-12-01-alibaba-interview/index.html</guid><category><![CDATA[interview]]></category><category><![CDATA[tech]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[cool4ZBL]]></dc:creator><pubDate>Mon, 01 Dec 2014 12:13:00 GMT</pubDate></item><item><title><![CDATA[写在百度电面后]]></title><description><![CDATA[<h1 id="-">写在百度电面后</h1>
+]]></description><link>/2014-12-01-alibaba-interview/index.html</link><guid isPermaLink="true">/2014-12-01-alibaba-interview/index.html</guid><category><![CDATA[interview]]></category><category><![CDATA[tech]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[cool4zbl]]></dc:creator><pubDate>Mon, 01 Dec 2014 12:13:00 GMT</pubDate></item><item><title><![CDATA[写在百度电面后]]></title><description><![CDATA[<h1 id="-">写在百度电面后</h1>
 <p>Desperado.</p>
 <figure>
 <img src="http://zbl-ghost-backup.qiniudn.com/blogcover_roadtothesky_2880x900.jpg" alt="road to the sky">
@@ -238,4 +238,4 @@ You&#39;re a prisioner walking through this world all alone.
     让你自己成为一个持续学习和思考的人，并只写你真正思考和总结之后的产物，其他一切就会随之而来。
 </blockquote>
 加油吧，希望能在通往大牛的道路上越走越远。</p>
-]]></description><link>/2014-11-04-baidu-interview-thought/index.html</link><guid isPermaLink="true">/2014-11-04-baidu-interview-thought/index.html</guid><category><![CDATA[interview]]></category><category><![CDATA[tech]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[cool4ZBL]]></dc:creator><pubDate>Tue, 04 Nov 2014 08:13:00 GMT</pubDate></item></channel></rss>
+]]></description><link>/2014-11-04-baidu-interview-thought/index.html</link><guid isPermaLink="true">/2014-11-04-baidu-interview-thought/index.html</guid><category><![CDATA[interview]]></category><category><![CDATA[tech]]></category><category><![CDATA[frontend]]></category><dc:creator><![CDATA[cool4zbl]]></dc:creator><pubDate>Tue, 04 Nov 2014 08:13:00 GMT</pubDate></item></channel></rss>
